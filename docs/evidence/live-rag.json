@@ -1,0 +1,116 @@
+{
+  "observed_at": "2026-10-20T21:00:43.204870+00:00",
+  "data_classification": "synthetic assessment knowledge only; no emails or external source content sent",
+  "embeddings": [
+    19,
+    384
+  ],
+  "questions": [
+    {
+      "plan": {
+        "question": "What are the check-in rules for EVT-101?",
+        "normalized_query": "What are the check-in rules for EVT-101?",
+        "event_id": "EVT-101",
+        "kind": "policy",
+        "category": "check_in",
+        "inherited_context": false,
+        "interpretation": "deterministic query transformation"
+      },
+      "evidence": [
+        {
+          "id": "POL-003",
+          "kind": "policy",
+          "scope": [
+            "EVT-101"
+          ],
+          "content": "Policy POL-003. Applies to EVT-101. Category check_in. Check-in for EVT-101 closes at 08:45 South Africa Standard Time.",
+          "fields": {
+            "policy_id": "POL-003",
+            "event_id": "EVT-101",
+            "category": "check_in",
+            "rule_text": "Check-in for EVT-101 closes at 08:45 South Africa Standard Time."
+          },
+          "source": "policies.csv#policy_id=POL-003",
+          "similarity": 0.8124
+        }
+      ],
+      "response": {
+        "status": "generated",
+        "answer": "Check-in for EVT-101 closes at 08:45 South Africa Standard Time.",
+        "citation_ids": [
+          "POL-003"
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 145,
+          "candidatesTokenCount": 39,
+          "totalTokenCount": 184,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 145
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "provider_response_id": "edbXaqicBMCkvdIPqsjTeA",
+        "note": "Citation membership validated; factual entailment still requires review."
+      },
+      "retrieval": "FastEmbed cosine semantic search",
+      "id": "9c1a0baf-b9ca-45b7-b109-68da70682c08"
+    },
+    {
+      "plan": {
+        "question": "And how early must I cancel it?",
+        "normalized_query": "And how early must I cancel it? Event EVT-101",
+        "event_id": "EVT-101",
+        "kind": "policy",
+        "category": "cancellation",
+        "inherited_context": true,
+        "interpretation": "deterministic query transformation"
+      },
+      "evidence": [
+        {
+          "id": "POL-002",
+          "kind": "policy",
+          "scope": [
+            "ALL"
+          ],
+          "content": "Policy POL-002. Applies to ALL. Category cancellation. Registration cancellations must be submitted at least 48 hours before the scheduled event start.",
+          "fields": {
+            "policy_id": "POL-002",
+            "event_id": "ALL",
+            "category": "cancellation",
+            "rule_text": "Registration cancellations must be submitted at least 48 hours before the scheduled event start."
+          },
+          "source": "policies.csv#policy_id=POL-002",
+          "similarity": 0.7995
+        }
+      ],
+      "response": {
+        "status": "generated",
+        "answer": "Registration cancellations must be submitted at least 48 hours before the scheduled event start.",
+        "citation_ids": [
+          "POL-002"
+        ],
+        "model": "gemini-3.5-flash-lite",
+        "usage": {
+          "promptTokenCount": 133,
+          "candidatesTokenCount": 46,
+          "totalTokenCount": 179,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 133
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "provider_response_id": "etbXarH_EMqFxN8Px531wQg",
+        "note": "Citation membership validated; factual entailment still requires review."
+      },
+      "retrieval": "FastEmbed cosine semantic search",
+      "id": "e8d49452-a5f2-4307-bbd5-8b64957bbf72"
+    }
+  ]
+}

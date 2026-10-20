@@ -1,0 +1,53 @@
+{
+  "observed_at": "2026-10-20T21:13:49.225875+00:00",
+  "mode": "actual in-app browser interactions plus persisted-state assertions",
+  "run_id": "5782c8ee-b7fe-4bd0-a45f-c39541ae2d44",
+  "execution_id": "6",
+  "agent_execution_id": "8",
+  "checks": [
+    {
+      "check": "browser Gemini policy question and contextual follow-up",
+      "status": "passed"
+    },
+    {
+      "check": "browser production-webhook trigger, execution 6",
+      "status": "passed"
+    },
+    {
+      "check": "verified participant inspection",
+      "status": "passed"
+    },
+    {
+      "check": "duplicate provenance inspection",
+      "status": "passed"
+    },
+    {
+      "check": "rejected participant inspection",
+      "status": "passed"
+    },
+    {
+      "check": "source evidence and reference inspection",
+      "status": "passed"
+    },
+    {
+      "check": "both CSV download actions exercised",
+      "status": "passed"
+    },
+    {
+      "check": "CSV generation matches persisted 8 total / 1 verified records",
+      "status": "passed"
+    },
+    {
+      "check": "execution history reopened the same saved request",
+      "status": "passed"
+    },
+    {
+      "check": "saved agent execution 8 restored in results",
+      "status": "passed"
+    },
+    {
+      "check": "human review note persisted without status promotion",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+.venv/
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+storage/*
+!storage/.gitkeep
+n8n/.local/
+*.log
+.DS_Store

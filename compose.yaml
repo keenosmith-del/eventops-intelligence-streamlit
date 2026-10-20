@@ -1,0 +1,45 @@
+name: eventops-companion-full
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8502:8501"
+    env_file: .env
+    environment:
+      EVENTOPS_DATABASE_URL: sqlite:////app/storage/eventops.db
+      FASTEMBED_CACHE_PATH: /app/storage/models
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook/eventops-verify
+      N8N_AGENT_URL: http://n8n:5678/webhook/eventops-agent
+      # Explicitly trusted private service URLs are supported only in this local compose topology.
+      EVENTOPS_LOCAL_COMPOSE: "true"
+    volumes:
+      - companion_storage:/app/storage
+  processor:
+    build: .
+    command: ["uvicorn", "eventops.service:app", "--host", "0.0.0.0", "--port", "8766"]
+    env_file: .env
+    environment:
+      EVENTOPS_DATABASE_URL: sqlite:////app/storage/eventops.db
+    volumes:
+      - companion_storage:/app/storage
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.42.6
+    ports:
+      - "127.0.0.1:5680:5678"
+    environment:
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Configure independent secrets}
+      N8N_WEBHOOK_URL: http://localhost:5680/
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      EVENTOPS_PROCESSOR_URL: http://processor:8766
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_UNVERIFIED_PACKAGES_ENABLED: "false"
+      N8N_SECURE_COOKIE: "false"
+      N8N_RUNNERS_TASK_TIMEOUT: 60
+      GENERIC_TIMEZONE: Africa/Johannesburg
+      EXECUTIONS_DATA_MAX_AGE: 168
+    volumes:
+      - companion_n8n:/home/node/.n8n
+      - ./n8n:/workflows:ro
+volumes:
+  companion_storage:
+  companion_n8n:

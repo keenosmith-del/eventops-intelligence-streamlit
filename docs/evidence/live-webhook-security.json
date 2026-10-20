@@ -1,0 +1,20 @@
+{
+  "observed_at": "2026-10-20T21:13:32.388186+00:00",
+  "checks": [
+    {
+      "check": "missing_webhook_auth",
+      "http_status": 403,
+      "status": "passed"
+    },
+    {
+      "check": "incorrect_webhook_auth",
+      "http_status": 403,
+      "status": "passed"
+    },
+    {
+      "check": "invalid_input",
+      "http_status": 400,
+      "status": "passed"
+    }
+  ]
+}

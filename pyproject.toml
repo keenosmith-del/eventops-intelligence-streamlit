@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = ["live: opt-in real provider calls"]
+[tool.ruff]
+line-length = 110
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"app.py" = ["E402"]
