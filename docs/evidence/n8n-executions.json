@@ -13,106 +13,64 @@
           "name": "Agent webhook",
           "type": "n8n-nodes-base.webhook",
           "invocations": 1,
-          "execution_times_ms": [
-            0
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [0],
+          "statuses": ["success"]
         },
         {
           "name": "Prepare agent context",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            15
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [15],
+          "statuses": ["success"]
         },
         {
           "name": "Gemini Flash Chat Model",
           "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
           "invocations": 4,
-          "execution_times_ms": [
-            1094,
-            694,
-            1221,
-            1641
-          ],
-          "statuses": [
-            "success",
-            "success",
-            "success",
-            "success"
-          ]
+          "execution_times_ms": [1094, 694, 1221, 1641],
+          "statuses": ["success", "success", "success", "success"]
         },
         {
           "name": "reference_lookup",
           "type": "@n8n/n8n-nodes-langchain.toolCode",
           "invocations": 1,
-          "execution_times_ms": [
-            10
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [10],
+          "statuses": ["success"]
         },
         {
           "name": "inspect_findings",
           "type": "@n8n/n8n-nodes-langchain.toolCode",
           "invocations": 1,
-          "execution_times_ms": [
-            8
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [8],
+          "statuses": ["success"]
         },
         {
           "name": "inspect_evidence",
           "type": "@n8n/n8n-nodes-langchain.toolCode",
           "invocations": 1,
-          "execution_times_ms": [
-            9
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [9],
+          "statuses": ["success"]
         },
         {
           "name": "Gemini read-only analyst",
           "type": "@n8n/n8n-nodes-langchain.agent",
           "invocations": 1,
-          "execution_times_ms": [
-            1672
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [1672],
+          "statuses": ["success"]
         },
         {
           "name": "Validate and save agent evidence",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            40
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [40],
+          "statuses": ["success"]
         },
         {
           "name": "Return agent explanation",
           "type": "n8n-nodes-base.respondToWebhook",
           "invocations": 1,
-          "execution_times_ms": [
-            2
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [2],
+          "statuses": ["success"]
         }
       ]
     },
@@ -127,232 +85,148 @@
           "name": "Verification webhook",
           "type": "n8n-nodes-base.webhook",
           "invocations": 1,
-          "execution_times_ms": [
-            0
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [0],
+          "statuses": ["success"]
         },
         {
           "name": "Validate and reserve request",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            35
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [35],
+          "statuses": ["success"]
         },
         {
           "name": "Repeated request?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            3
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [3],
+          "statuses": ["success"]
         },
         {
           "name": "Allowed source configuration",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            8
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [8],
+          "statuses": ["success"]
         },
         {
           "name": "Read Calendar",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            52
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [52],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Calendar outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            23
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [23],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Calendar",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            30
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [30],
+          "statuses": ["success"]
         },
         {
           "name": "Read Email",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            2974
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [2974],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Email outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            7
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [7],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Email",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            18
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [18],
+          "statuses": ["success"]
         },
         {
           "name": "Read Web",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            38
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [38],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Web outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            4
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [4],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Web",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            10
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [10],
+          "statuses": ["success"]
         },
         {
           "name": "Aggregate source evidence",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            11
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [11],
+          "statuses": ["success"]
         },
         {
           "name": "Normalize fields",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            14
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [14],
+          "statuses": ["success"]
         },
         {
           "name": "Merge duplicates",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            14
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [14],
+          "statuses": ["success"]
         },
         {
           "name": "Deterministic verification",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            16
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [16],
+          "statuses": ["success"]
         },
         {
           "name": "Any discrepancies?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            2
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [2],
+          "statuses": ["success"]
         },
         {
           "name": "Preserve review queue",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            5
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [5],
+          "statuses": ["success"]
         },
         {
           "name": "Persist authoritative results",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            31
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [31],
+          "statuses": ["success"]
         },
         {
           "name": "Return verification result",
           "type": "n8n-nodes-base.respondToWebhook",
           "invocations": 1,
-          "execution_times_ms": [
-            6
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [6],
+          "statuses": ["success"]
         }
       ]
     },
@@ -367,232 +241,148 @@
           "name": "Verification webhook",
           "type": "n8n-nodes-base.webhook",
           "invocations": 1,
-          "execution_times_ms": [
-            0
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [0],
+          "statuses": ["success"]
         },
         {
           "name": "Validate and reserve request",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            11
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [11],
+          "statuses": ["success"]
         },
         {
           "name": "Repeated request?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            1
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [1],
+          "statuses": ["success"]
         },
         {
           "name": "Allowed source configuration",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            7
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [7],
+          "statuses": ["success"]
         },
         {
           "name": "Read Calendar",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            33
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [33],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Calendar outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            6
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [6],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Calendar",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            14
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [14],
+          "statuses": ["success"]
         },
         {
           "name": "Read Email",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            2743
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [2743],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Email outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            9
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [9],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Email",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            15
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [15],
+          "statuses": ["success"]
         },
         {
           "name": "Read Web",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            42
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [42],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Web outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            7
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [7],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Web",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            11
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [11],
+          "statuses": ["success"]
         },
         {
           "name": "Aggregate source evidence",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            7
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [7],
+          "statuses": ["success"]
         },
         {
           "name": "Normalize fields",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            10
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [10],
+          "statuses": ["success"]
         },
         {
           "name": "Merge duplicates",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            11
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [11],
+          "statuses": ["success"]
         },
         {
           "name": "Deterministic verification",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            11
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [11],
+          "statuses": ["success"]
         },
         {
           "name": "Any discrepancies?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            1
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [1],
+          "statuses": ["success"]
         },
         {
           "name": "Preserve review queue",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            5
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [5],
+          "statuses": ["success"]
         },
         {
           "name": "Persist authoritative results",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            18
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [18],
+          "statuses": ["success"]
         },
         {
           "name": "Return verification result",
           "type": "n8n-nodes-base.respondToWebhook",
           "invocations": 1,
-          "execution_times_ms": [
-            5
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [5],
+          "statuses": ["success"]
         }
       ]
     },
@@ -607,106 +397,64 @@
           "name": "Agent webhook",
           "type": "n8n-nodes-base.webhook",
           "invocations": 1,
-          "execution_times_ms": [
-            0
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [0],
+          "statuses": ["success"]
         },
         {
           "name": "Prepare agent context",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            35
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [35],
+          "statuses": ["success"]
         },
         {
           "name": "Gemini Flash Chat Model",
           "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
           "invocations": 4,
-          "execution_times_ms": [
-            822,
-            1089,
-            998,
-            1659
-          ],
-          "statuses": [
-            "success",
-            "success",
-            "success",
-            "success"
-          ]
+          "execution_times_ms": [822, 1089, 998, 1659],
+          "statuses": ["success", "success", "success", "success"]
         },
         {
           "name": "reference_lookup",
           "type": "@n8n/n8n-nodes-langchain.toolCode",
           "invocations": 1,
-          "execution_times_ms": [
-            16
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [16],
+          "statuses": ["success"]
         },
         {
           "name": "inspect_findings",
           "type": "@n8n/n8n-nodes-langchain.toolCode",
           "invocations": 1,
-          "execution_times_ms": [
-            8
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [8],
+          "statuses": ["success"]
         },
         {
           "name": "inspect_evidence",
           "type": "@n8n/n8n-nodes-langchain.toolCode",
           "invocations": 1,
-          "execution_times_ms": [
-            10
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [10],
+          "statuses": ["success"]
         },
         {
           "name": "Gemini read-only analyst",
           "type": "@n8n/n8n-nodes-langchain.agent",
           "invocations": 1,
-          "execution_times_ms": [
-            1699
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [1699],
+          "statuses": ["success"]
         },
         {
           "name": "Validate and save agent evidence",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            50
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [50],
+          "statuses": ["success"]
         },
         {
           "name": "Return agent explanation",
           "type": "n8n-nodes-base.respondToWebhook",
           "invocations": 1,
-          "execution_times_ms": [
-            2
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [2],
+          "statuses": ["success"]
         }
       ]
     },
@@ -721,243 +469,155 @@
           "name": "Verification webhook",
           "type": "n8n-nodes-base.webhook",
           "invocations": 1,
-          "execution_times_ms": [
-            1
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [1],
+          "statuses": ["success"]
         },
         {
           "name": "Validate and reserve request",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            146
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [146],
+          "statuses": ["success"]
         },
         {
           "name": "Input accepted?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            10
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [10],
+          "statuses": ["success"]
         },
         {
           "name": "Repeated request?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            4
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [4],
+          "statuses": ["success"]
         },
         {
           "name": "Allowed source configuration",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            96
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [96],
+          "statuses": ["success"]
         },
         {
           "name": "Read Calendar",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            45
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [45],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Calendar outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            33
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [33],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Calendar",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            34
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [34],
+          "statuses": ["success"]
         },
         {
           "name": "Read Email",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            2840
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [2840],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Email outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            6
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [6],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Email",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            17
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [17],
+          "statuses": ["success"]
         },
         {
           "name": "Read Web",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            43
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [43],
+          "statuses": ["success"]
         },
         {
           "name": "Capture Web outcome",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            4
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [4],
+          "statuses": ["success"]
         },
         {
           "name": "Extract Web",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            6
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [6],
+          "statuses": ["success"]
         },
         {
           "name": "Aggregate source evidence",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            13
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [13],
+          "statuses": ["success"]
         },
         {
           "name": "Normalize fields",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            11
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [11],
+          "statuses": ["success"]
         },
         {
           "name": "Merge duplicates",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            10
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [10],
+          "statuses": ["success"]
         },
         {
           "name": "Deterministic verification",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            16
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [16],
+          "statuses": ["success"]
         },
         {
           "name": "Any discrepancies?",
           "type": "n8n-nodes-base.if",
           "invocations": 1,
-          "execution_times_ms": [
-            3
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [3],
+          "statuses": ["success"]
         },
         {
           "name": "Preserve review queue",
           "type": "n8n-nodes-base.code",
           "invocations": 1,
-          "execution_times_ms": [
-            18
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [18],
+          "statuses": ["success"]
         },
         {
           "name": "Persist authoritative results",
           "type": "n8n-nodes-base.httpRequest",
           "invocations": 1,
-          "execution_times_ms": [
-            47
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [47],
+          "statuses": ["success"]
         },
         {
           "name": "Return verification result",
           "type": "n8n-nodes-base.respondToWebhook",
           "invocations": 1,
-          "execution_times_ms": [
-            5
-          ],
-          "statuses": [
-            "success"
-          ]
+          "execution_times_ms": [5],
+          "statuses": ["success"]
         }
       ]
     }

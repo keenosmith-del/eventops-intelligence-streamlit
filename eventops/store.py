@@ -4,7 +4,16 @@ import json
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, MetaData, String, Table, Text, create_engine, select, update
+from sqlalchemy import (
+    Column,
+    MetaData,
+    String,
+    Table,
+    Text,
+    create_engine,
+    select,
+    update,
+)
 from sqlalchemy.exc import IntegrityError
 
 from eventops.config import ROOT, database_url
@@ -42,7 +51,11 @@ class Store:
         with self.engine.begin() as conn:
             conn.execute(
                 self.objects.insert().values(
-                    id=object_id, owner=owner, kind=kind, created_at=now(), payload=json.dumps(payload)
+                    id=object_id,
+                    owner=owner,
+                    kind=kind,
+                    created_at=now(),
+                    payload=json.dumps(payload),
                 )
             )
         return object_id
@@ -61,7 +74,9 @@ class Store:
         with self.engine.connect() as conn:
             row = (
                 conn.execute(
-                    select(self.objects).where(self.objects.c.id == object_id, self.objects.c.owner == owner)
+                    select(self.objects).where(
+                        self.objects.c.id == object_id, self.objects.c.owner == owner
+                    )
                 )
                 .mappings()
                 .first()

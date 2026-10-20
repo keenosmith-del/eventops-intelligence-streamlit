@@ -50,7 +50,10 @@ def grounded_answer(question, evidence, store, transport=None):
                         "text": json.dumps(
                             {
                                 "question": question,
-                                "evidence": [{"id": r["id"], "content": r["content"]} for r in evidence],
+                                "evidence": [
+                                    {"id": r["id"], "content": r["content"]}
+                                    for r in evidence
+                                ],
                             }
                         )
                     }
@@ -65,7 +68,9 @@ def grounded_answer(question, evidence, store, transport=None):
         },
     }
     try:
-        with httpx.Client(timeout=30, transport=transport, follow_redirects=False) as client:
+        with httpx.Client(
+            timeout=30, transport=transport, follow_redirects=False
+        ) as client:
             response = client.post(
                 f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
                 headers={"x-goog-api-key": setting("GEMINI_API_KEY")},
@@ -76,10 +81,18 @@ def grounded_answer(question, evidence, store, transport=None):
         candidate = raw["candidates"][0]
         if candidate.get("finishReason") != "STOP":
             raise ValueError("Incomplete generation")
-        text = "".join(p.get("text", "") for p in candidate["content"]["parts"] if not p.get("thought"))
+        text = "".join(
+            p.get("text", "")
+            for p in candidate["content"]["parts"]
+            if not p.get("thought")
+        )
         answer = Answer.model_validate_json(text)
         if not answer.answer and not answer.citation_ids:
-            return {"status": "insufficient_evidence", **answer.model_dump(), "model": model}
+            return {
+                "status": "insufficient_evidence",
+                **answer.model_dump(),
+                "model": model,
+            }
         allowed = {r["id"] for r in evidence}
         if (
             not answer.answer

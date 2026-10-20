@@ -21,9 +21,13 @@ from streamlit.testing.v1 import AppTest
 def test_all_pages_render(name, tmp_path, monkeypatch):
     monkeypatch.setenv("EVENTOPS_DATABASE_URL", "sqlite:///" + str(tmp_path / "ui.db"))
     monkeypatch.setenv("GEMINI_ENABLED", "false")
-    at = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app.py")).run(timeout=30)
+    at = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app.py")).run(
+        timeout=30
+    )
     # AppTest's public switch_page accepts file pages; this application uses native callable pages.
-    at._page_hash = next(key for key, page in at._registered_pages.items() if page["page_name"] == name)
+    at._page_hash = next(
+        key for key, page in at._registered_pages.items() if page["page_name"] == name
+    )
     at.run(timeout=30)
     assert not at.exception
     assert at.title

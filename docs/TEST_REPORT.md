@@ -25,11 +25,11 @@ Only known synthetic assessment knowledge was sent. Two additional browser quest
 
 Final verification request: `ba266447-a7ec-419f-96c5-5021e2a50b39`; actual **n8n execution 9**. Both workflow JSON files were imported and published on installed **n8n 2.42.6**, and production webhooks were called with Header Auth.
 
-| Source | Actual outcome | Parsed count |
-| --- | --- | --- |
-| Calendar | Completed public HTTPS ICS read | 5 |
-| Email | Completed Mailtrap API GET reads | 3 explicitly labelled synthetic registrations |
-| Web | Completed public HTTPS JSON read | 5 |
+| Source   | Actual outcome                   | Parsed count                                  |
+| -------- | -------------------------------- | --------------------------------------------- |
+| Calendar | Completed public HTTPS ICS read  | 5                                             |
+| Email    | Completed Mailtrap API GET reads | 3 explicitly labelled synthetic registrations |
+| Web      | Completed public HTTPS JSON read | 5                                             |
 
 Thirteen inputs became twelve records after one duplicate merge: **1 verified, 1 rejected, 10 incomplete**. Ada matched the authoritative active directory/registration; Lindi failed active-status and name checks. Holiday observations lacked event/participant identity and stayed incomplete. A real repeated webhook request returned the original execution ID rather than fetching again.
 
@@ -69,14 +69,14 @@ Screenshot: [actual Gemini result](evidence/browser-agent.png). Native Streamlit
 
 ## Explicitly unverified / incomplete
 
-| Check | Status | Reason |
-| --- | --- | --- |
-| Public Streamlit URL and complete hosted journey | Pending | Publication/independent hosting approval required |
-| Hosted n8n HTTPS webhook | Pending | Only isolated local n8n deployed |
-| Managed PostgreSQL persistence | Not executed | Dedicated connection support implemented; no separate account/database provisioned |
-| Full Linux Docker application build | Not executed | Additional deployment option prepared; host Python + Docker n8n topology tested |
-| Real provider timeout / rate-limit outages | Not forced | Controlled transport tests cover behavior without harming providers |
-| Commercial authentication, tenant isolation, queued recovery | Outside delivered demonstration | Workspace capabilities/password and synchronous execution have documented limits |
-| Broad claim-level hallucination evaluation / general extraction | Limited | Citations and conservative schemas checked; unrestricted language/attachments/OCR not implemented |
+| Check                                                           | Status                          | Reason                                                                                            |
+| --------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Public Streamlit URL and complete hosted journey                | Pending                         | Publication/independent hosting approval required                                                 |
+| Hosted n8n HTTPS webhook                                        | Pending                         | Only isolated local n8n deployed                                                                  |
+| Managed PostgreSQL persistence                                  | Not executed                    | Dedicated connection support implemented; no separate account/database provisioned                |
+| Full Linux Docker application build                             | Not executed                    | Additional deployment option prepared; host Python + Docker n8n topology tested                   |
+| Real provider timeout / rate-limit outages                      | Not forced                      | Controlled transport tests cover behavior without harming providers                               |
+| Commercial authentication, tenant isolation, queued recovery    | Outside delivered demonstration | Workspace capabilities/password and synchronous execution have documented limits                  |
+| Broad claim-level hallucination evaluation / general extraction | Limited                         | Citations and conservative schemas checked; unrestricted language/attachments/OCR not implemented |
 
 No public deployment, commercial production readiness, external assessment approval, or 100% rubric score is claimed.

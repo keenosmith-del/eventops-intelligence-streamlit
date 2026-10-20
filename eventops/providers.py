@@ -35,7 +35,9 @@ def validate_url(url, resolve=True):
     if resolve:
         try:
             addresses = socket.getaddrinfo(p.hostname, 443, type=socket.SOCK_STREAM)
-            if not addresses or any(not ipaddress.ip_address(item[4][0]).is_global for item in addresses):
+            if not addresses or any(
+                not ipaddress.ip_address(item[4][0]).is_global for item in addresses
+            ):
                 raise SourceError("Source resolved to a non-public address")
         except OSError as exc:
             raise SourceError("Source DNS lookup failed") from exc
@@ -47,10 +49,14 @@ def fetch(url, headers=None, transport=None):
     started = time.monotonic()
     try:
         with httpx.Client(
-            timeout=httpx.Timeout(12, connect=5), follow_redirects=False, transport=transport
+            timeout=httpx.Timeout(12, connect=5),
+            follow_redirects=False,
+            transport=transport,
         ) as client:
             with client.stream(
-                "GET", url, headers={"User-Agent": "EventOps-Streamlit/1.0", **(headers or {})}
+                "GET",
+                url,
+                headers={"User-Agent": "EventOps-Streamlit/1.0", **(headers or {})},
             ) as response:
                 if response.status_code != 200:
                     raise SourceError(f"Source returned HTTP {response.status_code}")
@@ -67,7 +73,8 @@ def fetch(url, headers=None, transport=None):
 
 def mailtrap(limit=3, transport=None):
     token, account, inbox = [
-        setting(k) for k in ("MAILTRAP_API_TOKEN", "MAILTRAP_ACCOUNT_ID", "MAILTRAP_INBOX_ID")
+        setting(k)
+        for k in ("MAILTRAP_API_TOKEN", "MAILTRAP_ACCOUNT_ID", "MAILTRAP_INBOX_ID")
     ]
     if not all((token, account, inbox)):
         return {

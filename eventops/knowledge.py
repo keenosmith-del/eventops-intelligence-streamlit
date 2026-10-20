@@ -32,9 +32,15 @@ def load_documents(directory=None):
                 raise ValueError("Duplicate or missing source identifier")
             ids.add(rid)
             if kind == "event":
-                if not re.fullmatch(r"EVT-\d{3}", rid) or not row["title"] or not row["venue"]:
+                if (
+                    not re.fullmatch(r"EVT-\d{3}", rid)
+                    or not row["title"]
+                    or not row["venue"]
+                ):
                     raise ValueError("Malformed event")
-                start, end = [datetime.fromisoformat(row[k]) for k in ("starts_at", "ends_at")]
+                start, end = [
+                    datetime.fromisoformat(row[k]) for k in ("starts_at", "ends_at")
+                ]
                 if (
                     start.utcoffset() is None
                     or end.utcoffset() is None
@@ -45,7 +51,11 @@ def load_documents(directory=None):
                 scope = [rid]
                 content = f"Event {rid}: {row['title']}. Starts at: {row['starts_at']}. Ends at: {row['ends_at']}. Venue: {row['venue']}. Capacity: {row['capacity']}."
             elif kind == "policy":
-                if row["event_id"] not in event_ids | {"ALL"} or not row["rule_text"] or not row["category"]:
+                if (
+                    row["event_id"] not in event_ids | {"ALL"}
+                    or not row["rule_text"]
+                    or not row["category"]
+                ):
                     raise ValueError("Invalid policy")
                 scope = [row["event_id"]]
                 content = f"Policy {rid}. Applies to {row['event_id']}. Category {row['category']}. {row['rule_text']}"
@@ -71,7 +81,9 @@ def load_documents(directory=None):
                     "source": f"{filename}#{id_key}={rid}",
                 }
             )
-    if len({r["fields"]["email"] for r in records if r["kind"] == "participant"}) != len(people):
+    if len(
+        {r["fields"]["email"] for r in records if r["kind"] == "participant"}
+    ) != len(people):
         raise ValueError("Duplicate directory email")
     return records
 

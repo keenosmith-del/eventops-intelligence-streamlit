@@ -69,4 +69,5 @@ SQLite is durable on your own persistent disk. Streamlit Community Cloud local s
 - [Deployment](docs/DEPLOYMENT.md) and [n8n operation](n8n/README.md)
 - [5–7-minute walkthrough](docs/INTERVIEW_WALKTHROUGH.md), [interview Q&A](docs/INTERVIEW_QA.md), [architecture comparison](docs/COMPARISON.md)
 - [Audit of original implementation](docs/ORIGINAL_AUDIT.md)
+
 # eventops-intelligence-streamlit

@@ -1,10 +1,7 @@
 {
   "observed_at": "2026-10-20T21:00:43.204870+00:00",
   "data_classification": "synthetic assessment knowledge only; no emails or external source content sent",
-  "embeddings": [
-    19,
-    384
-  ],
+  "embeddings": [19, 384],
   "questions": [
     {
       "plan": {
@@ -20,9 +17,7 @@
         {
           "id": "POL-003",
           "kind": "policy",
-          "scope": [
-            "EVT-101"
-          ],
+          "scope": ["EVT-101"],
           "content": "Policy POL-003. Applies to EVT-101. Category check_in. Check-in for EVT-101 closes at 08:45 South Africa Standard Time.",
           "fields": {
             "policy_id": "POL-003",
@@ -37,9 +32,7 @@
       "response": {
         "status": "generated",
         "answer": "Check-in for EVT-101 closes at 08:45 South Africa Standard Time.",
-        "citation_ids": [
-          "POL-003"
-        ],
+        "citation_ids": ["POL-003"],
         "model": "gemini-3.5-flash-lite",
         "usage": {
           "promptTokenCount": 145,
@@ -73,9 +66,7 @@
         {
           "id": "POL-002",
           "kind": "policy",
-          "scope": [
-            "ALL"
-          ],
+          "scope": ["ALL"],
           "content": "Policy POL-002. Applies to ALL. Category cancellation. Registration cancellations must be submitted at least 48 hours before the scheduled event start.",
           "fields": {
             "policy_id": "POL-002",
@@ -90,9 +81,7 @@
       "response": {
         "status": "generated",
         "answer": "Registration cancellations must be submitted at least 48 hours before the scheduled event start.",
-        "citation_ids": [
-          "POL-002"
-        ],
+        "citation_ids": ["POL-002"],
         "model": "gemini-3.5-flash-lite",
         "usage": {
           "promptTokenCount": 133,

@@ -13,7 +13,12 @@ from eventops.config import setting
 from eventops.knowledge import load_documents
 from eventops.store import Store, now
 
-app = FastAPI(title="EventOps companion primitives", docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(
+    title="EventOps companion primitives",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 
 @app.middleware("http")
@@ -84,7 +89,13 @@ def begin(data: RunInput):
         store.save(
             data.owner,
             "run",
-            {**data.model_dump(), "status": "running", "started_at": now(), "records": [], "outcomes": []},
+            {
+                **data.model_dump(),
+                "status": "running",
+                "started_at": now(),
+                "records": [],
+                "outcomes": [],
+            },
             run_id,
         )
     except Exception as exc:
@@ -103,7 +114,12 @@ def email(limit: int = 3):
     try:
         return providers.read_source("email", limit)
     except providers.SourceError as exc:
-        return {"source": "email", "status": "failed", "error": str(exc), "messages": []}
+        return {
+            "source": "email",
+            "status": "failed",
+            "error": str(exc),
+            "messages": [],
+        }
 
 
 @app.get("/sources/config", dependencies=[Depends(authorize)])
@@ -185,7 +201,9 @@ def finish(data: Finish):
         "run_id": data.run_id,
         "execution_id": data.execution_id,
         "orchestrator": "n8n",
-        "status": "completed" if completed == 3 else "partial" if completed else "failed",
+        "status": (
+            "completed" if completed == 3 else "partial" if completed else "failed"
+        ),
         "finished_at": now(),
         "records": records,
         "outcomes": data.outcomes,
@@ -217,8 +235,12 @@ def agent_context(data: AgentInput):
             if evidence.get("source") == "email":
                 excerpt = evidence.get("excerpt", "")
                 emails = re.findall(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", excerpt)
-                if "CONTROLLED SYNTHETIC ASSESSMENT REGISTRATION" not in excerpt or any(
-                    not email.casefold().endswith("@example.com") for email in emails
+                if (
+                    "CONTROLLED SYNTHETIC ASSESSMENT REGISTRATION" not in excerpt
+                    or any(
+                        not email.casefold().endswith("@example.com")
+                        for email in emails
+                    )
                 ):
                     raise HTTPException(
                         422,
@@ -230,13 +252,22 @@ def agent_context(data: AgentInput):
         **data.model_dump(),
         "event_id": payload["event_id"],
         "references": [
-            r for r in load_documents() if payload["event_id"] in r["scope"] or "ALL" in r["scope"]
+            r
+            for r in load_documents()
+            if payload["event_id"] in r["scope"] or "ALL" in r["scope"]
         ],
         "findings": [
-            {"id": r["id"], "status": r["status"], "issues": r["issues"], "checks": r["checks"]}
+            {
+                "id": r["id"],
+                "status": r["status"],
+                "issues": r["issues"],
+                "checks": r["checks"],
+            }
             for r in payload["records"]
         ],
-        "evidence": [{"id": r["id"], "evidence": r["evidence"]} for r in payload["records"]],
+        "evidence": [
+            {"id": r["id"], "evidence": r["evidence"]} for r in payload["records"]
+        ],
     }
 
 
@@ -269,7 +300,9 @@ def agent_finish(data: AgentFinish):
         "note": "No validated model-assisted result available.",
     }
     try:
-        answer = AgentAnswer.model_validate_json(re.sub(r"^```(?:json)?\s*|\s*```$", "", data.output.strip()))
+        answer = AgentAnswer.model_validate_json(
+            re.sub(r"^```(?:json)?\s*|\s*```$", "", data.output.strip())
+        )
         calls = []
         observed_ids = set()
         allowed = {"reference_lookup", "inspect_findings", "inspect_evidence"}
@@ -279,13 +312,25 @@ def agent_finish(data: AgentFinish):
                 raise ValueError("Unapproved tool")
             # Citations must occur in actual tool results, not merely exist somewhere in the dataset.
             observation = step.get("observation", "")
-            observed = json.loads(observation) if isinstance(observation, str) else observation
+            observed = (
+                json.loads(observation) if isinstance(observation, str) else observation
+            )
             # n8n Code Tools wrap string results as [{"response": "<JSON>"}].
-            if isinstance(observed, list) and len(observed) == 1 and isinstance(observed[0], dict):
+            if (
+                isinstance(observed, list)
+                and len(observed) == 1
+                and isinstance(observed[0], dict)
+            ):
                 observed = json.loads(observed[0].get("response", ""))
-            if not isinstance(observed, dict) or not isinstance(observed.get("records"), list):
+            if not isinstance(observed, dict) or not isinstance(
+                observed.get("records"), list
+            ):
                 raise ValueError("Invalid tool observation")
-            observed_ids.update(r["id"] for r in observed["records"] if isinstance(r, dict) and "id" in r)
+            observed_ids.update(
+                r["id"]
+                for r in observed["records"]
+                if isinstance(r, dict) and "id" in r
+            )
             # Store observable tool calls and results; omit internal agent logs/thoughts.
             calls.append(
                 {
@@ -294,7 +339,9 @@ def agent_finish(data: AgentFinish):
                     "observation": str(step.get("observation", ""))[:16000],
                 }
             )
-        ids = observed_ids & ({r["id"] for r in payload["records"]} | {r["id"] for r in load_documents()})
+        ids = observed_ids & (
+            {r["id"] for r in payload["records"]} | {r["id"] for r in load_documents()}
+        )
         if (
             data.error
             or not calls

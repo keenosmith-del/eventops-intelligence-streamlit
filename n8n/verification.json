@@ -8,10 +8,7 @@
       "name": "Verification webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [
-        0,
-        0
-      ],
+      "position": [0, 0],
       "parameters": {
         "httpMethod": "POST",
         "path": "eventops-verify",
@@ -32,10 +29,7 @@
       "name": "Validate and reserve request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        220,
-        0
-      ],
+      "position": [220, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/runs/begin\" }}",
@@ -61,10 +55,7 @@
       "name": "Repeated request?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [
-        440,
-        0
-      ],
+      "position": [440, 0],
       "parameters": {
         "conditions": {
           "options": {
@@ -94,10 +85,7 @@
       "name": "Return saved execution",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [
-        660,
-        -180
-      ],
+      "position": [660, -180],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json.run }}",
@@ -109,10 +97,7 @@
       "name": "Allowed source configuration",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        660,
-        0
-      ],
+      "position": [660, 0],
       "parameters": {
         "method": "GET",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/sources/config\" }}",
@@ -134,10 +119,7 @@
       "name": "Input accepted?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [
-        330,
-        -260
-      ],
+      "position": [330, -260],
       "parameters": {
         "conditions": {
           "options": {
@@ -167,10 +149,7 @@
       "name": "Return rejected request",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [
-        550,
-        -400
-      ],
+      "position": [550, -400],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ {status:\"rejected\",error:\"Request rejected or validation service unavailable. Check the strict input contract and service configuration.\"} }}",
@@ -184,10 +163,7 @@
       "name": "Read Calendar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        880,
-        0
-      ],
+      "position": [880, 0],
       "parameters": {
         "method": "GET",
         "url": "={{ $('Allowed source configuration').first().json.calendar }}",
@@ -214,10 +190,7 @@
       "name": "Capture Calendar outcome",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        1100,
-        0
-      ],
+      "position": [1100, 0],
       "parameters": {
         "jsCode": "const ok = $json.statusCode === 200 && typeof ($json.body ?? $json.data) === 'string'; return [{json:{source:'calendar',limit:$('Validate and reserve request').first().json.limit,payload:{status:ok?'completed':'failed',body:ok?($json.body ?? $json.data):'',reference:$('Allowed source configuration').first().json.calendar,error:ok?null:('Source returned HTTP '+($json.statusCode || 'network error'))}}}];"
       }
@@ -227,10 +200,7 @@
       "name": "Extract Calendar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        1320,
-        0
-      ],
+      "position": [1320, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/extract\" }}",
@@ -255,10 +225,7 @@
       "name": "Read Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        1540,
-        0
-      ],
+      "position": [1540, 0],
       "parameters": {
         "method": "GET",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/sources/email\" }}",
@@ -289,10 +256,7 @@
       "name": "Capture Email outcome",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        1760,
-        0
-      ],
+      "position": [1760, 0],
       "parameters": {
         "jsCode": "return [{json:{source:'email',payload:$json,limit:$('Validate and reserve request').first().json.limit}}];"
       }
@@ -302,10 +266,7 @@
       "name": "Extract Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        1980,
-        0
-      ],
+      "position": [1980, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/extract\" }}",
@@ -330,10 +291,7 @@
       "name": "Read Web",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        2200,
-        0
-      ],
+      "position": [2200, 0],
       "parameters": {
         "method": "GET",
         "url": "={{ $('Allowed source configuration').first().json.web }}",
@@ -360,10 +318,7 @@
       "name": "Capture Web outcome",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        2420,
-        0
-      ],
+      "position": [2420, 0],
       "parameters": {
         "jsCode": "const ok = $json.statusCode === 200 && typeof ($json.body ?? $json.data) === 'string'; return [{json:{source:'web',limit:$('Validate and reserve request').first().json.limit,payload:{status:ok?'completed':'failed',body:ok?($json.body ?? $json.data):'',reference:$('Allowed source configuration').first().json.web,error:ok?null:('Source returned HTTP '+($json.statusCode || 'network error'))}}}];"
       }
@@ -373,10 +328,7 @@
       "name": "Extract Web",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        2640,
-        0
-      ],
+      "position": [2640, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/extract\" }}",
@@ -401,10 +353,7 @@
       "name": "Aggregate source evidence",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        2860,
-        0
-      ],
+      "position": [2860, 0],
       "parameters": {
         "jsCode": "const groups = ['Extract Calendar','Extract Email','Extract Web'].map(n=>$(n).first().json); return [{json:{records:groups.flatMap(x=>x.records),outcomes:groups.map(x=>x.outcome)}}];"
       }
@@ -414,10 +363,7 @@
       "name": "Normalize fields",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        3080,
-        0
-      ],
+      "position": [3080, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/normalize\" }}",
@@ -442,10 +388,7 @@
       "name": "Merge duplicates",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        3300,
-        0
-      ],
+      "position": [3300, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/deduplicate\" }}",
@@ -470,10 +413,7 @@
       "name": "Deterministic verification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        3520,
-        0
-      ],
+      "position": [3520, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/verify\" }}",
@@ -498,10 +438,7 @@
       "name": "Any discrepancies?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [
-        3740,
-        0
-      ],
+      "position": [3740, 0],
       "parameters": {
         "conditions": {
           "options": {
@@ -531,10 +468,7 @@
       "name": "Preserve review queue",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        3960,
-        -120
-      ],
+      "position": [3960, -120],
       "parameters": {
         "jsCode": "return [{json:{...$json,review_required:true}}];"
       }
@@ -544,10 +478,7 @@
       "name": "All checks passed",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        3960,
-        120
-      ],
+      "position": [3960, 120],
       "parameters": {
         "jsCode": "return [{json:{...$json,review_required:false}}];"
       }
@@ -557,10 +488,7 @@
       "name": "Persist authoritative results",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        4180,
-        0
-      ],
+      "position": [4180, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/runs/finish\" }}",
@@ -585,10 +513,7 @@
       "name": "Return verification result",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [
-        4400,
-        0
-      ],
+      "position": [4400, 0],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}",

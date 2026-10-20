@@ -8,12 +8,16 @@ import secrets
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(page_title="EventOps Intelligence", page_icon=":material/hub:", layout="wide")
+st.set_page_config(
+    page_title="EventOps Intelligence", page_icon=":material/hub:", layout="wide"
+)
 # Streamlit deployment secrets populate server settings before application imports.
 try:
     for key, value in st.secrets.items():
         if isinstance(value, (str, int, bool)):
-            os.environ.setdefault(key, str(value).lower() if isinstance(value, bool) else str(value))
+            os.environ.setdefault(
+                key, str(value).lower() if isinstance(value, bool) else str(value)
+            )
 except (FileNotFoundError, st.errors.StreamlitSecretNotFoundError):
     pass
 
@@ -34,7 +38,9 @@ h2,h3 {font-weight:500;letter-spacing:-.025em;}
 </style>""")
 
 if setting("PUBLIC_DEMO") == "true" and not setting("APP_PASSWORD"):
-    st.error("Hosted operation requires an application access password. Configure APP_PASSWORD.")
+    st.error(
+        "Hosted operation requires an application access password. Configure APP_PASSWORD."
+    )
     st.stop()
 if setting("APP_PASSWORD") and not st.session_state.get("authenticated"):
     st.title("EventOps Intelligence")
@@ -103,13 +109,19 @@ def overview():
         st.write(
             "Ask about event schedules, admission rules, or participant records. Inspect semantic matches and the evidence behind each generated response."
         )
-        st.page_link(assistant_page, label="Open Knowledge Assistant", icon=":material/arrow_forward:")
+        st.page_link(
+            assistant_page,
+            label="Open Knowledge Assistant",
+            icon=":material/arrow_forward:",
+        )
     with b:
         st.subheader("02 / Process and verify")
         st.write(
             "Run the visual n8n workflow across Calendar, Email, and Web. Review discrepancies, compare references, and export verified records."
         )
-        st.page_link(agent_page, label="Open Agent Workspace", icon=":material/arrow_forward:")
+        st.page_link(
+            agent_page, label="Open Agent Workspace", icon=":material/arrow_forward:"
+        )
     st.space("medium")
     with st.container(border=True):
         st.subheader("Evidence before confidence")
@@ -125,30 +137,39 @@ def overview():
             [
                 {
                     "Component": "Semantic retrieval",
-                    "State": "FastEmbed index ready"
-                    if (ROOT / "storage/index.npz").exists()
-                    else "Builds on first query",
+                    "State": (
+                        "FastEmbed index ready"
+                        if (ROOT / "storage/index.npz").exists()
+                        else "Builds on first query"
+                    ),
                     "Meaning": "Real local embeddings; no lexical substitute",
                 },
                 {
                     "Component": "Gemini generation",
-                    "State": "Configured"
-                    if setting("GEMINI_ENABLED") == "true" and setting("GEMINI_API_KEY")
-                    else "Unavailable",
+                    "State": (
+                        "Configured"
+                        if setting("GEMINI_ENABLED") == "true"
+                        and setting("GEMINI_API_KEY")
+                        else "Unavailable"
+                    ),
                     "Meaning": "Connectivity confirmed only by an actual response",
                 },
                 {
                     "Component": "n8n orchestration",
-                    "State": f"Last run: {history[0]['payload']['status']}"
-                    if history
-                    else "No execution in this workspace",
+                    "State": (
+                        f"Last run: {history[0]['payload']['status']}"
+                        if history
+                        else "No execution in this workspace"
+                    ),
                     "Meaning": "A configured URL is not execution evidence",
                 },
                 {
                     "Component": "Persistence",
-                    "State": "PostgreSQL"
-                    if setting("EVENTOPS_DATABASE_URL").startswith("postgresql")
-                    else "Local SQLite",
+                    "State": (
+                        "PostgreSQL"
+                        if setting("EVENTOPS_DATABASE_URL").startswith("postgresql")
+                        else "Local SQLite"
+                    ),
                     "Meaning": "Cloud local files are ephemeral; use a dedicated durable database",
                 },
             ]
@@ -170,7 +191,9 @@ def render_answer(item):
         if not item["evidence"]:
             st.info("No matching source evidence.")
         for hit in item["evidence"]:
-            st.markdown(f"**{hit['id']}** · {hit['kind']} · cosine similarity {hit['similarity']:.3f}")
+            st.markdown(
+                f"**{hit['id']}** · {hit['kind']} · cosine similarity {hit['similarity']:.3f}"
+            )
             st.write(hit["content"])
             st.caption(hit["source"])
     with st.expander("Retrieval inspection"):
@@ -180,7 +203,10 @@ def render_answer(item):
                 "interpreted_intent": item["plan"]["kind"] or "general knowledge",
                 "query_transformation": item["plan"],
                 "retrieval": item["retrieval"],
-                "matched_records": [{"id": r["id"], "similarity": r["similarity"]} for r in item["evidence"]],
+                "matched_records": [
+                    {"id": r["id"], "similarity": r["similarity"]}
+                    for r in item["evidence"]
+                ],
                 "generation": response,
             }
         )
@@ -193,7 +219,10 @@ def assistant():
         "Search the three authoritative documents and inspect the records behind the answer.",
     )
     with st.expander("Answer settings"):
-        generate = st.checkbox("Generate a grounded Gemini answer", value=setting("GEMINI_ENABLED") == "true")
+        generate = st.checkbox(
+            "Generate a grounded Gemini answer",
+            value=setting("GEMINI_ENABLED") == "true",
+        )
         depth = st.slider("Retrieval depth", 1, 10, 5)
         st.caption(
             "Generation is bounded by the server daily budget. Citation membership is validated; this is not a proof of factual entailment."
@@ -217,7 +246,9 @@ def assistant():
             st.write(row["payload"]["plan"]["question"])
         with st.chat_message("assistant"):
             render_answer(row["payload"])
-    question = st.chat_input("Ask about an event, policy, or participant…", max_chars=1000)
+    question = st.chat_input(
+        "Ask about an event, policy, or participant…", max_chars=1000
+    )
     question = question or st.session_state.pop("example_question", None)
     if question:
         previous = history[-1]["payload"]["plan"]["event_id"] if history else None
@@ -241,13 +272,18 @@ def agent_workspace():
         "One trigger. An auditable run.",
         "n8n connects the sources and orchestrates each processing stage. Deterministic rules decide verification outcomes.",
     )
-    tab_run, tab_workflow, tab_reasoning = st.tabs(["Run verification", "Visual workflow", "Gemini analyst"])
+    tab_run, tab_workflow, tab_reasoning = st.tabs(
+        ["Run verification", "Visual workflow", "Gemini analyst"]
+    )
     with tab_run:
         st.info(
             "Calendar and Web defaults contain real public holidays. They test live connectivity and stay labelled as event observations. Mailtrap reads only the configured synthetic-data sandbox."
         )
         with st.form("execute"):
-            event = st.selectbox("Target event", [r["id"] for r in load_documents() if r["kind"] == "event"])
+            event = st.selectbox(
+                "Target event",
+                [r["id"] for r in load_documents() if r["kind"] == "event"],
+            )
             limit = st.slider("Maximum records per source", 1, 5, 3)
             submitted = st.form_submit_button("Run verification", type="primary")
         if submitted:
@@ -264,7 +300,11 @@ def agent_workspace():
                 st.warning(result["error"])
             if result.get("execution_id"):
                 st.caption(f"n8n execution {result['execution_id']}")
-                st.page_link(results_page, label="Inspect verification results", icon=":material/fact_check:")
+                st.page_link(
+                    results_page,
+                    label="Inspect verification results",
+                    icon=":material/fact_check:",
+                )
         st.caption(
             "No automatic retry follows an uncertain webhook delivery. Reconcile the request ID in Execution History or n8n before retrying."
         )
@@ -296,7 +336,9 @@ def agent_workspace():
         if not completed:
             st.info("Finish a verification execution first.")
         else:
-            run_id = st.selectbox("Execution to explain", [r["id"] for r in completed], key="agent_run")
+            run_id = st.selectbox(
+                "Execution to explain", [r["id"] for r in completed], key="agent_run"
+            )
             intent = st.text_area(
                 "What should the analyst investigate?",
                 "Explain which records need attention and why. Compare discrepancies with authoritative references and raw source evidence.",
@@ -304,7 +346,9 @@ def agent_workspace():
             )
             if st.button("Ask Gemini analyst", type="primary"):
                 try:
-                    with st.spinner("Waiting for Gemini and its selected tools in n8n…"):
+                    with st.spinner(
+                        "Waiting for Gemini and its selected tools in n8n…"
+                    ):
                         response = explain(owner, run_id, intent)
                     st.session_state.agent_response = response
                     st.session_state.agent_response_run_id = run_id
@@ -340,13 +384,17 @@ def render_agent(agent):
                 st.write(f"**{call['tool']}**")
                 st.json(call)
     if agent.get("execution_id"):
-        st.caption(f"n8n execution {agent['execution_id']} · {agent.get('model')} · {agent.get('note')}")
+        st.caption(
+            f"n8n execution {agent['execution_id']} · {agent.get('model')} · {agent.get('note')}"
+        )
 
 
 def select_run():
     history = runs()
     if not history:
-        st.info("No saved verification executions in this workspace. Start in Agent Workspace.")
+        st.info(
+            "No saved verification executions in this workspace. Start in Agent Workspace."
+        )
         return None
     ids = [r["id"] for r in history]
     selected = st.session_state.get("selected_run")
@@ -383,7 +431,8 @@ def results():
     if run["outcomes"]:
         st.dataframe(run["outcomes"], hide_index=True, width="stretch")
     choices = st.multiselect(
-        "Filter by verification status", ["verified", "review_required", "rejected", "incomplete"]
+        "Filter by verification status",
+        ["verified", "review_required", "rejected", "incomplete"],
     )
     filtered = [r for r in records if not choices or r["status"] in choices]
     display = [
@@ -406,7 +455,11 @@ def results():
     st.dataframe(display, hide_index=True, width="stretch")
     a, b = st.columns(2)
     a.download_button(
-        "Download all records · CSV", export_csv(records), "eventops-all.csv", "text/csv", width="stretch"
+        "Download all records · CSV",
+        export_csv(records),
+        "eventops-all.csv",
+        "text/csv",
+        width="stretch",
     )
     b.download_button(
         "Download verified only · CSV",
@@ -420,17 +473,33 @@ def results():
             "Inspect a record",
             [r["id"] for r in filtered],
             format_func=lambda x: next(
-                (r["full_name"] or r["title"] or x) + " · " + r["status"] for r in filtered if r["id"] == x
+                (r["full_name"] or r["title"] or x) + " · " + r["status"]
+                for r in filtered
+                if r["id"] == x
             ),
         )
         r = next(r for r in filtered if r["id"] == rid)
         tabs = st.tabs(
-            ["Verification checks", "Raw and normalized", "Evidence and references", "Duplicates", "Review"]
+            [
+                "Verification checks",
+                "Raw and normalized",
+                "Evidence and references",
+                "Duplicates",
+                "Review",
+            ]
         )
         with tabs[0]:
             st.caption("DETERMINISTIC BUSINESS RULES")
-            st.dataframe(r["checks"], hide_index=True, width="stretch", key="checks-" + run["run_id"] + rid)
-            st.write("Findings: " + (", ".join(r["issues"]) or "All applicable checks passed."))
+            st.dataframe(
+                r["checks"],
+                hide_index=True,
+                width="stretch",
+                key="checks-" + run["run_id"] + rid,
+            )
+            st.write(
+                "Findings: "
+                + (", ".join(r["issues"]) or "All applicable checks passed.")
+            )
         with tabs[1]:
             st.json(
                 {
@@ -455,7 +524,9 @@ def results():
                 st.code(evidence["excerpt"], language=None)
             st.json({"authoritative_matches": r["matches"]})
         with tabs[3]:
-            st.write(f"{r['duplicate_count']} duplicates merged · {r['duplicate_type'].replace('_', ' ')}")
+            st.write(
+                f"{r['duplicate_count']} duplicates merged · {r['duplicate_type'].replace('_', ' ')}"
+            )
             st.dataframe(
                 [
                     {
@@ -478,13 +549,17 @@ def results():
             if r["conflicts"]:
                 st.json({"conflicting_values": r["conflicts"]})
             if r.get("potentially_related"):
-                st.caption("Potentially related records (not merged): " + ", ".join(r["potentially_related"]))
+                st.caption(
+                    "Potentially related records (not merged): "
+                    + ", ".join(r["potentially_related"])
+                )
             with st.expander("All retained duplicate inputs"):
                 st.json(r["inputs"])
         with tabs[4]:
             with st.form("review"):
                 review = st.selectbox(
-                    "Human review status", ["unreviewed", "investigating", "resolved_with_note"]
+                    "Human review status",
+                    ["unreviewed", "investigating", "resolved_with_note"],
                 )
                 note = st.text_area("Review note", max_chars=2000)
                 if st.form_submit_button("Save review"):
@@ -504,11 +579,14 @@ def results():
                                 "at": now(),
                             },
                         )
-                        st.success("Review saved. The deterministic verification status is unchanged.")
+                        st.success(
+                            "Review saved. The deterministic verification status is unchanged."
+                        )
             notes = [
                 x["payload"]
                 for x in store.list(owner, "review")
-                if x["payload"]["record_id"] == rid and x["payload"]["run_id"] == run["run_id"]
+                if x["payload"]["record_id"] == rid
+                and x["payload"]["run_id"] == run["run_id"]
             ]
             if notes:
                 st.dataframe(notes, hide_index=True, width="stretch")
@@ -524,7 +602,9 @@ def sources():
     docs = load_documents()
     cols = st.columns(3)
     for col, filename, kind in zip(
-        cols, ["events.csv", "policies.csv", "directory.json"], ["event", "policy", "participant"]
+        cols,
+        ["events.csv", "policies.csv", "directory.json"],
+        ["event", "policy", "participant"],
     ):
         with col:
             st.metric(filename, sum(r["kind"] == kind for r in docs))
@@ -538,9 +618,15 @@ def sources():
         ("directory.json", "participant"),
     ]:
         with st.expander(filename, expanded=kind == "event"):
-            st.dataframe([r["fields"] for r in docs if r["kind"] == kind], hide_index=True, width="stretch")
+            st.dataframe(
+                [r["fields"] for r in docs if r["kind"] == kind],
+                hide_index=True,
+                width="stretch",
+            )
             st.download_button(
-                "Download " + filename, (ROOT / "data/structured" / filename).read_bytes(), filename
+                "Download " + filename,
+                (ROOT / "data/structured" / filename).read_bytes(),
+                filename,
             )
     if st.button("Validate and build semantic index"):
         try:
@@ -551,7 +637,9 @@ def sources():
             )
             st.code(index.signature, language=None)
         except Exception:
-            st.error("Index could not be built. Check model download access and the source validation logs.")
+            st.error(
+                "Index could not be built. Check model download access and the source validation logs."
+            )
 
 
 def history():
@@ -604,7 +692,12 @@ def history():
             "Your workspace key is a private access capability. Keep it to reopen history after a browser session ends. Never share it publicly."
         )
         st.text_input("Current workspace key", owner, type="password", disabled=True)
-        st.download_button("Save workspace access key", owner, "eventops-workspace-key.txt", "text/plain")
+        st.download_button(
+            "Save workspace access key",
+            owner,
+            "eventops-workspace-key.txt",
+            "text/plain",
+        )
         with st.form("restore-workspace"):
             key = st.text_input("Existing workspace key", type="password")
             if st.form_submit_button("Restore workspace"):
@@ -649,13 +742,21 @@ with st.sidebar:
     st.markdown("### EventOps Intelligence")
     st.caption("STREAMLIT EDITION")
     st.space("small")
-overview_page = st.Page(overview, title="Overview", icon=":material/home:", default=True)
+overview_page = st.Page(
+    overview, title="Overview", icon=":material/home:", default=True
+)
 assistant_page = st.Page(assistant, title="Knowledge Assistant", icon=":material/chat:")
 agent_page = st.Page(agent_workspace, title="Agent Workspace", icon=":material/hub:")
-results_page = st.Page(results, title="Verification Results", icon=":material/fact_check:")
-sources_page = st.Page(sources, title="Knowledge Sources", icon=":material/library_books:")
+results_page = st.Page(
+    results, title="Verification Results", icon=":material/fact_check:"
+)
+sources_page = st.Page(
+    sources, title="Knowledge Sources", icon=":material/library_books:"
+)
 history_page = st.Page(history, title="Execution History", icon=":material/history:")
-methodology_page = st.Page(methodology, title="Architecture & Methodology", icon=":material/account_tree:")
+methodology_page = st.Page(
+    methodology, title="Architecture & Methodology", icon=":material/account_tree:"
+)
 nav = st.navigation(
     {
         "Workspace": [overview_page, assistant_page, agent_page, results_page],

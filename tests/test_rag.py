@@ -17,7 +17,9 @@ def index():
 def test_three_documents():
     docs = load_documents()
     assert len(docs) == 19
-    assert {k: sum(r["kind"] == k for r in docs) for k in ["event", "policy", "participant"]} == {
+    assert {
+        k: sum(r["kind"] == k for r in docs) for k in ["event", "policy", "participant"]
+    } == {
         "event": 3,
         "policy": 9,
         "participant": 7,
@@ -63,7 +65,9 @@ def test_context_not_blindly_inherited():
     assert interpret("Tell me about catering", "EVT-101")["event_id"] is None
 
 
-@pytest.mark.parametrize("question", ["", " " * 10, "x" * 1001, "Compare EVT-101 and EVT-102"])
+@pytest.mark.parametrize(
+    "question", ["", " " * 10, "x" * 1001, "Compare EVT-101 and EVT-102"]
+)
 def test_invalid_query(question):
     with pytest.raises(ValueError):
         interpret(question)
@@ -81,9 +85,18 @@ def test_unknown_event_not_fabricated(index):
 def test_persistence_and_followup(index, store, monkeypatch):
     monkeypatch.setenv("GEMINI_ENABLED", "false")
     first = ask(index, store, "owner-a", "Where is EVT-101 held?", generate=True)
-    second = ask(index, store, "owner-a", "And what are its check-in rules?", first["plan"]["event_id"])
+    second = ask(
+        index,
+        store,
+        "owner-a",
+        "And what are its check-in rules?",
+        first["plan"]["event_id"],
+    )
     assert second["evidence"][0]["id"] == "POL-003"
-    assert store.get("owner-a", first["id"])["payload"]["response"]["status"] == "unavailable"
+    assert (
+        store.get("owner-a", first["id"])["payload"]["response"]["status"]
+        == "unavailable"
+    )
     assert len(store.list("owner-a", "question")) == 2
     assert not store.get("owner-b", first["id"])
 
@@ -122,7 +135,10 @@ def transport_answer(answer):
             200,
             json={
                 "candidates": [
-                    {"finishReason": "STOP", "content": {"parts": [{"text": json.dumps(answer)}]}}
+                    {
+                        "finishReason": "STOP",
+                        "content": {"parts": [{"text": json.dumps(answer)}]},
+                    }
                 ],
                 "responseId": "test-response",
             },
@@ -143,7 +159,9 @@ def test_grounding_contract(generation, store):
                         "finishReason": "STOP",
                         "content": {
                             "parts": [
-                                {"text": '{"answer":"Check-in closes at 08:45.","citation_ids":["POL-003"]}'}
+                                {
+                                    "text": '{"answer":"Check-in closes at 08:45.","citation_ids":["POL-003"]}'
+                                }
                             ]
                         },
                     }
@@ -151,7 +169,9 @@ def test_grounding_contract(generation, store):
             },
         )
 
-    result = grounded_answer("When does check-in close?", generation, store, httpx.MockTransport(handler))
+    result = grounded_answer(
+        "When does check-in close?", generation, store, httpx.MockTransport(handler)
+    )
     assert result["status"] == "generated"
 
 
@@ -165,12 +185,20 @@ def test_grounding_contract(generation, store):
     ],
 )
 def test_bad_citations_rejected(generation, store, answer):
-    assert grounded_answer("question", generation, store, transport_answer(answer))["status"] == "unavailable"
+    assert (
+        grounded_answer("question", generation, store, transport_answer(answer))[
+            "status"
+        ]
+        == "unavailable"
+    )
 
 
 def test_insufficient_evidence(generation, store):
     result = grounded_answer(
-        "question", generation, store, transport_answer({"answer": "", "citation_ids": []})
+        "question",
+        generation,
+        store,
+        transport_answer({"answer": "", "citation_ids": []}),
     )
     assert result["status"] == "insufficient_evidence"
     assert grounded_answer("question", [], store)["status"] == "insufficient_evidence"
@@ -179,11 +207,20 @@ def test_insufficient_evidence(generation, store):
 @pytest.mark.parametrize("status", [401, 429, 500])
 def test_gemini_failures(generation, store, status):
     result = grounded_answer(
-        "question", generation, store, httpx.MockTransport(lambda request: httpx.Response(status))
+        "question",
+        generation,
+        store,
+        httpx.MockTransport(lambda request: httpx.Response(status)),
     )
-    assert result["status"] == "unavailable" and result["reason"] == f"provider_http_{status}"
+    assert (
+        result["status"] == "unavailable"
+        and result["reason"] == f"provider_http_{status}"
+    )
 
 
 def test_gemini_budget(generation, store, monkeypatch):
     monkeypatch.setenv("GEMINI_DAILY_LIMIT", "0")
-    assert grounded_answer("question", generation, store)["reason"] == "daily_budget_exhausted"
+    assert (
+        grounded_answer("question", generation, store)["reason"]
+        == "daily_budget_exhausted"
+    )

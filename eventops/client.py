@@ -36,15 +36,28 @@ def webhook_url(agent=False):
 
 def trigger(store, owner, event_id, limit=3, request_id=None, transport=None):
     request_id = request_id or str(uuid.uuid4())
-    payload = {"owner": owner, "event_id": event_id, "limit": limit, "request_id": request_id}
+    payload = {
+        "owner": owner,
+        "event_id": event_id,
+        "limit": limit,
+        "request_id": request_id,
+    }
     try:
-        with httpx.Client(timeout=120, follow_redirects=False, transport=transport) as client:
+        with httpx.Client(
+            timeout=120, follow_redirects=False, transport=transport
+        ) as client:
             response = client.post(
-                webhook_url(), headers={"X-EventOps-Webhook": setting("N8N_WEBHOOK_TOKEN")}, json=payload
+                webhook_url(),
+                headers={"X-EventOps-Webhook": setting("N8N_WEBHOOK_TOKEN")},
+                json=payload,
             )
         response.raise_for_status()
         result = response.json()
-        if not isinstance(result, dict) or result.get("run_id") != request_id or "status" not in result:
+        if (
+            not isinstance(result, dict)
+            or result.get("run_id") != request_id
+            or "status" not in result
+        ):
             raise ValueError("Invalid n8n response")
         return result
     except (httpx.HTTPError, ValueError):

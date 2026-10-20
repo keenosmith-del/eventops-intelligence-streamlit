@@ -24,7 +24,8 @@ def test_url_allowlist(url):
 def test_http_errors(status):
     with pytest.raises(SourceError, match=str(status)):
         fetch(
-            "https://date.nager.at/api", transport=httpx.MockTransport(lambda request: httpx.Response(status))
+            "https://date.nager.at/api",
+            transport=httpx.MockTransport(lambda request: httpx.Response(status)),
         )
 
 
@@ -40,7 +41,9 @@ def test_size_limit():
     with pytest.raises(SourceError, match="bounded"):
         fetch(
             "https://date.nager.at/api",
-            transport=httpx.MockTransport(lambda request: httpx.Response(200, text="a" * 512001)),
+            transport=httpx.MockTransport(
+                lambda request: httpx.Response(200, text="a" * 512001)
+            ),
         )
 
 
@@ -51,14 +54,24 @@ def test_missing_mailtrap(monkeypatch):
 
 @pytest.mark.parametrize("bad", ["{}", '[{"id":"../not-valid"}]', '"wrong"'])
 def test_mailtrap_schema(monkeypatch, bad):
-    for k, v in [("MAILTRAP_API_TOKEN", "test"), ("MAILTRAP_ACCOUNT_ID", "1"), ("MAILTRAP_INBOX_ID", "2")]:
+    for k, v in [
+        ("MAILTRAP_API_TOKEN", "test"),
+        ("MAILTRAP_ACCOUNT_ID", "1"),
+        ("MAILTRAP_INBOX_ID", "2"),
+    ]:
         monkeypatch.setenv(k, v)
     with pytest.raises(SourceError):
-        mailtrap(transport=httpx.MockTransport(lambda request: httpx.Response(200, text=bad)))
+        mailtrap(
+            transport=httpx.MockTransport(lambda request: httpx.Response(200, text=bad))
+        )
 
 
 def test_mailtrap_read_only(monkeypatch):
-    for k, v in [("MAILTRAP_API_TOKEN", "test"), ("MAILTRAP_ACCOUNT_ID", "1"), ("MAILTRAP_INBOX_ID", "2")]:
+    for k, v in [
+        ("MAILTRAP_API_TOKEN", "test"),
+        ("MAILTRAP_ACCOUNT_ID", "1"),
+        ("MAILTRAP_INBOX_ID", "2"),
+    ]:
         monkeypatch.setenv(k, v)
     paths = []
 

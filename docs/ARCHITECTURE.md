@@ -4,15 +4,15 @@ Event coordinators must reconcile schedules, registration messages, policies and
 
 ## Components and authority
 
-| Component | Responsibility | Authority |
-| --- | --- | --- |
-| Streamlit | Navigation, questions, run triggering, inspection, review notes, exports | Presentation; cannot override verification |
-| FastEmbed + NumPy | Local document/query embeddings and cosine ranking | Retrieval relevance, not truth |
-| Gemini Flash-Lite REST | Structured explanation from retrieved knowledge | Generated interpretation only |
-| n8n verification graph | Protected trigger, replay branch, source reads, aggregation, stage calls, discrepancy branch, response | Orchestration; no model required |
-| Companion Python service | Bounded parsing, normalization, grouping, reference comparison and storage | Deterministic business rules |
-| n8n AI Agent + Gemini Chat Model | Interpret an investigation request; choose bounded evidence/reference tools; produce a structured explanation | Advisory only |
-| SQLite / separate PostgreSQL | Owner-scoped history, executions, reviews, idempotency reservations, budgets | Persisted audit state |
+| Component                        | Responsibility                                                                                                | Authority                                  |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Streamlit                        | Navigation, questions, run triggering, inspection, review notes, exports                                      | Presentation; cannot override verification |
+| FastEmbed + NumPy                | Local document/query embeddings and cosine ranking                                                            | Retrieval relevance, not truth             |
+| Gemini Flash-Lite REST           | Structured explanation from retrieved knowledge                                                               | Generated interpretation only              |
+| n8n verification graph           | Protected trigger, replay branch, source reads, aggregation, stage calls, discrepancy branch, response        | Orchestration; no model required           |
+| Companion Python service         | Bounded parsing, normalization, grouping, reference comparison and storage                                    | Deterministic business rules               |
+| n8n AI Agent + Gemini Chat Model | Interpret an investigation request; choose bounded evidence/reference tools; produce a structured explanation | Advisory only                              |
+| SQLite / separate PostgreSQL     | Owner-scoped history, executions, reviews, idempotency reservations, budgets                                  | Persisted audit state                      |
 
 The Python service has no endpoint that executes the complete workflow. n8n makes real Calendar and Web HTTP requests, invokes the Mailtrap read adapter, captures individual outcomes, chooses the repeated-request/discrepancy branches, aggregates data, invokes each stage separately and persists the result. Its node execution data proves those transitions occurred.
 

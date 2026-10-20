@@ -28,7 +28,10 @@ if config.get("GEMINI_API_KEY"):
             "id": "eventops-gemini",
             "name": "EventOps Gemini",
             "type": "googlePalmApi",
-            "data": {"host": "https://generativelanguage.googleapis.com", "apiKey": config["GEMINI_API_KEY"]},
+            "data": {
+                "host": "https://generativelanguage.googleapis.com",
+                "apiKey": config["GEMINI_API_KEY"],
+            },
         }
     )
 folder = ROOT / "n8n/.local"

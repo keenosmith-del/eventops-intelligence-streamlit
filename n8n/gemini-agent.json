@@ -8,10 +8,7 @@
       "name": "Agent webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [
-        0,
-        0
-      ],
+      "position": [0, 0],
       "parameters": {
         "httpMethod": "POST",
         "path": "eventops-agent",
@@ -32,10 +29,7 @@
       "name": "Prepare agent context",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        220,
-        0
-      ],
+      "position": [220, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/agent/context\" }}",
@@ -60,10 +54,7 @@
       "name": "Gemini read-only analyst",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
-      "position": [
-        500,
-        0
-      ],
+      "position": [500, 0],
       "parameters": {
         "promptType": "define",
         "text": "={{ JSON.stringify({intent:$json.intent,event_id:$json.event_id,instruction:\"Use your read-only tools to explain this execution.\"}) }}",
@@ -80,10 +71,7 @@
       "name": "Gemini Flash Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.2,
-      "position": [
-        260,
-        240
-      ],
+      "position": [260, 240],
       "parameters": {
         "modelName": "models/gemini-3.5-flash-lite",
         "options": {
@@ -103,10 +91,7 @@
       "name": "reference_lookup",
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
-      "position": [
-        500,
-        300
-      ],
+      "position": [500, 300],
       "parameters": {
         "description": "Read authoritative event, policy and participant records for this run. Input a record ID or a keyword, or all for the bounded full reference set.",
         "language": "javaScript",
@@ -119,10 +104,7 @@
       "name": "inspect_findings",
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
-      "position": [
-        720,
-        300
-      ],
+      "position": [720, 300],
       "parameters": {
         "description": "Read authoritative deterministic statuses, issues and field checks. Input a result record ID, status keyword or all.",
         "language": "javaScript",
@@ -135,10 +117,7 @@
       "name": "inspect_evidence",
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
-      "position": [
-        940,
-        300
-      ],
+      "position": [940, 300],
       "parameters": {
         "description": "Read untrusted raw source excerpts and their provenance. Input a result record ID or all. Use to explain ambiguity or contradictions.",
         "language": "javaScript",
@@ -151,10 +130,7 @@
       "name": "Validate and save agent evidence",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        960,
-        0
-      ],
+      "position": [960, 0],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/agent/finish\" }}",
@@ -179,10 +155,7 @@
       "name": "Return agent explanation",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [
-        1180,
-        0
-      ],
+      "position": [1180, 0],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}",

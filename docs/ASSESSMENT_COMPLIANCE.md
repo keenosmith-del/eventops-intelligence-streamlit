@@ -2,57 +2,57 @@
 
 Status terms: **Verified locally** means executed here. **Implemented/tested** may use controlled transports for failure cases. **Pending external deployment** is incomplete, not a pass. The original separate assessment brief was unavailable; this matrix follows the user's full pasted specification and added priorities. No external assessment score or 100% compliance certification is claimed.
 
-| Requirement | Result | Evidence / boundary |
-| --- | --- | --- |
-| Independent Streamlit product | Verified locally | `app.py`, seven native pages, actual browser journey |
-| Isolation from original app/database/deployment | Verified locally | Independent directory/config/store/workflows; original Git state remains clean |
-| Three structured knowledge documents | Verified locally | 3 events, 9 policies, 7 synthetic directory records |
-| Validation, normalization, provenance and stable IDs | Verified locally | `knowledge.py`, dataset validation tests, source selectors |
-| Actual local semantic embeddings | Verified locally | FastEmbed BGE-small, 19×384 vectors; `live-rag.json` |
-| Reproducible, duplicate-free, compatible index | Verified locally | Fingerprinted atomic snapshot, corrupt-index rebuild tests |
-| Semantic retrieval and configurable depth | Verified locally | Actual cosine search and paraphrase tests |
-| Event IDs, filters and query transformation | Verified locally | Normalized event formats, event/category scopes, global policies |
-| Contextual follow-ups | Verified locally | RAG evidence and browser cancellation follow-up |
-| Grounded model answers with record citations | Verified locally | Gemini provider response IDs and `POL-003` / `POL-002` answers |
-| Missing information / insufficient sources | Implemented/tested | No-hit behavior, model refusal contract; broader entailment evaluation remains limited |
-| Provider failures and quota handling | Implemented/tested | Mock HTTP 401/429/500, schema, budget tests; no invented generated fallback |
-| Stored questions, plans, matches and responses | Verified locally | Store and history tests; actual local records |
-| Knowledge inspection and evidence presentation | Verified locally | Browser and native page checks |
-| Real n8n orchestration | Verified locally | Imported/published workflows and real production execution IDs |
-| Calendar integration | Verified locally | Actual Office Holidays HTTPS ICS via n8n HTTP Request |
-| Email integration | Verified locally | Three real GET-read Mailtrap messages, explicitly synthetic |
-| Web integration | Verified locally | Actual Nager.Date HTTPS JSON via n8n HTTP Request |
-| Autonomous trigger-to-results processing | Verified locally | Single Streamlit trigger; complete source/stage/persistence graph |
-| Actual n8n source connections/branches/transforms | Verified locally | HTTP Request, Code, If, protected Webhook/Respond nodes; narrow Python stage contracts |
-| Extraction from semi-structured registration text | Verified locally | Synthetic positive/duplicate/inactive-conflict source messages; labelled fields/HTML/ICS/JSON tests |
-| LLM-assisted ambiguous extraction | Optional, not implemented | Conservative extraction flags ambiguity; model analyst explains discrepancies without guessing identity |
-| Consistent IDs/email/whitespace/Unicode/dates | Implemented/tested | Normalization tests; missing timezone flagged |
-| Exact duplicates and conflicting values | Verified locally + tests | Live duplicate, retained evidence/inputs; conflicting field tests |
-| Potential related records kept separate | Implemented/tested | Similar-name/different-email test |
-| Authoritative identity/active/registration checks | Verified locally | Ada verified; inactive/name-conflict Lindi rejected |
-| Supplied event schedule/title/location checks | Implemented/tested | Contradictory venue/date tests; event-observation checks |
-| Workflow success distinct from record verification | Verified locally | Completed workflow includes rejected/incomplete records |
-| Filtered results, field checks and raw evidence | Verified locally | Actual browser inspection |
-| All-record and verified-only CSV | Verified locally | Both UI actions exercised; generated CSV contents validated |
-| Saved history and reopening execution | Verified locally | Persisted local runs; browser history/reopen journey |
-| Human review without status promotion | Implemented/tested | Separate review status/append-only notes; deterministic record status unchanged |
-| Error scenarios | Implemented/tested | Timeout, rate limit, bad schema, missing config/reference, auth, model failure, conflicts, uncertain delivery |
-| Authentication on production webhooks | Verified locally | Missing/wrong credentials rejected; `live-webhook-security.json` |
-| Repeated webhook requests | Verified locally | Real replay returns original execution ID; atomic reservation tests |
-| Interrupted workflow transparency | Implemented/tested | Delivery-unknown client and visible running state; no automatic recovery claim |
-| Genuine Gemini AI Agent node | Verified locally | Actual n8n AI Agent + Gemini Chat Model; executions 3, 8 and 12, separate evidence |
-| Model-chosen read-only tool interaction | Verified locally | Reference/findings/evidence tool calls saved in real agent results |
-| AI reasoning, evidence, tool calls and verification distinguished | Verified locally | Separate agent panel, retrieved evidence, tools, deterministic field authority |
-| Structured agent output, permissions and bounded execution | Implemented/tested + live | Allowed tools only, actual-observation citations, 5 iterations, 120 seconds, 5 runs/day |
-| Prompt injection containment | Implemented/tested | Untrusted instructions; no write/network tools; authoritative rules remain independent |
-| Controlled data before Gemini analysis | Implemented/tested | Only labelled synthetic example.com emails accepted by demonstration guard |
-| Persistence for local operation | Verified locally | Independent SQLite store and owner-scoped histories |
-| Dedicated managed DB support | Implemented, externally unverified | SQLAlchemy PostgreSQL/psycopg URL; no managed DB provisioned/tested |
-| Independent public web deployment | Pending external deployment | Requires new repository publication approval and independent hosted n8n/processor/durable DB |
-| Current deployment guidance | Prepared | Official Streamlit, Gemini and n8n documentation checked; `DEPLOYMENT.md` |
-| Reproducible local n8n setup | Verified locally | Isolated Docker instance/volume, version 2.42.6, import/publish/restart commands |
-| Full Linux Docker app build | Prepared, not executed | Additional Dockerfile/full-compose option; tested topology uses host Python + n8n Docker |
-| Architecture, comparison and interview materials | Delivered | All requested documents and 5–7-minute companion script |
+| Requirement                                                       | Result                             | Evidence / boundary                                                                                           |
+| ----------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Independent Streamlit product                                     | Verified locally                   | `app.py`, seven native pages, actual browser journey                                                          |
+| Isolation from original app/database/deployment                   | Verified locally                   | Independent directory/config/store/workflows; original Git state remains clean                                |
+| Three structured knowledge documents                              | Verified locally                   | 3 events, 9 policies, 7 synthetic directory records                                                           |
+| Validation, normalization, provenance and stable IDs              | Verified locally                   | `knowledge.py`, dataset validation tests, source selectors                                                    |
+| Actual local semantic embeddings                                  | Verified locally                   | FastEmbed BGE-small, 19×384 vectors; `live-rag.json`                                                          |
+| Reproducible, duplicate-free, compatible index                    | Verified locally                   | Fingerprinted atomic snapshot, corrupt-index rebuild tests                                                    |
+| Semantic retrieval and configurable depth                         | Verified locally                   | Actual cosine search and paraphrase tests                                                                     |
+| Event IDs, filters and query transformation                       | Verified locally                   | Normalized event formats, event/category scopes, global policies                                              |
+| Contextual follow-ups                                             | Verified locally                   | RAG evidence and browser cancellation follow-up                                                               |
+| Grounded model answers with record citations                      | Verified locally                   | Gemini provider response IDs and `POL-003` / `POL-002` answers                                                |
+| Missing information / insufficient sources                        | Implemented/tested                 | No-hit behavior, model refusal contract; broader entailment evaluation remains limited                        |
+| Provider failures and quota handling                              | Implemented/tested                 | Mock HTTP 401/429/500, schema, budget tests; no invented generated fallback                                   |
+| Stored questions, plans, matches and responses                    | Verified locally                   | Store and history tests; actual local records                                                                 |
+| Knowledge inspection and evidence presentation                    | Verified locally                   | Browser and native page checks                                                                                |
+| Real n8n orchestration                                            | Verified locally                   | Imported/published workflows and real production execution IDs                                                |
+| Calendar integration                                              | Verified locally                   | Actual Office Holidays HTTPS ICS via n8n HTTP Request                                                         |
+| Email integration                                                 | Verified locally                   | Three real GET-read Mailtrap messages, explicitly synthetic                                                   |
+| Web integration                                                   | Verified locally                   | Actual Nager.Date HTTPS JSON via n8n HTTP Request                                                             |
+| Autonomous trigger-to-results processing                          | Verified locally                   | Single Streamlit trigger; complete source/stage/persistence graph                                             |
+| Actual n8n source connections/branches/transforms                 | Verified locally                   | HTTP Request, Code, If, protected Webhook/Respond nodes; narrow Python stage contracts                        |
+| Extraction from semi-structured registration text                 | Verified locally                   | Synthetic positive/duplicate/inactive-conflict source messages; labelled fields/HTML/ICS/JSON tests           |
+| LLM-assisted ambiguous extraction                                 | Optional, not implemented          | Conservative extraction flags ambiguity; model analyst explains discrepancies without guessing identity       |
+| Consistent IDs/email/whitespace/Unicode/dates                     | Implemented/tested                 | Normalization tests; missing timezone flagged                                                                 |
+| Exact duplicates and conflicting values                           | Verified locally + tests           | Live duplicate, retained evidence/inputs; conflicting field tests                                             |
+| Potential related records kept separate                           | Implemented/tested                 | Similar-name/different-email test                                                                             |
+| Authoritative identity/active/registration checks                 | Verified locally                   | Ada verified; inactive/name-conflict Lindi rejected                                                           |
+| Supplied event schedule/title/location checks                     | Implemented/tested                 | Contradictory venue/date tests; event-observation checks                                                      |
+| Workflow success distinct from record verification                | Verified locally                   | Completed workflow includes rejected/incomplete records                                                       |
+| Filtered results, field checks and raw evidence                   | Verified locally                   | Actual browser inspection                                                                                     |
+| All-record and verified-only CSV                                  | Verified locally                   | Both UI actions exercised; generated CSV contents validated                                                   |
+| Saved history and reopening execution                             | Verified locally                   | Persisted local runs; browser history/reopen journey                                                          |
+| Human review without status promotion                             | Implemented/tested                 | Separate review status/append-only notes; deterministic record status unchanged                               |
+| Error scenarios                                                   | Implemented/tested                 | Timeout, rate limit, bad schema, missing config/reference, auth, model failure, conflicts, uncertain delivery |
+| Authentication on production webhooks                             | Verified locally                   | Missing/wrong credentials rejected; `live-webhook-security.json`                                              |
+| Repeated webhook requests                                         | Verified locally                   | Real replay returns original execution ID; atomic reservation tests                                           |
+| Interrupted workflow transparency                                 | Implemented/tested                 | Delivery-unknown client and visible running state; no automatic recovery claim                                |
+| Genuine Gemini AI Agent node                                      | Verified locally                   | Actual n8n AI Agent + Gemini Chat Model; executions 3, 8 and 12, separate evidence                            |
+| Model-chosen read-only tool interaction                           | Verified locally                   | Reference/findings/evidence tool calls saved in real agent results                                            |
+| AI reasoning, evidence, tool calls and verification distinguished | Verified locally                   | Separate agent panel, retrieved evidence, tools, deterministic field authority                                |
+| Structured agent output, permissions and bounded execution        | Implemented/tested + live          | Allowed tools only, actual-observation citations, 5 iterations, 120 seconds, 5 runs/day                       |
+| Prompt injection containment                                      | Implemented/tested                 | Untrusted instructions; no write/network tools; authoritative rules remain independent                        |
+| Controlled data before Gemini analysis                            | Implemented/tested                 | Only labelled synthetic example.com emails accepted by demonstration guard                                    |
+| Persistence for local operation                                   | Verified locally                   | Independent SQLite store and owner-scoped histories                                                           |
+| Dedicated managed DB support                                      | Implemented, externally unverified | SQLAlchemy PostgreSQL/psycopg URL; no managed DB provisioned/tested                                           |
+| Independent public web deployment                                 | Pending external deployment        | Requires new repository publication approval and independent hosted n8n/processor/durable DB                  |
+| Current deployment guidance                                       | Prepared                           | Official Streamlit, Gemini and n8n documentation checked; `DEPLOYMENT.md`                                     |
+| Reproducible local n8n setup                                      | Verified locally                   | Isolated Docker instance/volume, version 2.42.6, import/publish/restart commands                              |
+| Full Linux Docker app build                                       | Prepared, not executed             | Additional Dockerfile/full-compose option; tested topology uses host Python + n8n Docker                      |
+| Architecture, comparison and interview materials                  | Delivered                          | All requested documents and 5–7-minute companion script                                                       |
 
 ## Important limits
 

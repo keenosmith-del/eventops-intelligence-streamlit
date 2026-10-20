@@ -34,7 +34,11 @@ class SemanticIndex:
                 self.vectors = None
         if self.vectors is None:
             self.vectors = np.asarray(
-                list(self.model.passage_embed([r["content"] for r in self.records], batch_size=4)),
+                list(
+                    self.model.passage_embed(
+                        [r["content"] for r in self.records], batch_size=4
+                    )
+                ),
                 dtype=np.float32,
             )
             self._validate(self.vectors)
@@ -55,15 +59,29 @@ class SemanticIndex:
         if not 1 <= depth <= 10:
             raise ValueError("Retrieval depth must be 1–10")
         with self.lock:
-            vector = np.asarray(list(self.model.query_embed(plan["normalized_query"]))[0], dtype=np.float32)
-        scores = self.vectors @ vector / (np.linalg.norm(self.vectors, axis=1) * np.linalg.norm(vector))
+            vector = np.asarray(
+                list(self.model.query_embed(plan["normalized_query"]))[0],
+                dtype=np.float32,
+            )
+        scores = (
+            self.vectors
+            @ vector
+            / (np.linalg.norm(self.vectors, axis=1) * np.linalg.norm(vector))
+        )
         eligible = []
         for i, record in enumerate(self.records):
-            if plan["event_id"] and plan["event_id"] not in record["scope"] and "ALL" not in record["scope"]:
+            if (
+                plan["event_id"]
+                and plan["event_id"] not in record["scope"]
+                and "ALL" not in record["scope"]
+            ):
                 continue
             if plan["kind"] and record["kind"] != plan["kind"]:
                 continue
-            if plan.get("category") and record["fields"].get("category") != plan["category"]:
+            if (
+                plan.get("category")
+                and record["fields"].get("category") != plan["category"]
+            ):
                 continue
             if float(scores[i]) >= 0.30:
                 eligible.append({**record, "similarity": round(float(scores[i]), 4)})
@@ -90,19 +108,30 @@ def interpret(question, previous_event=None):
         for r in load_documents():
             if r["kind"] == "event" and (
                 r["fields"]["title"].casefold() in query.casefold()
-                or re.search(r"\b" + re.escape(r["fields"]["title"].split()[-1]) + r"\b", query, re.I)
+                or re.search(
+                    r"\b" + re.escape(r["fields"]["title"].split()[-1]) + r"\b",
+                    query,
+                    re.I,
+                )
             ):
                 event_id = r["id"]
                 break
     lower = query.casefold()
     kind = (
         "policy"
-        if re.search(r"polic|check.in|cancel|transfer|recording|eligib|identification|rules", lower)
-        else "participant"
-        if re.search(r"participant|attendee|directory|registered|active", lower)
-        else "event"
-        if re.search(r"where|when|venue|capacity|start|schedule", lower)
-        else None
+        if re.search(
+            r"polic|check.in|cancel|transfer|recording|eligib|identification|rules",
+            lower,
+        )
+        else (
+            "participant"
+            if re.search(r"participant|attendee|directory|registered|active", lower)
+            else (
+                "event"
+                if re.search(r"where|when|venue|capacity|start|schedule", lower)
+                else None
+            )
+        )
     )
     category = (
         next(

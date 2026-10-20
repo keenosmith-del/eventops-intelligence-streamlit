@@ -28,23 +28,23 @@ Run `./scripts/start_local.sh` in another terminal. Do not reuse ports, database
 
 ## Verification graph
 
-| Important node | Work performed |
-| --- | --- |
-| Verification webhook | Production POST endpoint with Header Auth |
-| Validate and reserve request | Strict contract, known target event, atomic owner-scoped request ID |
-| Repeated request? | Real If branch returns saved state without repeating source calls |
-| Allowed source configuration | Loads server-controlled, HTTPS allowlisted sources |
-| Read Calendar / Read Web | Actual built-in HTTP Request nodes, 12-second request timeout, no redirects, full text response |
-| Capture outcome | Focused Code node interprets HTTP/network status; installed version returns text as `data` |
-| Read Email | HTTP call to a bounded read-only Mailtrap adapter that reads list/body API endpoints |
-| Extract Calendar / Email / Web | Separate parsing calls with source-specific outcome/error capture |
-| Aggregate source evidence | Code node combines the three real outputs and keeps all outcomes |
-| Normalize fields | Unicode/whitespace/email/ID/date normalization primitive |
-| Merge duplicates | Conservative grouping primitive preserving inputs/conflicts/provenance |
-| Deterministic verification | Authoritative event/directory checks, no model override |
-| Any discrepancies? | Real If branch to review-queue or all-checks-passed node |
-| Persist authoritative results | Reapplies verification; saves n8n execution ID, timestamps and all outcomes |
-| Return verification result | Respond to Webhook with actual persisted result |
+| Important node                 | Work performed                                                                                  |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- |
+| Verification webhook           | Production POST endpoint with Header Auth                                                       |
+| Validate and reserve request   | Strict contract, known target event, atomic owner-scoped request ID                             |
+| Repeated request?              | Real If branch returns saved state without repeating source calls                               |
+| Allowed source configuration   | Loads server-controlled, HTTPS allowlisted sources                                              |
+| Read Calendar / Read Web       | Actual built-in HTTP Request nodes, 12-second request timeout, no redirects, full text response |
+| Capture outcome                | Focused Code node interprets HTTP/network status; installed version returns text as `data`      |
+| Read Email                     | HTTP call to a bounded read-only Mailtrap adapter that reads list/body API endpoints            |
+| Extract Calendar / Email / Web | Separate parsing calls with source-specific outcome/error capture                               |
+| Aggregate source evidence      | Code node combines the three real outputs and keeps all outcomes                                |
+| Normalize fields               | Unicode/whitespace/email/ID/date normalization primitive                                        |
+| Merge duplicates               | Conservative grouping primitive preserving inputs/conflicts/provenance                          |
+| Deterministic verification     | Authoritative event/directory checks, no model override                                         |
+| Any discrepancies?             | Real If branch to review-queue or all-checks-passed node                                        |
+| Persist authoritative results  | Reapplies verification; saves n8n execution ID, timestamps and all outcomes                     |
+| Return verification result     | Respond to Webhook with actual persisted result                                                 |
 
 The processor does not run the whole sequence behind one endpoint. Python owns testable parsing/business rules; n8n owns the observable orchestration, actual Calendar/Web connections and conditional routing.
 
@@ -67,7 +67,12 @@ Output schema: `{intent: string, summary: string, evidence_ids: string[], limita
 Verification POST body:
 
 ```json
-{"owner":"0123456789abcdef0123456789abcdef0123456789abcdef","request_id":"00000000-0000-4000-8000-000000000001","event_id":"EVT-101","limit":3}
+{
+  "owner": "0123456789abcdef0123456789abcdef0123456789abcdef",
+  "request_id": "00000000-0000-4000-8000-000000000001",
+  "event_id": "EVT-101",
+  "limit": 3
+}
 ```
 
 Use a new request UUID for a new run. Reuse the **same** UUID to retrieve/reconcile the original run. The header is `X-EventOps-Webhook: <independent-token>`. Never put it in a URL or client-side browser script. This example is synthetic test data, not a real execution ID.
@@ -86,18 +91,18 @@ Mailtrap uses only the dedicated Email Testing inbox and GET requests to list me
 
 ## Failure behavior and troubleshooting
 
-| Symptom | Meaning / action |
-| --- | --- |
-| 401 at webhook | Missing/wrong Header Auth credential; verify independent webhook token |
-| 404 webhook | Workflow unpublished or running process not restarted after CLI publish |
-| Processor connection refused | Start the protected service; check Docker host routing/port 8766 |
-| Partial run | Inspect per-source HTTP/schema/unavailable error; other sources still processed |
-| HTTP 429 | Provider quota; no paid fallback, respect reset before another deliberate run |
-| Completed run, incomplete records | Public holidays lack authoritative event/participant identity; expected |
-| Empty inbox | Successful zero-message read; insert controlled data manually only if explicitly desired |
-| Running/uncertain after timeout | Inspect real n8n execution; do not generate a new request ID blindly |
-| Agent unavailable | Check Gemini credential/model/quota, output schema, tool traces and synthetic-data guard |
-| Invalid input | Service rejects strict schema/unknown target; workflow must not be reported completed |
+| Symptom                           | Meaning / action                                                                         |
+| --------------------------------- | ---------------------------------------------------------------------------------------- |
+| 401 at webhook                    | Missing/wrong Header Auth credential; verify independent webhook token                   |
+| 404 webhook                       | Workflow unpublished or running process not restarted after CLI publish                  |
+| Processor connection refused      | Start the protected service; check Docker host routing/port 8766                         |
+| Partial run                       | Inspect per-source HTTP/schema/unavailable error; other sources still processed          |
+| HTTP 429                          | Provider quota; no paid fallback, respect reset before another deliberate run            |
+| Completed run, incomplete records | Public holidays lack authoritative event/participant identity; expected                  |
+| Empty inbox                       | Successful zero-message read; insert controlled data manually only if explicitly desired |
+| Running/uncertain after timeout   | Inspect real n8n execution; do not generate a new request ID blindly                     |
+| Agent unavailable                 | Check Gemini credential/model/quota, output schema, tool traces and synthetic-data guard |
+| Invalid input                     | Service rejects strict schema/unknown target; workflow must not be reported completed    |
 
 The regression suite covers simulated timeouts, rate limits, auth errors, bad schemas, missing configuration/reference data, duplicates/conflicts and invalid model output. Live evidence is separately labelled; it does not imply every external failure condition was forced against the real providers.
 
