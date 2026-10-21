@@ -1,62 +1,45 @@
-# Architecture and data flow
+# Architecture and trust boundaries
 
-Event coordinators must reconcile schedules, registration messages, policies and directory identities. Automation reduces repetitive comparison; evidence and uncertainty must remain visible. This edition solves the same sample business problem as the original assessment with an independently operating internal tool.
+The public GitHub repository contains an independently operating companion to the submitted full-stack assessment. Public application hosting is still pending. Iteration 001 evidence is historical; current changes/evidence are under `docs/iterations/002`.
 
-## Components and authority
+| Component | Work | Authority |
+| --- | --- | --- |
+| Streamlit | Questions, scenario/run controls, reviews, exports, history | Presentation and advisory review annotations |
+| FastEmbed/NumPy | Local 384-dimensional embeddings, metadata filters, cosine ranking | Relevance, not truth or confidence |
+| Gemini RAG | Structured explanation from retrieved context | Generated interpretation with validated citations |
+| n8n verification | Protected trigger/replay, actual source HTTP reads, transforms/branches/checkpoints, stage orchestration | Workflow execution |
+| Python processing | Bounded parsing, normalization, duplicates and reference comparison | Deterministic verification rules |
+| n8n Gemini AI Agent | Select read-only reference/findings/evidence tools; structured investigation | Advisory explanation only |
+| SQLAlchemy store | Owner-scoped snapshots, revisions, reviews, reservations and investigation claims | Persisted audit state |
 
-| Component                        | Responsibility                                                                                                | Authority                                  |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Streamlit                        | Navigation, questions, run triggering, inspection, review notes, exports                                      | Presentation; cannot override verification |
-| FastEmbed + NumPy                | Local document/query embeddings and cosine ranking                                                            | Retrieval relevance, not truth             |
-| Gemini Flash-Lite REST           | Structured explanation from retrieved knowledge                                                               | Generated interpretation only              |
-| n8n verification graph           | Protected trigger, replay branch, source reads, aggregation, stage calls, discrepancy branch, response        | Orchestration; no model required           |
-| Companion Python service         | Bounded parsing, normalization, grouping, reference comparison and storage                                    | Deterministic business rules               |
-| n8n AI Agent + Gemini Chat Model | Interpret an investigation request; choose bounded evidence/reference tools; produce a structured explanation | Advisory only                              |
-| SQLite / separate PostgreSQL     | Owner-scoped history, executions, reviews, idempotency reservations, budgets                                  | Persisted audit state                      |
+## Retrieval
 
-The Python service has no endpoint that executes the complete workflow. n8n makes real Calendar and Web HTTP requests, invokes the Mailtrap read adapter, captures individual outcomes, chooses the repeated-request/discrepancy branches, aggregates data, invokes each stage separately and persists the result. Its node execution data proves those transitions occurred.
+Three original documents yield 19 stable event/policy/participant units. Complete structured rows keep identity and provenance together. BGE-small passage/query embeddings form a fingerprinted atomic NumPy index; corrupt or incompatible snapshots rebuild, with unique temporary files preventing concurrent write collisions. No vector service or original API is used.
 
-## RAG
+The v2 deterministic query plan resolves explicit IDs/titles before optional follow-up context, preserves global policy scope and permits cross-document evidence. Vague or multiple event references clarify rather than silently choosing. Cosine ranking/depth is inspectable and is never displayed as confidence. Supplementary mapped CSV/schema JSON knowledge is workspace-scoped, versioned and protected; it cannot replace identity verification references.
 
-`events.csv`, `policies.csv`, and `directory.json` become 19 complete retrieval records with stable IDs and field-level source selectors. Ingestion rejects malformed schedules, duplicate IDs/emails, unsupported directory versions and invalid associations. Each record includes normalized structured fields and human-readable text.
+Gemini receives only retrieved context. Schema, citation membership, conservative numeric/source mismatches and prohibited action claims are checked. Unsupported output is not displayed as a valid generated answer. Those checks and curated fact-alias tests are not a full proof of entailment. No additional evaluator-model call is added to ordinary questions. Questions, plans, hits, provider status and responses are persisted.
 
-FastEmbed's `BAAI/bge-small-en-v1.5` produces 384-dimensional passage/query vectors locally using ONNX. Nineteen float32 vectors occupy about 29 KB before metadata; this is a dataset calculation, not a measured application-memory claim. An `.npz` index stores the vectors and a content/model/format fingerprint. Incompatible or corrupt indexes rebuild. No pickle is loaded. No duplicate append operation exists: rebuilding replaces the entire snapshot atomically.
+## Source scenarios and orchestration
 
-The deterministic query plan normalizes whitespace/event IDs, resolves event titles and inherits event context for a supported follow-up. Metadata filtering respects global policies and participant event registrations. Cosine similarity ranks eligible records; a 0.30 floor and 1–10 result depth bound context. Similarity is not calibrated confidence.
+`external_reference` preserves real Office Holidays/Nager.Date reads. `assessment_event` uses a controlled synthetic event Calendar/Web service independently fetched over HTTP plus real Mailtrap GET reads. `provider_unavailable` makes the controlled Web source return HTTP 503. No frontend fabricates results and no provider adapter sends email. The local fixture is labelled local synthetic transport, never a live external event authority.
 
-Gemini receives the normalized query and retrieved record text only. The prompt treats all context as untrusted, requests refusal when unsupported, and asks for structured answer/citation IDs. Validation rejects unknown, duplicate or missing citations and incomplete output. Original question, transformed query, matches, response status, provider model/usage and answer are persisted. Citation membership validation does not prove every generated claim is entailed; human-readable evidence is always available.
+n8n owns the sequence: authenticated production webhook → strict atomic reservation/replay → backend-owned configuration → independent source reads/parsing → source checkpoints → aggregate → normalize → deduplicate → deterministic verification → discrepancy branch → guarded final persistence → response. There is no Python endpoint that secretly executes this graph. Read/parsing failures are isolated; stage/finalization failures leave an uncertain/incomplete execution rather than fabricated success.
 
-## Verification
+Source outcomes distinguish completed, completed-empty, failed, unavailable, timed out and partially processed. Final workflow status reflects all three outcomes. Record statuses are separate. Correct event observations may verify as event records; they are not participant registrations. All inputs/conflicts/raw excerpts and field-level provenance remain inspectable.
 
-1. Authenticate the production webhook.
-2. Validate target event, owner, record limit and request ID; atomically reserve the request.
-3. Return saved state for repeated requests, including a still-running state rather than initiating duplicate work.
-4. Read Calendar, Email and Web with independent outcome capture. Network failures and invalid schemas contribute failed outcomes while other sources continue.
-5. Parse ICS, bounded JSON and explicit registration labels. Retain source IDs, full bounded excerpts and raw fields.
-6. Normalize Unicode, whitespace, IDs, email casing and timezone-aware timestamps. Missing zones are flagged rather than guessed.
-7. Merge event/email duplicates conservatively. Keep every input, evidence reference and conflicting field value. Similar-name/different-email records are only marked potentially related.
-8. Compare event scope, directory email, active status, event registration, exact normalized name, optional participant ID, and supplied schedule/title/venue against reference records.
-9. Classify each record independently: verified, review required, rejected, incomplete. A workflow can complete while records are rejected or incomplete.
-10. Reapply deterministic verification at persistence, store actual n8n execution ID/outcomes/timestamps, return results and expose exports/history.
+## Execution state, concurrency and review
 
-Calendar/Web holiday observations lack event identity and therefore remain incomplete. Synthetic Mailtrap positives/duplicates and inactive-conflict messages provide the participant demonstration without fabricating real registrations.
+Request IDs bind owner, target, scenario and limits. Simultaneous requests reserve one run; others replay its in-progress/final state. Checkpoints bind actual n8n IDs and timestamps. Reconciliation uses persisted state and optional read-only owner-bound n8n metadata. Missing reservation means not observed, not proof of nondelivery. An old checkpoint means intervention; no queue, automatic replay or durable job recovery is claimed.
 
-## Optional genuine AI agent
+The existing object table is preserved with revision counters. Compare-and-swap updates prevent lost evidence; final results cannot be overwritten by a later replay. Migration versions are recorded and startup serialized/locked. Pooled connections, SQLite WAL/busy timeout and dedicated PostgreSQL support are explicit. Reviews update review state and append the reason/note/action/correction proposal atomically; source claims and authoritative statuses never change. Workspace capability holders are not identified employees.
 
-The second workflow uses `@n8n/n8n-nodes-langchain.agent` v3, the installed Gemini Chat Model integration v1.2, and three Code Tools v1.3. The model selects tool calls using a string query. `reference_lookup` searches only the target event's authoritative records; `inspect_findings` returns recorded deterministic findings; `inspect_evidence` returns the bounded source excerpts. None accepts URLs, SQL, scripts, credentials or write actions.
+## Genuine model-assisted investigation
 
-The agent sees user intent and event identity initially, then obtains records through tools. A five-iteration cap, 120-second workflow limit and five-run daily budget bound work. The demonstration service allows only explicitly labelled synthetic example.com email evidence. Output requires interpreted intent, summary, evidence IDs and limitations. Unknown tools/citations, invalid JSON, model failures, and outputs without actual tool calls yield unavailable. Private chain-of-thought is neither requested nor stored in application evidence; observable tool arguments/results are stored.
+The actual n8n AI Agent connects to Gemini Chat Model and three read-only tools. Initial user intent is interpreted by the model; tools expose only one permitted snapshot. They accept bounded search strings and no URL, SQL, code, secrets or write action. Prompts treat all source material as untrusted. Five iterations, a workflow deadline, output bounds and daily budgets constrain work.
 
-A model explanation cannot write participant state or verification statuses. Human review updates a separate review status and append-only note record; it never promotes a record to verified.
+The output contract includes intent, summary, evidence-linked findings/conflicts, advisory review actions, uncertainties and limitations. Server validation compares actual tool-returned records with permitted snapshot records and rejects unknown/nested unsupported citations. Repeated identical investigations reuse an atomic owner/run/intent/evidence-hash claim; changed evidence invalidates reuse. A model-produced identifier error was actually observed and rejected in execution 24, separately from successful agent executions.
 
-## Persistence and ownership
+## Deployment boundary
 
-All objects use independent companion tables. A 192-bit workspace capability scopes reads and updates; the app does not cache per-user history. Only the public synthetic index/model is process-cached. Save the workspace key to restore a session. The app password is a demonstration gate, not a user identity provider.
-
-SQLite supports isolated local operation. The same SQLAlchemy store accepts an independently provisioned PostgreSQL/psycopg URL. Hosted local files are ephemeral: the vector index may rebuild, but histories require durable storage. PostgreSQL support is implemented, not live-tested against a managed account.
-
-## Reliability and commercial evolution
-
-Source and model requests have explicit timeouts and no application-level retries. n8n source failures are represented per source; unavailable configuration is distinct from empty inbox. A delivery timeout leaves an uncertain request record; reconcile the persisted run before retrying the same request ID. An interrupted run remains running/uncertain and is never reported as complete. This edition does not implement automatic stale-run recovery or background-job polling.
-
-For commercial multi-user service: add OIDC identities, tenant membership and row-level authorization; per-user/tenant budgets; durable queues and cancellation; monitored worker health; managed PostgreSQL migrations/backups; managed n8n external runners; deployment TLS and private networking; retention/deletion controls; redaction and a data-processing agreement; claim-level grounding evaluation; and broader format/date/language extraction coverage. Do not infer these capabilities from the demonstration password or a successful local run.
+The full Linux local topology uses non-root Python services, internal PostgreSQL and scenario service, private container networking, health checks, memory limits and separate volumes. Only loopback development ports are published. n8n node environment access is blocked; credentials are separate encrypted objects. Hosted preparation adds an HTTPS gateway that exposes only production webhook paths and keeps the processor/editor private. No hosted verification has occurred. Commercial identity/tenancy, queues, operational backups/retention and external n8n runners remain further work.

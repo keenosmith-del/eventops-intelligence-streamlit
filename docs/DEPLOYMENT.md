@@ -1,64 +1,46 @@
-# Deployment
+# Deployment readiness
 
-## Observed status
+The repository is publicly available on GitHub. Iteration 001 acceptance occurred locally before publication. Iteration 002 develops and validates local deployment preparation only: **no public deployment or push was performed**.
 
-Validated locally on macOS/Python 3.12 with Streamlit 1.66.0, FastEmbed 0.7.4 and n8n 2.42.6. Streamlit runs at `http://127.0.0.1:8501`; isolated n8n runs at `http://localhost:5679`; the protected processor listens on port 8766. These are local URLs, not a public deployment.
+## Tested local architecture
 
-No GitHub push, Render update, public exposure, paid service, or managed database provisioning has occurred. The original EventOps deployment is untouched.
+Root `compose.yaml`: Streamlit at 8502, protected processor at loopback 8767, n8n editor/webhooks at loopback 5680, internal PostgreSQL and independent controlled HTTP source. Python image is built from pinned dependencies under Python 3.12.15; app/processor/source run as UID 1000. Health checks and dependencies enforce readiness; memory limits are explicit. Separate `iteration002_*` volumes preserve old companion data.
 
-## Repeatable local environment
+Use README's setup sequence and `scripts/setup_n8n.sh`. Generation remains opt-in; provider keys belong only to the services that need them. Workflows embed a trusted processor address instead of reading environment variables; node environment access is blocked. Local HTTP/cookie settings are for loopback development only.
 
-```bash
-python3.12 -m venv .venv
-.venv/bin/python -m pip install -r requirements.lock.txt
-.venv/bin/python scripts/configure_local.py
-# Set only this application's Gemini and sandbox Mailtrap settings in .env.
-.venv/bin/python scripts/index_knowledge.py
-```
+Migrations are additive and versioned (`python -m scripts.migrate`). SQLite uses WAL/busy timeout and serialized migration initialization; PostgreSQL uses transaction-scoped advisory locking. Back up before upgrading. Never reset/reseed old data or reuse the original assessment's database. Histories/reviews are retained; approve retention/backups before real deployment.
 
-Follow the import/publish procedure in [n8n operation](../n8n/README.md), then `./scripts/start_local.sh`. Stop the script to stop Streamlit and its processor; stop the isolated workflow engine with:
+## Hosting options
 
-```bash
-docker compose --env-file .env -f n8n/compose.yaml stop
-```
+| Option | Benefit | Operational cost/constraint |
+| --- | --- | --- |
+| Community Cloud + separately hosted n8n/processor/PostgreSQL | Easy Streamlit release flow | Three-service integration, cross-provider reachability, model cold starts, durable DB still required |
+| One container provider, separate app/processor/n8n services + managed DB | Shared region/private networking, simpler secret/operations ownership | Multiple service allocations; persistent n8n data and realistic compute budget |
+| Private container host running the full stack + managed DB | Closest to tested Compose topology, precise network/gateway control | Host patching/backups/TLS/monitoring become your responsibility |
+| App + processor in one supervised container, separate n8n/DB | Fewer Python compute allocations | Requires a supported private secondary listener and reviewed process supervisor; not assumed from a free web tier |
 
-The separate n8n volume preserves workflows, encrypted credentials and local execution history. Back up `.env` and this volume securely; changing the encryption key can make saved credentials unreadable. Do not use `down -v` unless you intend to remove this companion's local n8n data.
+Recommendation: one container provider/private network with dedicated PostgreSQL, or a reviewed private container host matching Compose. Prefer predictable capacity over a fragile chain of unrelated free services. Consolidating Python processes can be evaluated later if platform port/process guarantees and operating budget justify it; it was not needed to validate this iteration.
 
-The ignored `.env` contains independent webhook/service/encryption tokens. The helper can copy only Gemini/Mailtrap settings from an expressly approved file; it excludes all original database/deployment settings. After credential import, delete `n8n/.local/credentials.json`.
+Current official references checked for preparation:
 
-## Full Docker topology
+- [Streamlit deployment](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy) and [secrets](https://docs.streamlit.io/deploy/concepts/secrets): configure app entrypoint/dependencies and server secrets. Community Cloud does not host companion n8n.
+- [Render private networking](https://render.com/docs/private-network): same-region services can communicate privately; free web services cannot receive private requests. Do not assume an arbitrary second private listener works on a free app.
+- [Render persistent disks](https://render.com/docs/disks): persistent disks require an eligible paid service. Review the [pricing page](https://render.com/pricing) for actual compute/storage allocations.
+- [n8n security settings](https://docs.n8n.io/hosting/configuration/environment-variables/security/): node environment access can be blocked, and production cookies require HTTPS.
 
-The root `compose.yaml` and `Dockerfile` offer app, processor and n8n on a private compose network with separate storage volumes. This is an additional deployment option; the Linux image build/full-compose runtime was not executed during acceptance. The host Python + isolated n8n topology is the one actually tested.
+Exact current prices/account entitlements could not be established reliably from the accessible pricing content, so no monthly total or free entitlement is invented. Budget app memory, processor, n8n, DB/storage, backups, egress and domain costs separately, using the recorded local sample as a sizing observation rather than a hosted guarantee.
 
-```bash
-docker compose --env-file .env up --build -d
-```
+## Precise next-phase checklist — do not execute yet
 
-Ports for this alternative: Streamlit 8502, n8n 5680. Import/publish using `docker compose exec -T n8n ...` instead of the development compose path. The app's explicit `EVENTOPS_LOCAL_COMPOSE=true` permits only the named `n8n` private host over HTTP. Never set this flag for an internet-facing arbitrary HTTP destination.
+1. Approve provider, region, services, domain and spending limit; review access to synthetic versus real data.
+2. Publish the reviewed iteration only after push approval. No existing Render service should be touched.
+3. Provision a **new** dedicated managed PostgreSQL role/database with TLS. Apply additive migrations and test backup restoration.
+4. Host app, processor and n8n with private networking. Keep processor and n8n editor inaccessible publicly; use SSH/VPN for editor administration.
+5. Configure demo access password or proper identity/tenant controls, independent tokens/encryption key, provider budgets and retention.
+6. Generate workflows with the approved processor URL. Import/publish through the protected editor/CLI; delete temporary plaintext credential imports.
+7. Configure publicly reachable HTTPS production webhooks. The prepared gateway permits only those two paths; never expose the editor through it.
+8. Provide an approved controlled HTTPS event source if required. Do not relabel the local synthetic service as a hosted third-party source.
+9. Validate model cold start, memory, source bounds, auth, all scenarios, agent citations/tools, exports, reviews/history and restart/reconciliation in the target environment.
+10. Record actual deployment revision/URL and observed hosted CI run. Until then label hosted status pending.
 
-## Streamlit Community Cloud
-
-Official requirements checked 20 October 2026:
-
-- [Deployment flow](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy): choose a repository, branch and entrypoint; select a supported Python version.
-- [Dependencies](https://docs.streamlit.io/deploy/concepts/dependencies): provide requirements at the appropriate project location.
-- [Secrets management](https://docs.streamlit.io/deploy/concepts/secrets): configure secrets outside the repository.
-
-Concrete publishing sequence, requiring the owner's repository/hosting approval:
-
-1. Review and publish this independent project to a new repository. Do not push the original repository or expose `.env`, `storage`, `.streamlit/secrets.toml` or the ignored n8n credential file.
-2. Provision a separate durable PostgreSQL database. Use only its `postgresql+psycopg://...` URL, TLS and a dedicated restricted account. Never reuse the v.01 database. The application creates its own `companion_objects` table; commercial migrations/backups are a separate operational task.
-3. Host the processor service and n8n independently on private networking. n8n needs `EVENTOPS_PROCESSOR_URL` pointing to that processor. Keep header-authenticated processor endpoints private. Protect the n8n editor with its owner account and expose only necessary production webhooks through HTTPS.
-4. Import the workflows and create credentials with the same referenced names/IDs or rebind them in the editor. Set an independent n8n encryption key. Publish both workflows; perform authenticated and unauthenticated checks.
-5. In Community Cloud choose `app.py`, Python 3.12, and this repository's `requirements.txt`. `requirements.lock.txt` records the actually tested environment; use those versions for deployment reproducibility if desired by replacing requirements with the reviewed lock contents.
-6. Add secrets as top-level values: `PUBLIC_DEMO="true"`, `APP_PASSWORD`, independent service/webhook tokens, dedicated `EVENTOPS_DATABASE_URL`, Gemini configuration and hosted HTTPS `N8N_WEBHOOK_URL` / `N8N_AGENT_URL`. Mailtrap credentials belong to the processor, not the browser. Never configure a hosted app to call localhost.
-7. Ensure the FastEmbed cache path is writable, e.g. `FASTEMBED_CACHE_PATH="/tmp/eventops-models"`. The index is rebuildable; cloud model download failure is shown honestly.
-8. Run the complete browser journey, confirm all actual source outcomes and a Gemini tool-using agent execution, then record the observed URL and deployment revision.
-
-The current model/index strategy avoids a separate vector database. Hosted RAM/cold-start behavior must be measured on the target platform; local tests do not establish Community Cloud resource headroom. Histories on an ephemeral cloud filesystem are not durable.
-
-## Public operation boundaries
-
-Set the application password, use HTTPS, restrict shared access to synthetic data, establish connector data permissions, set retention and budgets, and monitor failures. The demo's random workspace key is a bearer capability, not commercial account/tenant identity. For real personal data, replace this model with proper authentication and tenant authorization before deployment.
-
-Unfinished runs are left visibly running/uncertain and never falsely marked completed. Investigate in n8n, then reconcile the request ID. There is no automatic worker restart/recovery mechanism in this version.
+`deploy/compose.hosted.yaml`, `deploy/Caddyfile` and `deploy/README.md` are prepared configuration, not hosted-verified artifacts. Commercial operation additionally needs proper identities/tenancy, monitored recovery/queues, external n8n runners, tested backups and retention policy.

@@ -1,0 +1,63 @@
+{
+  "environment": "Local Docker Linux ARM64; one observation, not a hosted load benchmark",
+  "restart_preserved_all_object_payloads": true,
+  "before": {
+    "objects": 44,
+    "reviews": 1,
+    "sha256": "93ac469bb7136d8e4eb1a6cd867ba564bcdbfd11f0284b5594e987f21a69ed8e"
+  },
+  "after": {
+    "objects": 44,
+    "reviews": 1,
+    "sha256": "93ac469bb7136d8e4eb1a6cd867ba564bcdbfd11f0284b5594e987f21a69ed8e"
+  },
+  "services": [
+    {
+      "service": "app",
+      "health": "healthy"
+    },
+    {
+      "service": "database",
+      "health": "healthy"
+    },
+    {
+      "service": "n8n",
+      "health": "healthy"
+    },
+    {
+      "service": "processor",
+      "health": "healthy"
+    },
+    {
+      "service": "scenario",
+      "health": "healthy"
+    }
+  ],
+  "resource_sample": [
+    {
+      "Name": "eventops-companion-full-app-1",
+      "MemUsage": "51.59MiB / 1GiB",
+      "CPUPerc": "17.28%"
+    },
+    {
+      "Name": "eventops-companion-full-processor-1",
+      "MemUsage": "49.55MiB / 1GiB",
+      "CPUPerc": "0.17%"
+    },
+    {
+      "Name": "eventops-companion-full-scenario-1",
+      "MemUsage": "14.62MiB / 128MiB",
+      "CPUPerc": "12.97%"
+    },
+    {
+      "Name": "eventops-companion-full-n8n-1",
+      "MemUsage": "568.9MiB / 1.5GiB",
+      "CPUPerc": "0.50%"
+    },
+    {
+      "Name": "eventops-companion-full-database-1",
+      "MemUsage": "19.91MiB / 512MiB",
+      "CPUPerc": "0.03%"
+    }
+  ]
+}

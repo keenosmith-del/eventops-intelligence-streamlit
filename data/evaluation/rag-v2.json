@@ -1,0 +1,555 @@
+{
+  "schema_version": 1,
+  "dataset_version": 2,
+  "cases": [
+    {
+      "id": "RAG2-001",
+      "query": "Where is EVT-101 held?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-101"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Cape Town Convention Centre"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-002",
+      "query": "Check-in rules for EVT 101",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-003"
+      ],
+      "supported_fact_aliases": [
+        [
+          "08:45"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-003",
+      "query": "And what are its check-in rules?",
+      "prior_context": "EVT-101",
+      "expected_source_ids": [
+        "POL-003"
+      ],
+      "supported_fact_aliases": [
+        [
+          "08:45"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-004",
+      "query": "Where is EVT-102 held?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-102"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Sandton Convention Centre"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-005",
+      "query": "Check-in rules for EVT 102",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-005"
+      ],
+      "supported_fact_aliases": [
+        [
+          "09:15"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-006",
+      "query": "And what are its check-in rules?",
+      "prior_context": "EVT-102",
+      "expected_source_ids": [
+        "POL-005"
+      ],
+      "supported_fact_aliases": [
+        [
+          "09:15"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-007",
+      "query": "Where is EVT-103 held?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-103"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Century City Conference Centre"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-008",
+      "query": "Check-in rules for EVT 103",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-007"
+      ],
+      "supported_fact_aliases": [
+        [
+          "08:45"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-009",
+      "query": "And what are its check-in rules?",
+      "prior_context": "EVT-103",
+      "expected_source_ids": [
+        "POL-007"
+      ],
+      "supported_fact_aliases": [
+        [
+          "08:45"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-010",
+      "query": "How soon must I cancel my registration?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-002"
+      ],
+      "supported_fact_aliases": [
+        [
+          "48"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-011",
+      "query": "What photographic identification do attendees need?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-001"
+      ],
+      "supported_fact_aliases": [
+        [
+          "photographic",
+          "photo"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-012",
+      "query": "Cancellation policy for EVT-103",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-002"
+      ],
+      "supported_fact_aliases": [
+        [
+          "48"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-013",
+      "query": "Can a confirmation email establish eligibility?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-009"
+      ],
+      "supported_fact_aliases": [
+        [
+          "alone",
+          "does not"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-014",
+      "query": "What is the recording rule for EVT-103?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-008"
+      ],
+      "supported_fact_aliases": [
+        [
+          "approval"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-015",
+      "query": "What is the transfer policy for EVT-102?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "POL-006"
+      ],
+      "supported_fact_aliases": [
+        [
+          "24"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-016",
+      "query": "Is Lindi Mokoena active?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "P-003"
+      ],
+      "supported_fact_aliases": [
+        [
+          "inactive"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-017",
+      "query": "Who is Ada Mensah?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "P-001"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Meridian"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-018",
+      "query": "Where is the Sustainable Retail Forum?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-102"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Sandton"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-019",
+      "query": "What is the capacity of EVT-103?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-103"
+      ],
+      "supported_fact_aliases": [
+        [
+          "80"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-020",
+      "query": "Where is the Logistics Innovation Briefing?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-103"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Century City"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-021",
+      "query": "How many people can attend the summit?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-101"
+      ],
+      "supported_fact_aliases": [
+        [
+          "150"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-022",
+      "query": "Where is the summit and what are its check-in rules?",
+      "prior_context": null,
+      "expected_source_ids": [
+        "EVT-101",
+        "POL-003"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Cape Town"
+        ],
+        [
+          "08:45"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-023",
+      "query": "Where is EVT-102?",
+      "prior_context": "EVT-101",
+      "expected_source_ids": [
+        "EVT-102"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Sandton"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-024",
+      "query": "And how early must I cancel it?",
+      "prior_context": "EVT-101",
+      "expected_source_ids": [
+        "POL-002"
+      ],
+      "supported_fact_aliases": [
+        [
+          "48"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-025",
+      "query": "Where is the Sustainable Retail Forum?",
+      "prior_context": "EVT-101",
+      "expected_source_ids": [
+        "EVT-102"
+      ],
+      "supported_fact_aliases": [
+        [
+          "Sandton"
+        ]
+      ],
+      "expected_behavior": "answer",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-026",
+      "query": "Is it okay?",
+      "prior_context": "EVT-101",
+      "expected_source_ids": [],
+      "supported_fact_aliases": [],
+      "expected_behavior": "clarify",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-027",
+      "query": "What about its check-in rules?",
+      "prior_context": [
+        "EVT-101",
+        "EVT-102"
+      ],
+      "expected_source_ids": [],
+      "supported_fact_aliases": [],
+      "expected_behavior": "clarify",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-028",
+      "query": "Compare EVT-101 and EVT-102",
+      "prior_context": null,
+      "expected_source_ids": [],
+      "supported_fact_aliases": [],
+      "expected_behavior": "clarify",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-029",
+      "query": "Is she active?",
+      "prior_context": "EVT-101",
+      "expected_source_ids": [],
+      "supported_fact_aliases": [],
+      "expected_behavior": "clarify",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    },
+    {
+      "id": "RAG2-030",
+      "query": "Where is EVT-999?",
+      "prior_context": null,
+      "expected_source_ids": [],
+      "supported_fact_aliases": [],
+      "expected_behavior": "abstain",
+      "unsupported_claim_patterns": [
+        "free parking",
+        "guaranteed admission",
+        "cancellation fee of"
+      ]
+    }
+  ]
+}

@@ -8,25 +8,24 @@ import secrets
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(
-    page_title="EventOps Intelligence", page_icon=":material/hub:", layout="wide"
-)
+st.set_page_config(page_title="EventOps Intelligence", page_icon=":material/hub:", layout="wide")
 # Streamlit deployment secrets populate server settings before application imports.
 try:
     for key, value in st.secrets.items():
         if isinstance(value, (str, int, bool)):
-            os.environ.setdefault(
-                key, str(value).lower() if isinstance(value, bool) else str(value)
-            )
+            os.environ.setdefault(key, str(value).lower() if isinstance(value, bool) else str(value))
 except (FileNotFoundError, st.errors.StreamlitSecretNotFoundError):
     pass
 
 from eventops.client import explain, trigger
 from eventops.config import ROOT, setting
-from eventops.knowledge import load_documents
+from eventops.knowledge import fingerprint, load_documents
+from eventops.knowledge_admin import put_document, remove_document, workspace_records
+from eventops.lifecycle import reconcile
 from eventops.pipeline import export_csv, summary
 from eventops.rag import SemanticIndex, ask
-from eventops.store import Store, now
+from eventops.scenarios import SCENARIOS
+from eventops.store import Store
 
 st.html("""<style>
 .block-container {max-width:1280px;padding-top:2.4rem;padding-bottom:3rem;}
@@ -38,9 +37,7 @@ h2,h3 {font-weight:500;letter-spacing:-.025em;}
 </style>""")
 
 if setting("PUBLIC_DEMO") == "true" and not setting("APP_PASSWORD"):
-    st.error(
-        "Hosted operation requires an application access password. Configure APP_PASSWORD."
-    )
+    st.error("Hosted operation requires an application access password. Configure APP_PASSWORD.")
     st.stop()
 if setting("APP_PASSWORD") and not st.session_state.get("authenticated"):
     st.title("EventOps Intelligence")
@@ -64,6 +61,21 @@ owner = st.session_state.owner
 @st.cache_resource(show_spinner=False)
 def semantic_index():
     return SemanticIndex()
+
+
+def current_index():
+    records = workspace_records(store, owner)
+    if len(records) == 19:
+        return semantic_index()
+    signature = fingerprint(records)
+    cached = st.session_state.get("workspace_semantic_index")
+    if cached is None or st.session_state.get("workspace_index_signature") != signature:
+        import hashlib
+
+        path = ROOT / "storage" / "workspace-indexes" / (hashlib.sha256(owner.encode()).hexdigest() + ".npz")
+        st.session_state.workspace_semantic_index = SemanticIndex(path, records)
+        st.session_state.workspace_index_signature = signature
+    return st.session_state.workspace_semantic_index
 
 
 def heading(eyebrow, title, subtitle):
@@ -105,7 +117,7 @@ def overview():
     st.divider()
     a, b = st.columns(2, gap="large")
     with a:
-        st.subheader("01 / Find the authoritative answer")
+        st.subheader("Find the authoritative answer")
         st.write(
             "Ask about event schedules, admission rules, or participant records. Inspect semantic matches and the evidence behind each generated response."
         )
@@ -115,13 +127,11 @@ def overview():
             icon=":material/arrow_forward:",
         )
     with b:
-        st.subheader("02 / Process and verify")
+        st.subheader("Process and verify")
         st.write(
             "Run the visual n8n workflow across Calendar, Email, and Web. Review discrepancies, compare references, and export verified records."
         )
-        st.page_link(
-            agent_page, label="Open Agent Workspace", icon=":material/arrow_forward:"
-        )
+        st.page_link(agent_page, label="Open Agent Workspace", icon=":material/arrow_forward:")
     st.space("medium")
     with st.container(border=True):
         st.subheader("Evidence before confidence")
@@ -148,8 +158,7 @@ def overview():
                     "Component": "Gemini generation",
                     "State": (
                         "Configured"
-                        if setting("GEMINI_ENABLED") == "true"
-                        and setting("GEMINI_API_KEY")
+                        if setting("GEMINI_ENABLED") == "true" and setting("GEMINI_API_KEY")
                         else "Unavailable"
                     ),
                     "Meaning": "Connectivity confirmed only by an actual response",
@@ -191,9 +200,7 @@ def render_answer(item):
         if not item["evidence"]:
             st.info("No matching source evidence.")
         for hit in item["evidence"]:
-            st.markdown(
-                f"**{hit['id']}** · {hit['kind']} · cosine similarity {hit['similarity']:.3f}"
-            )
+            st.markdown(f"**{hit['id']}** · {hit['kind']} · cosine similarity {hit['similarity']:.3f}")
             st.write(hit["content"])
             st.caption(hit["source"])
     with st.expander("Retrieval inspection"):
@@ -203,10 +210,7 @@ def render_answer(item):
                 "interpreted_intent": item["plan"]["kind"] or "general knowledge",
                 "query_transformation": item["plan"],
                 "retrieval": item["retrieval"],
-                "matched_records": [
-                    {"id": r["id"], "similarity": r["similarity"]}
-                    for r in item["evidence"]
-                ],
+                "matched_records": [{"id": r["id"], "similarity": r["similarity"]} for r in item["evidence"]],
                 "generation": response,
             }
         )
@@ -246,15 +250,13 @@ def assistant():
             st.write(row["payload"]["plan"]["question"])
         with st.chat_message("assistant"):
             render_answer(row["payload"])
-    question = st.chat_input(
-        "Ask about an event, policy, or participant…", max_chars=1000
-    )
+    question = st.chat_input("Ask about an event, policy, or participant…", max_chars=1000)
     question = question or st.session_state.pop("example_question", None)
     if question:
         previous = history[-1]["payload"]["plan"]["event_id"] if history else None
         with st.spinner("Retrieving source evidence and preparing the answer…"):
             try:
-                ask(semantic_index(), store, owner, question, previous, depth, generate)
+                ask(current_index(), store, owner, question, previous, depth, generate)
             except Exception as exc:
                 if isinstance(exc, ValueError):
                     st.error(str(exc))
@@ -272,23 +274,36 @@ def agent_workspace():
         "One trigger. An auditable run.",
         "n8n connects the sources and orchestrates each processing stage. Deterministic rules decide verification outcomes.",
     )
-    tab_run, tab_workflow, tab_reasoning = st.tabs(
-        ["Run verification", "Visual workflow", "Gemini analyst"]
-    )
+    tab_run, tab_workflow, tab_reasoning = st.tabs(["Run verification", "Visual workflow", "Gemini analyst"])
     with tab_run:
         st.info(
             "Calendar and Web defaults contain real public holidays. They test live connectivity and stay labelled as event observations. Mailtrap reads only the configured synthetic-data sandbox."
         )
         with st.form("execute"):
+            scenario = st.selectbox(
+                "Source scenario",
+                list(SCENARIOS),
+                index=list(SCENARIOS).index(st.session_state.get("scenario_selection", "external_reference")),
+                format_func=lambda key: SCENARIOS[key],
+            )
+            st.caption(
+                "Assessment sources are controlled synthetic HTTP data plus the configured Mailtrap sandbox. External reference sources contain public holidays. All operations are read-only."
+            )
             event = st.selectbox(
                 "Target event",
                 [r["id"] for r in load_documents() if r["kind"] == "event"],
+                index=[r["id"] for r in load_documents() if r["kind"] == "event"].index(
+                    st.session_state.get("event_selection", "EVT-101")
+                ),
             )
-            limit = st.slider("Maximum records per source", 1, 5, 3)
+            limit = st.slider("Maximum records per source", 1, 5, st.session_state.get("limit_selection", 3))
+            st.session_state.limit_selection = limit
+            st.session_state.scenario_selection = scenario
+            st.session_state.event_selection = event
             submitted = st.form_submit_button("Run verification", type="primary")
         if submitted:
             with st.spinner("Waiting for the actual n8n execution…"):
-                result = trigger(store, owner, event, limit)
+                result = trigger(store, owner, event, limit, scenario=scenario)
             st.session_state.selected_run = result["run_id"]
             st.session_state.last_delivery = result
             st.rerun()
@@ -298,6 +313,8 @@ def agent_workspace():
             st.write(f"Status: {result['status']} · Request: {result['run_id']}")
             if result.get("error"):
                 st.warning(result["error"])
+            if result.get("outcomes"):
+                st.dataframe(result["outcomes"], hide_index=True, width="stretch")
             if result.get("execution_id"):
                 st.caption(f"n8n execution {result['execution_id']}")
                 st.page_link(
@@ -316,6 +333,17 @@ def agent_workspace():
         st.caption(
             "Workflow design. Execution evidence is shown in saved source outcomes and the actual n8n execution record."
         )
+        selected = st.session_state.get("selected_run")
+        saved = store.get(owner, selected) if selected else None
+        if saved:
+            st.subheader("Recorded execution checkpoints")
+            st.caption(
+                "Persisted observations for request " + selected + "; this is not simulated live progress."
+            )
+            st.dataframe(saved["payload"].get("stages", []), hide_index=True, width="stretch")
+        else:
+            st.info("Configured workflow design only. Select a saved run to inspect actual checkpoints.")
+
         st.dataframe(
             [{"Node": n["name"], "Implementation": n["type"]} for n in graph["nodes"]],
             hide_index=True,
@@ -336,9 +364,7 @@ def agent_workspace():
         if not completed:
             st.info("Finish a verification execution first.")
         else:
-            run_id = st.selectbox(
-                "Execution to explain", [r["id"] for r in completed], key="agent_run"
-            )
+            run_id = st.selectbox("Execution to explain", [r["id"] for r in completed], key="agent_run")
             intent = st.text_area(
                 "What should the analyst investigate?",
                 "Explain which records need attention and why. Compare discrepancies with authoritative references and raw source evidence.",
@@ -346,9 +372,7 @@ def agent_workspace():
             )
             if st.button("Ask Gemini analyst", type="primary"):
                 try:
-                    with st.spinner(
-                        "Waiting for Gemini and its selected tools in n8n…"
-                    ):
+                    with st.spinner("Waiting for Gemini and its selected tools in n8n…"):
                         response = explain(owner, run_id, intent)
                     st.session_state.agent_response = response
                     st.session_state.agent_response_run_id = run_id
@@ -376,6 +400,15 @@ def render_agent(agent):
         st.subheader("AI-generated explanation")
         st.write(agent["result"]["summary"])
         st.caption("Evidence IDs: " + ", ".join(agent["result"]["evidence_ids"]))
+        for finding in agent["result"].get("findings", []):
+            st.write(f"• {finding['description']}")
+        actions = agent["result"].get("suggested_review_actions", [])
+        if actions:
+            st.markdown("**Suggested human review actions**")
+            for action in actions:
+                st.write("• " + action)
+        if agent["result"].get("uncertainties"):
+            st.info(" ".join(agent["result"]["uncertainties"]))
         with st.expander("Interpreted intent and limitations"):
             st.json(agent["result"])
     if agent.get("tool_calls"):
@@ -384,17 +417,13 @@ def render_agent(agent):
                 st.write(f"**{call['tool']}**")
                 st.json(call)
     if agent.get("execution_id"):
-        st.caption(
-            f"n8n execution {agent['execution_id']} · {agent.get('model')} · {agent.get('note')}"
-        )
+        st.caption(f"n8n execution {agent['execution_id']} · {agent.get('model')} · {agent.get('note')}")
 
 
 def select_run():
     history = runs()
     if not history:
-        st.info(
-            "No saved verification executions in this workspace. Start in Agent Workspace."
-        )
+        st.info("No saved verification executions in this workspace. Start in Agent Workspace.")
         return None
     ids = [r["id"] for r in history]
     selected = st.session_state.get("selected_run")
@@ -406,6 +435,7 @@ def select_run():
             f"{next(r['created_at'][:19] for r in history if r['id'] == rid)} UTC · {rid[:8]}"
         ),
     )
+    st.session_state.selected_run = run_id
     return store.get(owner, run_id)["payload"]
 
 
@@ -434,7 +464,23 @@ def results():
         "Filter by verification status",
         ["verified", "review_required", "rejected", "incomplete"],
     )
-    filtered = [r for r in records if not choices or r["status"] in choices]
+    search = st.text_input("Find a participant, record or event", placeholder="Name, email, event ID…")
+    unresolved = st.checkbox("Unresolved review queue only")
+    filtered = [
+        r
+        for r in records
+        if (not choices or r["status"] in choices)
+        and (not unresolved or (r["status"] != "verified" and r.get("review_status") != "resolved_with_note"))
+        and (
+            not search
+            or search.casefold()
+            in " ".join(
+                str(r.get(k, "")) for k in ["id", "full_name", "email", "event_id", "title"]
+            ).casefold()
+        )
+    ]
+    order = {"rejected": 0, "review_required": 1, "incomplete": 2, "verified": 3}
+    filtered.sort(key=lambda r: (order.get(r["status"], 4), r.get("full_name", ""), r["id"]))
     display = [
         {
             k: r.get(k)
@@ -473,9 +519,7 @@ def results():
             "Inspect a record",
             [r["id"] for r in filtered],
             format_func=lambda x: next(
-                (r["full_name"] or r["title"] or x) + " · " + r["status"]
-                for r in filtered
-                if r["id"] == x
+                (r["full_name"] or r["title"] or x) + " · " + r["status"] for r in filtered if r["id"] == x
             ),
         )
         r = next(r for r in filtered if r["id"] == rid)
@@ -489,6 +533,25 @@ def results():
             ]
         )
         with tabs[0]:
+            st.subheader(r["status"].replace("_", " ").title())
+            friendly = {
+                "active_participant": "The directory marks this participant inactive.",
+                "name_matches": "The submitted name differs from the authoritative directory.",
+                "event_exists": "The event identity is missing or unknown.",
+                "target_event_matches": "This claim does not match the selected event.",
+                "registered_for_event": "The directory has no registration for this event.",
+                "directory_identity": "No authoritative participant matches this email.",
+                "venue_matches": "The claimed location differs from the authoritative event.",
+                "starts_at_matches": "The claimed schedule differs from the authoritative event.",
+            }
+            if r["issues"]:
+                for issue in r["issues"]:
+                    st.write("• " + friendly.get(issue, issue.replace("_", " ").capitalize()))
+                st.info(
+                    "Next action: inspect the source claim and authoritative match, then record a review note. Corrections remain proposals; verification is not overridden."
+                )
+            else:
+                st.success("All applicable authoritative checks passed.")
             st.caption("DETERMINISTIC BUSINESS RULES")
             st.dataframe(
                 r["checks"],
@@ -496,37 +559,34 @@ def results():
                 width="stretch",
                 key="checks-" + run["run_id"] + rid,
             )
-            st.write(
-                "Findings: "
-                + (", ".join(r["issues"]) or "All applicable checks passed.")
-            )
+            st.write("Findings: " + (", ".join(r["issues"]) or "All applicable checks passed."))
         with tabs[1]:
-            st.json(
-                {
-                    "raw": r["raw"],
-                    "normalized": {
-                        k: r[k]
-                        for k in [
-                            "event_id",
-                            "participant_id",
-                            "full_name",
-                            "email",
-                            "title",
-                            "starts_at",
-                            "venue",
-                        ]
-                    },
-                }
+            fields = ["event_id", "participant_id", "full_name", "email", "title", "starts_at", "venue"]
+            st.dataframe(
+                [
+                    {
+                        "Field": field,
+                        "Extracted value": r["raw"].get(field, ""),
+                        "Normalized value": r.get(field, ""),
+                        "Source references": len(r.get("field_provenance", {}).get(field, [])),
+                    }
+                    for field in fields
+                ],
+                hide_index=True,
+                width="stretch",
             )
+            with st.expander("Technical provenance details"):
+                st.json(r.get("field_provenance", {}))
         with tabs[2]:
             for evidence in r["evidence"]:
                 st.caption(evidence["source"] + " · " + evidence["reference"])
                 st.code(evidence["excerpt"], language=None)
-            st.json({"authoritative_matches": r["matches"]})
+            for match in r["matches"]:
+                with st.expander("Authoritative reference " + match["id"]):
+                    st.write(match["content"])
+                    st.caption(match["source"])
         with tabs[3]:
-            st.write(
-                f"{r['duplicate_count']} duplicates merged · {r['duplicate_type'].replace('_', ' ')}"
-            )
+            st.write(f"{r['duplicate_count']} duplicates merged · {r['duplicate_type'].replace('_', ' ')}")
             st.dataframe(
                 [
                     {
@@ -549,44 +609,37 @@ def results():
             if r["conflicts"]:
                 st.json({"conflicting_values": r["conflicts"]})
             if r.get("potentially_related"):
-                st.caption(
-                    "Potentially related records (not merged): "
-                    + ", ".join(r["potentially_related"])
-                )
+                st.caption("Potentially related records (not merged): " + ", ".join(r["potentially_related"]))
             with st.expander("All retained duplicate inputs"):
                 st.json(r["inputs"])
         with tabs[4]:
-            with st.form("review"):
+            with st.form("review-" + run["run_id"] + rid):
                 review = st.selectbox(
                     "Human review status",
                     ["unreviewed", "investigating", "resolved_with_note"],
+                    index=["unreviewed", "investigating", "resolved_with_note"].index(
+                        r.get("review_status", "unreviewed")
+                    ),
                 )
                 note = st.text_area("Review note", max_chars=2000)
+                reason = st.text_input("Reason for review", max_chars=1000)
+                next_action = st.text_input("Optional next action", max_chars=1000)
+                st.caption(
+                    "Reviewer = workspace capability holder. Commercial employee identity/authorization is not provided by this demonstration."
+                )
                 if st.form_submit_button("Save review"):
                     if not note.strip():
                         st.error("Add a note explaining the review.")
                     else:
-                        r["review_status"] = review
-                        store.replace(owner, run["run_id"], run)
-                        store.save(
-                            owner,
-                            "review",
-                            {
-                                "run_id": run["run_id"],
-                                "record_id": rid,
-                                "review_status": review,
-                                "note": note,
-                                "at": now(),
-                            },
-                        )
-                        st.success(
-                            "Review saved. The deterministic verification status is unchanged."
-                        )
+                        if not reason.strip():
+                            st.error("Add a reason for this review.")
+                        else:
+                            store.review(owner, run["run_id"], rid, review, note, reason, next_action)
+                            st.success("Review saved. The deterministic verification status is unchanged.")
             notes = [
                 x["payload"]
                 for x in store.list(owner, "review")
-                if x["payload"]["record_id"] == rid
-                and x["payload"]["run_id"] == run["run_id"]
+                if x["payload"]["record_id"] == rid and x["payload"]["run_id"] == run["run_id"]
             ]
             if notes:
                 st.dataframe(notes, hide_index=True, width="stretch")
@@ -637,9 +690,49 @@ def sources():
             )
             st.code(index.signature, language=None)
         except Exception:
-            st.error(
-                "Index could not be built. Check model download access and the source validation logs."
+            st.error("Index could not be built. Check model download access and the source validation logs.")
+
+    if setting("KNOWLEDGE_ADMIN_ENABLED") == "true":
+        with st.expander("Protected structured knowledge administration"):
+            st.caption(
+                "Workspace-scoped supplemental knowledge only. Original verification authority is never replaced."
             )
+            password = st.text_input("Knowledge administrator password", type="password")
+            allowed = bool(setting("KNOWLEDGE_ADMIN_PASSWORD")) and hmac.compare_digest(
+                password, setting("KNOWLEDGE_ADMIN_PASSWORD")
+            )
+            if allowed:
+                upload = st.file_uploader("Structured CSV or JSON", type=["csv", "json"])
+                mapping = {
+                    key: st.text_input("CSV column for " + key, value=key)
+                    for key in ["id", "kind", "scope", "content"]
+                }
+                if st.button("Validate and ingest") and upload:
+                    try:
+                        result = put_document(store, owner, upload.name, upload.getvalue(), mapping)
+                        st.success(
+                            "Knowledge validated; "
+                            + (
+                                "new version saved"
+                                if result["changed"]
+                                else "identical content already indexed"
+                            )
+                        )
+                    except (ValueError, KeyError, TypeError) as exc:
+                        st.error(str(exc))
+                for item in store.list(owner, "document"):
+                    st.write(
+                        item["payload"]["filename"]
+                        + " · version "
+                        + item["payload"]["version"]
+                        + " · "
+                        + ("active" if item["payload"].get("active") else "removed")
+                    )
+                    if item["payload"].get("active") and st.button(
+                        "Remove from retrieval", key="remove-" + item["id"]
+                    ):
+                        remove_document(store, owner, item["id"])
+                        st.rerun()
 
 
 def history():
@@ -658,6 +751,12 @@ def history():
                 "Workflow status": r["payload"]["status"],
                 "n8n execution": r["payload"].get("execution_id", ""),
                 "Records": len(r["payload"]["records"]),
+                "Verified": r["payload"].get("summary", {}).get("verified", 0),
+                "Rejected": r["payload"].get("summary", {}).get("rejected", 0),
+                "Incomplete": r["payload"].get("summary", {}).get("incomplete", 0),
+                "Sources": " · ".join(
+                    o["source"] + ": " + o["status"] for o in r["payload"].get("outcomes", [])
+                ),
             }
             for r in rows
         ],
@@ -669,6 +768,15 @@ def history():
         if st.button("Open saved results"):
             st.session_state.selected_run = selected
             st.switch_page(results_page)
+    with st.expander("Reconcile an execution request"):
+        request_id = st.text_input("Existing request ID", max_chars=80)
+        if st.button("Check recorded execution state") and request_id:
+            state = reconcile(store, owner, request_id)
+            st.write("State: " + state["state"].replace("_", " "))
+            st.caption(state.get("note", "Authoritative persisted execution state."))
+            if state.get("run"):
+                st.session_state.selected_run = request_id
+                st.page_link(results_page, label="Open reconciled results")
     st.subheader("Saved questions")
     questions = store.list(owner, "question")
     st.dataframe(
@@ -742,21 +850,13 @@ with st.sidebar:
     st.markdown("### EventOps Intelligence")
     st.caption("STREAMLIT EDITION")
     st.space("small")
-overview_page = st.Page(
-    overview, title="Overview", icon=":material/home:", default=True
-)
+overview_page = st.Page(overview, title="Overview", icon=":material/home:", default=True)
 assistant_page = st.Page(assistant, title="Knowledge Assistant", icon=":material/chat:")
 agent_page = st.Page(agent_workspace, title="Agent Workspace", icon=":material/hub:")
-results_page = st.Page(
-    results, title="Verification Results", icon=":material/fact_check:"
-)
-sources_page = st.Page(
-    sources, title="Knowledge Sources", icon=":material/library_books:"
-)
+results_page = st.Page(results, title="Verification Results", icon=":material/fact_check:")
+sources_page = st.Page(sources, title="Knowledge Sources", icon=":material/library_books:")
 history_page = st.Page(history, title="Execution History", icon=":material/history:")
-methodology_page = st.Page(
-    methodology, title="Architecture & Methodology", icon=":material/account_tree:"
-)
+methodology_page = st.Page(methodology, title="Architecture & Methodology", icon=":material/account_tree:")
 nav = st.navigation(
     {
         "Workspace": [overview_page, assistant_page, agent_page, results_page],

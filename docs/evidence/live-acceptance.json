@@ -529,7 +529,7 @@
           {
             "source": "email",
             "source_record_id": "5748076401",
-            "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages/5748076401/body.txt",
+            "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt",
             "excerpt": "EventOps final assessment | EVT-101 | inactive-conflict\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Lindi Mokoena-Test\nEmail: LINDI.MOKOENA@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: inactive-conflict. Verify against directory and event references.\n"
           }
         ],
@@ -561,7 +561,7 @@
               {
                 "source": "email",
                 "source_record_id": "5748076401",
-                "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages/5748076401/body.txt",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt",
                 "excerpt": "EventOps final assessment | EVT-101 | inactive-conflict\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Lindi Mokoena-Test\nEmail: LINDI.MOKOENA@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: inactive-conflict. Verify against directory and event references.\n"
               }
             ]
@@ -686,13 +686,13 @@
           {
             "source": "email",
             "source_record_id": "5748076082",
-            "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages/5748076082/body.txt",
+            "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt",
             "excerpt": "EventOps final assessment | EVT-101 | duplicate\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: duplicate. Verify against directory and event references.\n"
           },
           {
             "source": "email",
             "source_record_id": "5748068714",
-            "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages/5748068714/body.txt",
+            "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt",
             "excerpt": "EventOps final assessment | EVT-101 | positive\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: positive. Verify against directory and event references.\n"
           }
         ],
@@ -724,7 +724,7 @@
               {
                 "source": "email",
                 "source_record_id": "5748076082",
-                "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages/5748076082/body.txt",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt",
                 "excerpt": "EventOps final assessment | EVT-101 | duplicate\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: duplicate. Verify against directory and event references.\n"
               }
             ]
@@ -756,7 +756,7 @@
               {
                 "source": "email",
                 "source_record_id": "5748068714",
-                "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages/5748068714/body.txt",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt",
                 "excerpt": "EventOps final assessment | EVT-101 | positive\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: positive. Verify against directory and event references.\n"
               }
             ]
@@ -1317,7 +1317,7 @@
       {
         "source": "email",
         "status": "completed",
-        "reference": "https://mailtrap.io/api/accounts/2853336/inboxes/4953522/messages",
+        "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
         "count": 3,
         "error": null,
         "observed_at": "2026-10-20T21:13:32.371309+00:00"

@@ -1,0 +1,6 @@
+{
+  "baseline_objects": 19,
+  "baseline_payloads_unchanged": true,
+  "current_objects": 19,
+  "migration": "additive only; old object IDs and payload bytes retained"
+}

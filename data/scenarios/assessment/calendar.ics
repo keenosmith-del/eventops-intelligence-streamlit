@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//EventOps//Controlled synthetic assessment//EN
+BEGIN:VEVENT
+UID:assessment-evt101-correct
+SUMMARY:AI Engineering Summit
+DTSTART:20261021T070000Z
+LOCATION:Cape Town Convention Centre
+DESCRIPTION:Controlled synthetic assessment event. Event ID: EVT-101
+END:VEVENT
+BEGIN:VEVENT
+UID:assessment-evt101-discrepancy
+SUMMARY:AI Engineering Summit
+DTSTART:20261021T080000Z
+LOCATION:Incorrect Assessment Hall
+DESCRIPTION:Controlled synthetic assessment discrepancy. Event ID: EVT-101
+END:VEVENT
+END:VCALENDAR

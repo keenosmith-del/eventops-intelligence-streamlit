@@ -1,73 +1,64 @@
 # EventOps Intelligence — Streamlit Edition
 
-An independent assessment companion for event knowledge retrieval and auditable operations. It uses Streamlit, FastEmbed, Gemini and genuine n8n workflows. The original React/FastAPI/LangGraph application and its databases are not dependencies.
+An independent event operations workspace combining semantic RAG, genuine n8n automation and a bounded Gemini investigation agent. Streamlit presents source evidence, deterministic decisions and AI explanations as separate concepts.
 
-**Current delivery: running and validated locally; not publicly deployed.** Real Gemini RAG and an n8n Gemini AI Agent execution are recorded in `docs/evidence/`. No repository has been pushed and no existing infrastructure has been changed. See [assessment compliance](docs/ASSESSMENT_COMPLIANCE.md), [observed test results](docs/TEST_REPORT.md), and [deployment](docs/DEPLOYMENT.md).
+[Public source repository](https://github.com/keenosmith-del/eventops-intelligence-streamlit) · [Iteration 002 report](docs/iterations/002/ACCEPTANCE_REPORT.md) · [Architecture](docs/ARCHITECTURE.md)
 
-## What works
+**Current state: locally tested, not publicly deployed.** The repository was published after Iteration 001's local acceptance. Iteration 002 makes no GitHub push, paid provisioning or public deployment. Historical evidence is kept separately in `docs/evidence`; new evidence is in `docs/iterations/002/evidence`.
 
-- Three validated structured documents: 3 events, 9 policies, 7 synthetic directory records.
-- Real FastEmbed BGE-small embeddings (19 × 384), persisted NumPy index, cosine search, event/category filters, query normalization and contextual follow-ups.
-- Grounded structured Gemini answers, record citations, explicit unavailable/refusal states, persisted retrieval inspection.
-- A protected production n8n webhook performing source reads, conditional replay, source outcome handling, extraction, normalization, duplicate merging, deterministic verification and persistence.
-- Genuine remote Calendar and Web reads plus read-only Mailtrap sandbox messages. Public holidays are never presented as registrations.
-- A separate n8n AI Agent with a Gemini Chat Model and three read-only tools. Actual selected tool calls and structured explanations are persisted separately from verification rules.
-- Seven native Streamlit screens, field checks, raw evidence, conflicts and duplicate groups, review notes, scoped history and two CSV exports.
-- Atomic request reservation, daily generation/agent budgets, source bounds, protected processing endpoints, formula-safe CSV, isolated SQLite or dedicated PostgreSQL configuration.
+## Capabilities
 
-## Quick start — Python 3.12
+- Three reproducible reference documents, 19 real FastEmbed vectors, event-aware semantic ranking and grounded Gemini answers with citations.
+- Clarification for ambiguous context, cross-document questions, a versioned 30-case RAG evaluation with retrieval metrics and separate curated answer checks.
+- Actual n8n source orchestration, source-specific failure isolation, checkpoints, protected webhooks, atomic request replay and conservative reconciliation.
+- Controlled event Calendar/Web data fetched from an independent HTTP service alongside real read-only Mailtrap messages. External holiday providers remain a separate connectivity scenario.
+- Deterministic normalization, provenance, duplicate/conflict preservation and authoritative event/participant verification.
+- A genuine Gemini AI Agent with three read-only tools, evidence-validated structured findings/actions and cached investigations keyed to the run snapshot.
+- Native Streamlit result inspection, practical review notes/reasons/actions, exports, history and workspace recovery. Supplemental structured knowledge administration is protected and disabled by default.
+- Additive migrations, SQLite development persistence, tested isolated PostgreSQL containers, health checks, non-root Python services and offline CI configuration.
+
+## Recommended local setup: full containers
+
+Use Python 3.12 for configuration and tests; Docker Compose runs the application stack.
 
 ```bash
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.lock.txt
 .venv/bin/python scripts/configure_local.py
-# Edit the ignored .env: Gemini and dedicated Mailtrap sandbox credentials.
-.venv/bin/python scripts/index_knowledge.py
+# Configure only this companion's .env; keep Gemini disabled until explicitly needed.
+docker compose --env-file .env up -d --build
+# Once n8n is healthy, import/publish workflows and credentials:
+./scripts/setup_n8n.sh
 ```
 
-Configure n8n once using [n8n/README.md](n8n/README.md). Then:
+Open [Streamlit](http://127.0.0.1:8502). n8n's local editor is at [localhost:5680](http://localhost:5680); the processing API is header-protected on local port 8767. PostgreSQL and the controlled event source are internal-only. This topology uses new `iteration002_*` volumes and never resets earlier SQLite or n8n records.
 
 ```bash
-docker compose --env-file .env -f n8n/compose.yaml up -d
-./scripts/start_local.sh
-```
-
-Open [Streamlit](http://127.0.0.1:8501) and [n8n](http://localhost:5679). Local processing service: port 8766. The service is header-authenticated; its listening address allows the Docker bridge to reach the host. Use a local firewall or the private full-compose network outside this development machine.
-
-Tests:
-
-```bash
-.venv/bin/python -m pip install -r requirements-dev.txt
 .venv/bin/python -m pytest -q
 .venv/bin/ruff check app.py eventops scripts tests
+.venv/bin/python scripts/build_workflows.py --check
+.venv/bin/python scripts/validate_workflows.py
+.venv/bin/python scripts/evaluate_rag.py
+.venv/bin/python scripts/security_audit.py
+.venv/bin/python scripts/acceptance002.py
 ```
 
-A live deterministic acceptance run (external reads, no sends, no model calls):
+`acceptance002.py --models` explicitly adds bounded real Gemini calls. It checks controlled synthetic email before transmission; no email is sent. Account quota/billing still requires the operator's attention; there is no paid fallback or billing enablement. Ordinary regression/CI needs no live-provider keys, but downloads a public embedding model on first use.
 
-```bash
-.venv/bin/python scripts/live_acceptance.py
-```
+Stop without deleting data: `docker compose --env-file .env stop`. Never use volume removal as initialization. Back up databases and n8n encryption keys before changes.
 
-`--rag` explicitly enables two Gemini calls on synthetic reference knowledge. `--agent` invokes the optional AI Agent on a saved run; the service permits only labelled synthetic example.com email evidence. Agent iterations ≤5, workflow duration ≤120 seconds, run budget 5/day. Provider account quotas still apply. Never assume a key is free-tier merely because the model offers one; do not enable billing to make a failed demonstration pass.
+## Optional host-Python development
 
-## Navigation
+The original local topology remains supported on Streamlit 8501 / processor 8766 / n8n 5679. Start n8n with `docker compose --env-file .env -f n8n/compose.yaml up -d`, import with `./scripts/setup_n8n.sh development`, then `./scripts/start_local.sh`. For controlled scenarios start `scripts/scenario_server.py` on 8090 and explicitly configure the backend source base URL. Details: [deployment](docs/DEPLOYMENT.md), [n8n](n8n/README.md).
 
-Overview → Knowledge Assistant → Agent Workspace → Verification Results → Execution History. Knowledge Sources exposes the actual documents; Architecture & Methodology explains implementation and evidence.
+## Data, authority and deployment boundaries
 
-Workspace history uses a random private access capability. Save the key from Execution History to reopen the same workspace. A configured application password gates a shared demo. This is not commercial user authentication or role-based authorization.
+All identities and assessment registrations are synthetic. The independent fixture is a real HTTP integration test, not a claimed live third-party event API. Mailtrap is actually read. Public holidays are unrelated observations and never invented registrations. Supplemental documents cannot replace authoritative verification records.
 
-## Data and secrets
+Workspace access uses a random private capability, optionally behind a demo password; it is not commercial employee identity or tenant authorization. Save the key in Execution History to restore that workspace. Public deployment requires proper access decisions, HTTPS, private services and dedicated durable persistence.
 
-Only the adapted synthetic assessment source files were copied from v.01. No original Python modules, API results, database URL or production tables are used. `.env`, workspace keys, model caches, databases and n8n credential imports are ignored. `scripts/configure_local.py --provider-env /approved/file` copies only Gemini and Mailtrap variables when expressly authorized; it never imports database settings.
-
-SQLite is durable on your own persistent disk. Streamlit Community Cloud local storage is **ephemeral**. A hosted deployment needs a separate `EVENTOPS_DATABASE_URL=postgresql+psycopg://...` database for durable histories and a hosted HTTPS n8n plus private processing service for automation. No paid service or public endpoint is created by this repository.
+SQLite is suitable for local disk. Hosted ephemeral files are not durable history. The tested full topology uses dedicated local PostgreSQL; managed PostgreSQL/HTTPS/public-host acceptance is still pending. The original React/FastAPI/LangGraph project and production infrastructure remain untouched.
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.md) and [design decisions](docs/DESIGN_DECISIONS.md)
-- [Requirement evidence](docs/ASSESSMENT_COMPLIANCE.md) and [test report](docs/TEST_REPORT.md)
-- [Deployment](docs/DEPLOYMENT.md) and [n8n operation](n8n/README.md)
-- [5–7-minute walkthrough](docs/INTERVIEW_WALKTHROUGH.md), [interview Q&A](docs/INTERVIEW_QA.md), [architecture comparison](docs/COMPARISON.md)
-- [Audit of original implementation](docs/ORIGINAL_AUDIT.md)
-
-# eventops-intelligence-streamlit
+[Completion report](docs/COMPLETION_REPORT.md) · [Assessment evidence](docs/ASSESSMENT_COMPLIANCE.md) · [Tests](docs/TEST_REPORT.md) · [Design decisions](docs/DESIGN_DECISIONS.md) · [Comparison](docs/COMPARISON.md) · [Interview walkthrough](docs/INTERVIEW_WALKTHROUGH.md) · [Q&A](docs/INTERVIEW_QA.md) · [Migration policy](migrations/README.md)

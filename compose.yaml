@@ -1,45 +1,101 @@
 name: eventops-companion-full
+x-python: &python
+  image: eventops-companion:iteration002
+  build: .
+  restart: unless-stopped
+  mem_limit: 1g
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
 services:
-  app:
-    build: .
-    ports:
-      - "127.0.0.1:8502:8501"
-    env_file: .env
+  database:
+    image: postgres:17-alpine
     environment:
-      EVENTOPS_DATABASE_URL: sqlite:////app/storage/eventops.db
+      POSTGRES_USER: companion
+      POSTGRES_DB: companion
+      POSTGRES_PASSWORD: ${COMPANION_POSTGRES_PASSWORD:?Generate dedicated local password}
+    volumes: ["iteration002_postgres:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U companion -d companion"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    mem_limit: 512m
+  app:
+    <<: *python
+    ports: ["127.0.0.1:8502:8501"]
+    environment:
+      EVENTOPS_DATABASE_URL: postgresql+psycopg://companion:${COMPANION_POSTGRES_PASSWORD}@database/companion
       FASTEMBED_CACHE_PATH: /app/storage/models
       N8N_WEBHOOK_URL: http://n8n:5678/webhook/eventops-verify
       N8N_AGENT_URL: http://n8n:5678/webhook/eventops-agent
-      # Explicitly trusted private service URLs are supported only in this local compose topology.
+      N8N_WEBHOOK_TOKEN: ${N8N_WEBHOOK_TOKEN}
       EVENTOPS_LOCAL_COMPOSE: "true"
-    volumes:
-      - companion_storage:/app/storage
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
+      GEMINI_DAILY_LIMIT: 8
+      KNOWLEDGE_ADMIN_ENABLED: "false"
+    volumes: ["iteration002_models:/app/storage"]
+    depends_on:
+      database: {condition: service_healthy}
+      processor: {condition: service_healthy}
   processor:
-    build: .
+    <<: *python
     command: ["uvicorn", "eventops.service:app", "--host", "0.0.0.0", "--port", "8766"]
-    env_file: .env
+    ports: ["127.0.0.1:8767:8766"]
     environment:
-      EVENTOPS_DATABASE_URL: sqlite:////app/storage/eventops.db
-    volumes:
-      - companion_storage:/app/storage
+      EVENTOPS_DATABASE_URL: postgresql+psycopg://companion:${COMPANION_POSTGRES_PASSWORD}@database/companion
+      EVENTOPS_SERVICE_TOKEN: ${EVENTOPS_SERVICE_TOKEN}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      MAILTRAP_API_TOKEN: ${MAILTRAP_API_TOKEN:-}
+      MAILTRAP_ACCOUNT_ID: ${MAILTRAP_ACCOUNT_ID:-}
+      MAILTRAP_INBOX_ID: ${MAILTRAP_INBOX_ID:-}
+      ENABLE_LOCAL_SCENARIO: "true"
+      ASSESSMENT_SOURCE_BASE_URL: http://scenario:8090
+    depends_on:
+      database: {condition: service_healthy}
+      scenario: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8766/health',timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+  scenario:
+    <<: *python
+    command: ["python", "scripts/scenario_server.py"]
+    mem_limit: 128m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/health',timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
   n8n:
     image: docker.n8n.io/n8nio/n8n:2.42.6
-    ports:
-      - "127.0.0.1:5680:5678"
+    ports: ["127.0.0.1:5680:5678"]
     environment:
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Configure independent secrets}
       N8N_WEBHOOK_URL: http://localhost:5680/
-      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
-      EVENTOPS_PROCESSOR_URL: http://processor:8766
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "true"
       N8N_DIAGNOSTICS_ENABLED: "false"
       N8N_UNVERIFIED_PACKAGES_ENABLED: "false"
       N8N_SECURE_COOKIE: "false"
       N8N_RUNNERS_TASK_TIMEOUT: 60
       GENERIC_TIMEZONE: Africa/Johannesburg
       EXECUTIONS_DATA_MAX_AGE: 168
+      EXECUTIONS_DATA_PRUNE: "true"
     volumes:
-      - companion_n8n:/home/node/.n8n
+      - iteration002_n8n:/home/node/.n8n
       - ./n8n:/workflows:ro
+    depends_on:
+      processor: {condition: service_healthy}
+    mem_limit: 1536m
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5678/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
 volumes:
-  companion_storage:
-  companion_n8n:
+  iteration002_postgres:
+  iteration002_models:
+  iteration002_n8n:

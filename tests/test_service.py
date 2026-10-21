@@ -10,9 +10,7 @@ from eventops.store import Store
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
-    monkeypatch.setenv(
-        "EVENTOPS_DATABASE_URL", "sqlite:///" + str(tmp_path / "service.db")
-    )
+    monkeypatch.setenv("EVENTOPS_DATABASE_URL", "sqlite:///" + str(tmp_path / "service.db"))
     monkeypatch.setenv("EVENTOPS_SERVICE_TOKEN", "a" * 40)
     with TestClient(app) as c:
         c.headers["X-EventOps-Token"] = "a" * 40
@@ -30,10 +28,7 @@ def run_input():
 
 def test_auth(client):
     assert client.get("/health").status_code == 200
-    assert (
-        client.get("/sources/config", headers={"X-EventOps-Token": "bad"}).status_code
-        == 401
-    )
+    assert client.get("/sources/config", headers={"X-EventOps-Token": "bad"}).status_code == 401
 
 
 def test_invalid_request(client):
@@ -73,8 +68,7 @@ def test_finish_partial(client, processed, statuses, expected):
             "run_id": first["run_id"],
             "execution_id": "test-1",
             "outcomes": [
-                {"source": s, "status": status}
-                for s, status in zip(["calendar", "email", "web"], statuses)
+                {"source": s, "status": status} for s, status in zip(["calendar", "email", "web"], statuses)
             ],
             "records": processed,
         },
@@ -112,10 +106,7 @@ def test_record_state_not_overridden_by_agent(client, processed):
             **data,
             "run_id": data["request_id"],
             "execution_id": "1",
-            "outcomes": [
-                {"source": s, "status": "completed"}
-                for s in ["calendar", "email", "web"]
-            ],
+            "outcomes": [{"source": s, "status": "completed"} for s in ["calendar", "email", "web"]],
             "records": processed,
         },
     )
@@ -135,14 +126,27 @@ def test_record_state_not_overridden_by_agent(client, processed):
         "intermediate_steps": [],
     }
     result = client.post("/agent/finish", json=body)
-    assert (
-        result.json()["status"] == "unavailable"
-    )  # No tool evidence: never claim a genuine agent.
+    assert result.json()["status"] == "unavailable"  # No tool evidence: never claim a genuine agent.
     body["intermediate_steps"] = [
         {
             "action": {"tool": "inspect_findings", "toolInput": "all"},
             "observation": json.dumps(
-                [{"response": json.dumps({"records": [{"id": processed[0]["id"]}]})}]
+                [
+                    {
+                        "response": json.dumps(
+                            {
+                                "records": [
+                                    {
+                                        "id": processed[0]["id"],
+                                        "status": processed[0]["status"],
+                                        "issues": processed[0]["issues"],
+                                        "checks": processed[0]["checks"],
+                                    }
+                                ]
+                            }
+                        )
+                    }
+                ]
             ),
         }
     ]
@@ -174,9 +178,7 @@ def test_client_uncertain_delivery(store, monkeypatch):
 
     from eventops.client import trigger
 
-    monkeypatch.setenv(
-        "N8N_WEBHOOK_URL", "http://127.0.0.1:5679/webhook/eventops-verify"
-    )
+    monkeypatch.setenv("N8N_WEBHOOK_URL", "http://127.0.0.1:5679/webhook/eventops-verify")
     rid = str(uuid.uuid4())
     result = trigger(
         store,
@@ -185,7 +187,7 @@ def test_client_uncertain_delivery(store, monkeypatch):
         request_id=rid,
         transport=httpx.MockTransport(lambda request: httpx.Response(401)),
     )
-    assert result["status"] == "delivery_unknown"
+    assert result["status"] == "request_rejected"
     assert store.get("x" * 48, "request-" + rid)
 
 
@@ -200,10 +202,7 @@ def test_agent_rejects_unlabelled_email(client, processed, monkeypatch):
             **data,
             "run_id": data["request_id"],
             "execution_id": "1",
-            "outcomes": [
-                {"source": s, "status": "completed"}
-                for s in ["calendar", "email", "web"]
-            ],
+            "outcomes": [{"source": s, "status": "completed"} for s in ["calendar", "email", "web"]],
             "records": processed,
         },
     )
@@ -224,17 +223,13 @@ def test_client_repeated_failed_delivery_is_saved_once(store, monkeypatch):
 
     from eventops.client import trigger
 
-    monkeypatch.setenv(
-        "N8N_WEBHOOK_URL", "http://127.0.0.1:5679/webhook/eventops-verify"
-    )
+    monkeypatch.setenv("N8N_WEBHOOK_URL", "http://127.0.0.1:5679/webhook/eventops-verify")
     rid = str(uuid.uuid4())
     transport = httpx.MockTransport(lambda request: httpx.Response(401))
     for _ in range(2):
         assert (
-            trigger(store, "x" * 48, "EVT-101", request_id=rid, transport=transport)[
-                "status"
-            ]
-            == "delivery_unknown"
+            trigger(store, "x" * 48, "EVT-101", request_id=rid, transport=transport)["status"]
+            == "request_rejected"
         )
     assert len(store.list("x" * 48, "request")) == 1
 
@@ -247,3 +242,42 @@ def test_bad_source_configuration_does_not_hide_other_sources(client, monkeypatc
     result = response.json()
     assert result["calendar"] == "" and "calendar" in result["configuration_errors"]
     assert result["web"].startswith("https://date.nager.at/")
+
+
+def test_same_request_cannot_change_inputs(client):
+    data = run_input()
+    assert client.post("/runs/begin", json=data).status_code == 200
+    data["event_id"] = "EVT-102"
+    assert client.post("/runs/begin", json=data).status_code == 409
+
+
+def test_checkpoint_owner_scope_and_finished_run_immutability(client, processed):
+    data = run_input()
+    client.post("/runs/begin", json=data)
+    checkpoint = {
+        "owner": data["owner"],
+        "run_id": data["request_id"],
+        "execution_id": "actual-1",
+        "stage": "calendar",
+    }
+    assert client.post("/runs/checkpoint", json=checkpoint).json()["stages"][0]["stage"] == "calendar"
+    checkpoint["owner"] = "b" * 48
+    assert client.post("/runs/checkpoint", json=checkpoint).status_code == 404
+    final = {
+        **data,
+        "run_id": data["request_id"],
+        "execution_id": "actual-1",
+        "outcomes": [{"source": s, "status": "completed"} for s in ["calendar", "email", "web"]],
+        "records": processed,
+    }
+    result = client.post("/runs/finish", json=final).json()
+    final["records"] = []
+    assert client.post("/runs/finish", json=final).json() == result
+
+
+def test_replay_while_processing_keeps_request_contract(client):
+    data = run_input()
+    client.post("/runs/begin", json=data)
+    replay = client.post("/runs/begin", json=data).json()
+    assert replay["replayed"] and replay["run"]["run_id"] == data["request_id"]
+    assert replay["run"]["status"] == "running"

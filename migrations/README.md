@@ -1,0 +1,5 @@
+# Additive migration strategy
+
+`python -m scripts.migrate` applies versioned SQLAlchemy migrations from `eventops/migrations.py`. Migration 1 records the pre-existing object schema; migration 2 adds non-null revision counters and an investigation-claim table. Old object payloads and keys are preserved. Initialization is idempotent. PostgreSQL takes a transaction-scoped advisory lock; SQLite uses a single initialization lock in-process and busy timeout (run migrations once before multiple worker startup). No drop/reseed/downgrade operation exists.
+
+Back up SQLite with its backup API before an upgrade; use a dedicated PostgreSQL backup/snapshot in hosted operation. Restore backups into a separate database and verify counts before switching. Never use the original application's database URL. JSON objects remain appropriate for bounded audit snapshots; revisions enforce concurrency while normalized claim keys enforce investigation uniqueness. Future query-heavy tenant reporting can justify dedicated result/review tables with another additive migration.

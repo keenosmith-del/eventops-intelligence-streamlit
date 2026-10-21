@@ -8,7 +8,10 @@
       "name": "Verification webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "parameters": {
         "httpMethod": "POST",
         "path": "eventops-verify",
@@ -29,10 +32,13 @@
       "name": "Validate and reserve request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [220, 0],
+      "position": [
+        220,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/runs/begin\" }}",
+        "url": "http://processor:8766/runs/begin",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -40,7 +46,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ $json.body }}"
+        "jsonBody": "={{ {...$json.body,execution_id:$execution.id} }}"
       },
       "credentials": {
         "httpHeaderAuth": {
@@ -55,7 +61,10 @@
       "name": "Repeated request?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [440, 0],
+      "position": [
+        440,
+        0
+      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -85,7 +94,10 @@
       "name": "Return saved execution",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [660, -180],
+      "position": [
+        660,
+        -180
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json.run }}",
@@ -97,14 +109,26 @@
       "name": "Allowed source configuration",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [660, 0],
+      "position": [
+        660,
+        0
+      ],
       "parameters": {
         "method": "GET",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/sources/config\" }}",
+        "url": "http://processor:8766/sources/config",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
           "timeout": 30000
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "scenario",
+              "value": "={{ $('Validate and reserve request').first().json.scenario }}"
+            }
+          ]
         }
       },
       "credentials": {
@@ -119,7 +143,10 @@
       "name": "Input accepted?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [330, -260],
+      "position": [
+        330,
+        -260
+      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -149,7 +176,10 @@
       "name": "Return rejected request",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [550, -400],
+      "position": [
+        550,
+        -400
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ {status:\"rejected\",error:\"Request rejected or validation service unavailable. Check the strict input contract and service configuration.\"} }}",
@@ -163,7 +193,10 @@
       "name": "Read Calendar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [880, 0],
+      "position": [
+        880,
+        0
+      ],
       "parameters": {
         "method": "GET",
         "url": "={{ $('Allowed source configuration').first().json.calendar }}",
@@ -190,9 +223,12 @@
       "name": "Capture Calendar outcome",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1100, 0],
+      "position": [
+        1100,
+        0
+      ],
       "parameters": {
-        "jsCode": "const ok = $json.statusCode === 200 && typeof ($json.body ?? $json.data) === 'string'; return [{json:{source:'calendar',limit:$('Validate and reserve request').first().json.limit,payload:{status:ok?'completed':'failed',body:ok?($json.body ?? $json.data):'',reference:$('Allowed source configuration').first().json.calendar,error:ok?null:('Source returned HTTP '+($json.statusCode || 'network error'))}}}];"
+        "jsCode": "const config=$('Allowed source configuration').first().json; const reason=config.configuration_errors?.calendar; const text=$json.body??$json.data; const ok=$json.statusCode===200&&typeof text==='string'; const timeout=/timeout|timed.out|etimedout/i.test(JSON.stringify($json.error||'')); return [{json:{source:'calendar',limit:$('Validate and reserve request').first().json.limit,payload:{status:reason?'unavailable':ok?'completed':timeout?'timed_out':'failed',body:ok?text:'',reference:config.calendar,http_status:$json.statusCode||null,error:reason|| (ok?null:timeout?'Source timed out':'Source request failed or returned HTTP '+($json.statusCode||'network error'))}}}];"
       }
     },
     {
@@ -200,10 +236,13 @@
       "name": "Extract Calendar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1320, 0],
+      "position": [
+        1320,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/extract\" }}",
+        "url": "http://processor:8766/stages/extract",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -218,17 +257,21 @@
           "id": "eventops-service",
           "name": "EventOps companion service"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "id": "read-email",
       "name": "Read Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1540, 0],
+      "position": [
+        1540,
+        0
+      ],
       "parameters": {
         "method": "GET",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/sources/email\" }}",
+        "url": "http://processor:8766/sources/email",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -249,16 +292,20 @@
           "id": "eventops-service",
           "name": "EventOps companion service"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "id": "capture-email-outcome",
       "name": "Capture Email outcome",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1760, 0],
+      "position": [
+        1760,
+        0
+      ],
       "parameters": {
-        "jsCode": "return [{json:{source:'email',payload:$json,limit:$('Validate and reserve request').first().json.limit}}];"
+        "jsCode": "const err=$json.error; const timeout=JSON.stringify(err||'').toLowerCase().includes('timed out'); return [{json:{source:'email',limit:$('Validate and reserve request').first().json.limit,payload:err?{status:timeout?'timed_out':'failed',error:'Mailtrap adapter request failed',messages:[]}:$json}}];"
       }
     },
     {
@@ -266,10 +313,13 @@
       "name": "Extract Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1980, 0],
+      "position": [
+        1980,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/extract\" }}",
+        "url": "http://processor:8766/stages/extract",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -284,14 +334,18 @@
           "id": "eventops-service",
           "name": "EventOps companion service"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "id": "read-web",
       "name": "Read Web",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2200, 0],
+      "position": [
+        2200,
+        0
+      ],
       "parameters": {
         "method": "GET",
         "url": "={{ $('Allowed source configuration').first().json.web }}",
@@ -318,9 +372,12 @@
       "name": "Capture Web outcome",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2420, 0],
+      "position": [
+        2420,
+        0
+      ],
       "parameters": {
-        "jsCode": "const ok = $json.statusCode === 200 && typeof ($json.body ?? $json.data) === 'string'; return [{json:{source:'web',limit:$('Validate and reserve request').first().json.limit,payload:{status:ok?'completed':'failed',body:ok?($json.body ?? $json.data):'',reference:$('Allowed source configuration').first().json.web,error:ok?null:('Source returned HTTP '+($json.statusCode || 'network error'))}}}];"
+        "jsCode": "const config=$('Allowed source configuration').first().json; const reason=config.configuration_errors?.web; const text=$json.body??$json.data; const ok=$json.statusCode===200&&typeof text==='string'; const timeout=/timeout|timed.out|etimedout/i.test(JSON.stringify($json.error||'')); return [{json:{source:'web',limit:$('Validate and reserve request').first().json.limit,payload:{status:reason?'unavailable':ok?'completed':timeout?'timed_out':'failed',body:ok?text:'',reference:config.web,http_status:$json.statusCode||null,error:reason|| (ok?null:timeout?'Source timed out':'Source request failed or returned HTTP '+($json.statusCode||'network error'))}}}];"
       }
     },
     {
@@ -328,10 +385,13 @@
       "name": "Extract Web",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2640, 0],
+      "position": [
+        2640,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/extract\" }}",
+        "url": "http://processor:8766/stages/extract",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -346,16 +406,20 @@
           "id": "eventops-service",
           "name": "EventOps companion service"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "id": "aggregate-source-evidence",
       "name": "Aggregate source evidence",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2860, 0],
+      "position": [
+        2860,
+        0
+      ],
       "parameters": {
-        "jsCode": "const groups = ['Extract Calendar','Extract Email','Extract Web'].map(n=>$(n).first().json); return [{json:{records:groups.flatMap(x=>x.records),outcomes:groups.map(x=>x.outcome)}}];"
+        "jsCode": "const groups=['Isolate Calendar processing','Isolate Email processing','Isolate Web processing'].map(n=>$(n).first().json);return [{json:{records:groups.flatMap(g=>g.records),outcomes:groups.map(g=>g.outcome)}}];"
       }
     },
     {
@@ -363,10 +427,13 @@
       "name": "Normalize fields",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3080, 0],
+      "position": [
+        3080,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/normalize\" }}",
+        "url": "http://processor:8766/stages/normalize",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -388,10 +455,13 @@
       "name": "Merge duplicates",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3300, 0],
+      "position": [
+        3300,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/deduplicate\" }}",
+        "url": "http://processor:8766/stages/deduplicate",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -413,10 +483,13 @@
       "name": "Deterministic verification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3520, 0],
+      "position": [
+        3520,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/stages/verify\" }}",
+        "url": "http://processor:8766/stages/verify",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -438,7 +511,10 @@
       "name": "Any discrepancies?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [3740, 0],
+      "position": [
+        3740,
+        0
+      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -468,7 +544,10 @@
       "name": "Preserve review queue",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3960, -120],
+      "position": [
+        3960,
+        -120
+      ],
       "parameters": {
         "jsCode": "return [{json:{...$json,review_required:true}}];"
       }
@@ -478,7 +557,10 @@
       "name": "All checks passed",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3960, 120],
+      "position": [
+        3960,
+        120
+      ],
       "parameters": {
         "jsCode": "return [{json:{...$json,review_required:false}}];"
       }
@@ -488,10 +570,13 @@
       "name": "Persist authoritative results",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [4180, 0],
+      "position": [
+        4180,
+        0
+      ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVENTOPS_PROCESSOR_URL + \"/runs/finish\" }}",
+        "url": "http://processor:8766/runs/finish",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {
@@ -499,7 +584,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {owner:$('Validate and reserve request').first().json.owner,request_id:$('Validate and reserve request').first().json.request_id,event_id:$('Validate and reserve request').first().json.event_id,limit:$('Validate and reserve request').first().json.limit,run_id:$('Validate and reserve request').first().json.run_id,execution_id:$execution.id,outcomes:$('Aggregate source evidence').first().json.outcomes,records:$json.records} }}"
+        "jsonBody": "={{ {owner:$('Validate and reserve request').first().json.owner,request_id:$('Validate and reserve request').first().json.request_id,event_id:$('Validate and reserve request').first().json.event_id,scenario:$('Validate and reserve request').first().json.scenario,limit:$('Validate and reserve request').first().json.limit,run_id:$('Validate and reserve request').first().json.run_id,execution_id:$execution.id,outcomes:$('Aggregate source evidence').first().json.outcomes,records:$json.records} }}"
       },
       "credentials": {
         "httpHeaderAuth": {
@@ -513,12 +598,141 @@
       "name": "Return verification result",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
-      "position": [4400, 0],
+      "position": [
+        4400,
+        0
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}",
         "options": {}
       }
+    },
+    {
+      "id": "isolate-calendar-processing",
+      "name": "Isolate Calendar processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        500
+      ],
+      "parameters": {
+        "jsCode": "return [{json:$json.outcome?$json:{records:[],outcome:{source:'calendar',status:'failed',count:0,error:'Source processing service unavailable',observed_at:new Date().toISOString()}}}];"
+      }
+    },
+    {
+      "id": "checkpoint-calendar",
+      "name": "Checkpoint Calendar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://processor:8766/runs/checkpoint",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {owner:$('Validate and reserve request').first().json.owner,run_id:$('Validate and reserve request').first().json.run_id,execution_id:$execution.id,stage:'calendar',outcome:$json.outcome} }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "eventops-service",
+          "name": "EventOps companion service"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "isolate-email-processing",
+      "name": "Isolate Email processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        500
+      ],
+      "parameters": {
+        "jsCode": "return [{json:$json.outcome?$json:{records:[],outcome:{source:'email',status:'failed',count:0,error:'Source processing service unavailable',observed_at:new Date().toISOString()}}}];"
+      }
+    },
+    {
+      "id": "checkpoint-email",
+      "name": "Checkpoint Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://processor:8766/runs/checkpoint",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {owner:$('Validate and reserve request').first().json.owner,run_id:$('Validate and reserve request').first().json.run_id,execution_id:$execution.id,stage:'email',outcome:$json.outcome} }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "eventops-service",
+          "name": "EventOps companion service"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "isolate-web-processing",
+      "name": "Isolate Web processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        500
+      ],
+      "parameters": {
+        "jsCode": "return [{json:$json.outcome?$json:{records:[],outcome:{source:'web',status:'failed',count:0,error:'Source processing service unavailable',observed_at:new Date().toISOString()}}}];"
+      }
+    },
+    {
+      "id": "checkpoint-web",
+      "name": "Checkpoint Web",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://processor:8766/runs/checkpoint",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {owner:$('Validate and reserve request').first().json.owner,run_id:$('Validate and reserve request').first().json.run_id,execution_id:$execution.id,stage:'web',outcome:$json.outcome} }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "eventops-service",
+          "name": "EventOps companion service"
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "connections": {
@@ -617,7 +831,7 @@
       "main": [
         [
           {
-            "node": "Read Email",
+            "node": "Isolate Calendar processing",
             "type": "main",
             "index": 0
           }
@@ -650,7 +864,7 @@
       "main": [
         [
           {
-            "node": "Read Web",
+            "node": "Isolate Email processing",
             "type": "main",
             "index": 0
           }
@@ -683,7 +897,7 @@
       "main": [
         [
           {
-            "node": "Aggregate source evidence",
+            "node": "Isolate Web processing",
             "type": "main",
             "index": 0
           }
@@ -779,6 +993,72 @@
         [
           {
             "node": "Return verification result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Isolate Calendar processing": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checkpoint Calendar": {
+      "main": [
+        [
+          {
+            "node": "Read Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Isolate Email processing": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checkpoint Email": {
+      "main": [
+        [
+          {
+            "node": "Read Web",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Isolate Web processing": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint Web",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checkpoint Web": {
+      "main": [
+        [
+          {
+            "node": "Aggregate source evidence",
             "type": "main",
             "index": 0
           }

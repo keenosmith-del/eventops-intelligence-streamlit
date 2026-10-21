@@ -1,0 +1,11 @@
+{
+  "execution_id": "24",
+  "status": "rejected_by_validation",
+  "actual_model_tools_called": [
+    "reference_lookup",
+    "inspect_findings",
+    "inspect_evidence"
+  ],
+  "reason": "A generated citation shortened/combined a record identifier that did not occur in tool observations. Server rejected the entire explanation. No status changed.",
+  "classification": "Actual model invocation, not a fixture; this failure remains separate from successful execution 9."
+}

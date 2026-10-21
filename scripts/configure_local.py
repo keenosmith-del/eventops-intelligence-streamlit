@@ -29,10 +29,15 @@ if args.provider_env:
     ):
         if approved.get(key):
             config[key] = approved[key]
-for key in ("EVENTOPS_SERVICE_TOKEN", "N8N_WEBHOOK_TOKEN", "N8N_ENCRYPTION_KEY"):
+for key in (
+    "EVENTOPS_SERVICE_TOKEN",
+    "N8N_WEBHOOK_TOKEN",
+    "N8N_ENCRYPTION_KEY",
+    "COMPANION_POSTGRES_PASSWORD",
+):
     if not config.get(key):
         config[key] = secrets.token_urlsafe(40)
-config["GEMINI_ENABLED"] = "true" if config.get("GEMINI_API_KEY") else "false"
+config["GEMINI_ENABLED"] = config.get("GEMINI_ENABLED", "false")
 path.write_text("\n".join(f"{k}={v}" for k, v in config.items()) + "\n")
 os.chmod(path, 0o600)
 print("Independent local configuration saved; provider credentials not displayed.")

@@ -1,0 +1,39 @@
+# Preparation only. Do not start until hosting, domains, access and costs are approved.
+# Override the tested local topology on a reviewed private container host.
+services:
+  app:
+    ports: !reset []
+    environment:
+      PUBLIC_DEMO: "true"
+      APP_PASSWORD: ${APP_PASSWORD:?Set a strong demo access password}
+      KNOWLEDGE_ADMIN_ENABLED: "false"
+      N8N_WEBHOOK_URL: https://${AUTOMATION_DOMAIN}/webhook/eventops-verify
+      N8N_AGENT_URL: https://${AUTOMATION_DOMAIN}/webhook/eventops-agent
+      EVENTOPS_LOCAL_COMPOSE: "false"
+      EVENTOPS_DATABASE_URL: ${HOSTED_COMPANION_DATABASE_URL:?Use a dedicated PostgreSQL with TLS}
+  processor:
+    ports: !reset []
+    environment:
+      EVENTOPS_DATABASE_URL: ${HOSTED_COMPANION_DATABASE_URL}
+      ENABLE_LOCAL_SCENARIO: "false"
+      ASSESSMENT_SOURCE_BASE_URL: ${HOSTED_ASSESSMENT_SOURCE_URL:-}
+      ASSESSMENT_SOURCE_HOST: ${HOSTED_ASSESSMENT_SOURCE_HOST:-}
+  n8n:
+    ports: !reset []
+    environment:
+      N8N_WEBHOOK_URL: https://${AUTOMATION_DOMAIN}/
+      N8N_SECURE_COOKIE: "true"
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "true"
+  gateway:
+    image: caddy:2-alpine
+    ports: ["80:80", "443:443"]
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      AUTOMATION_DOMAIN: ${AUTOMATION_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - gateway_tls:/data
+    depends_on: [app, n8n]
+volumes:
+  gateway_tls:

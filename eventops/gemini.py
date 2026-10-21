@@ -50,10 +50,7 @@ def grounded_answer(question, evidence, store, transport=None):
                         "text": json.dumps(
                             {
                                 "question": question,
-                                "evidence": [
-                                    {"id": r["id"], "content": r["content"]}
-                                    for r in evidence
-                                ],
+                                "evidence": [{"id": r["id"], "content": r["content"]} for r in evidence],
                             }
                         )
                     }
@@ -68,9 +65,7 @@ def grounded_answer(question, evidence, store, transport=None):
         },
     }
     try:
-        with httpx.Client(
-            timeout=30, transport=transport, follow_redirects=False
-        ) as client:
+        with httpx.Client(timeout=30, transport=transport, follow_redirects=False) as client:
             response = client.post(
                 f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
                 headers={"x-goog-api-key": setting("GEMINI_API_KEY")},
@@ -81,11 +76,7 @@ def grounded_answer(question, evidence, store, transport=None):
         candidate = raw["candidates"][0]
         if candidate.get("finishReason") != "STOP":
             raise ValueError("Incomplete generation")
-        text = "".join(
-            p.get("text", "")
-            for p in candidate["content"]["parts"]
-            if not p.get("thought")
-        )
+        text = "".join(p.get("text", "") for p in candidate["content"]["parts"] if not p.get("thought"))
         answer = Answer.model_validate_json(text)
         if not answer.answer and not answer.citation_ids:
             return {
@@ -101,6 +92,20 @@ def grounded_answer(question, evidence, store, transport=None):
             or not set(answer.citation_ids) <= allowed
         ):
             raise ValueError("Invalid citations")
+        # Cheap conservative checks complement, but do not prove, factual entailment.
+        cited_text = " ".join(r["content"] for r in evidence if r["id"] in answer.citation_ids)
+
+        def numbers(value):
+            return {int(n) for n in re.findall(r"\b\d+\b", value)}
+
+        if not numbers(answer.answer) <= numbers(cited_text) or re.search(
+            r"\bI (?:sent|updated|changed|approved|verified)\b", answer.answer, re.I
+        ):
+            return {
+                **unavailable,
+                "reason": "unsupported_claim",
+                "note": "Numeric/source mismatch or prohibited action claim; not a complete entailment evaluator.",
+            }
         return {
             "status": "generated",
             **answer.model_dump(),

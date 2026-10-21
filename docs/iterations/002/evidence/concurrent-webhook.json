@@ -1,0 +1,56 @@
+{
+  "observed_at": "2026-10-20T21:56:06.280813+00:00",
+  "request_id": "6d0ff54d-f078-42bc-bfcf-b3d98bde15af",
+  "responses": [
+    {
+      "status": "completed",
+      "execution_id": "22"
+    },
+    {
+      "status": "running",
+      "execution_id": "22"
+    }
+  ],
+  "persisted_state": "completed",
+  "source_checkpoints": [
+    {
+      "stage": "calendar",
+      "at": "2026-10-20T21:56:03.147731+00:00",
+      "outcome": {
+        "source": "calendar",
+        "status": "completed",
+        "reference": "http://scenario:8090/calendar.ics",
+        "count": 2,
+        "error": null,
+        "observed_at": "2026-10-20T21:56:03.139713+00:00"
+      }
+    },
+    {
+      "stage": "email",
+      "at": "2026-10-20T21:56:06.180215+00:00",
+      "outcome": {
+        "source": "email",
+        "status": "completed",
+        "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+        "count": 3,
+        "error": null,
+        "observed_at": "2026-10-20T21:56:06.165088+00:00"
+      }
+    },
+    {
+      "stage": "web",
+      "at": "2026-10-20T21:56:06.204254+00:00",
+      "outcome": {
+        "source": "web",
+        "status": "completed",
+        "reference": "http://scenario:8090/records.json",
+        "count": 5,
+        "error": null,
+        "observed_at": "2026-10-20T21:56:06.194076+00:00"
+      }
+    }
+  ],
+  "reconciliation_http_ms": 11.713124986272305,
+  "samples": 1,
+  "note": "Two real simultaneous webhook requests; one reserved run. Per-node execution manifest corroborates the replay branch."
+}

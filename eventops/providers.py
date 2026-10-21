@@ -35,9 +35,7 @@ def validate_url(url, resolve=True):
     if resolve:
         try:
             addresses = socket.getaddrinfo(p.hostname, 443, type=socket.SOCK_STREAM)
-            if not addresses or any(
-                not ipaddress.ip_address(item[4][0]).is_global for item in addresses
-            ):
+            if not addresses or any(not ipaddress.ip_address(item[4][0]).is_global for item in addresses):
                 raise SourceError("Source resolved to a non-public address")
         except OSError as exc:
             raise SourceError("Source DNS lookup failed") from exc
@@ -73,8 +71,7 @@ def fetch(url, headers=None, transport=None):
 
 def mailtrap(limit=3, transport=None):
     token, account, inbox = [
-        setting(k)
-        for k in ("MAILTRAP_API_TOKEN", "MAILTRAP_ACCOUNT_ID", "MAILTRAP_INBOX_ID")
+        setting(k) for k in ("MAILTRAP_API_TOKEN", "MAILTRAP_ACCOUNT_ID", "MAILTRAP_INBOX_ID")
     ]
     if not all((token, account, inbox)):
         return {
@@ -92,22 +89,24 @@ def mailtrap(limit=3, transport=None):
         if not isinstance(messages, list):
             raise ValueError("Expected messages array")
         output = []
+        errors = []
         for message in messages[: min(limit, 5)]:
             mid = str(message["id"])
             if not mid.isdigit():
                 raise ValueError("Invalid message ID")
             url = f"{root}/{mid}/body.txt"
+            try:
+                body = fetch(url, headers, transport)[:12000]
+            except SourceError as exc:
+                errors.append({"message_id": mid, "error": str(exc)})
+                continue
             output.append(
-                {
-                    "id": mid,
-                    "subject": str(message.get("subject", ""))[:500],
-                    "body": fetch(url, headers, transport)[:12000],
-                    "reference": url,
-                }
+                {"id": mid, "subject": str(message.get("subject", ""))[:500], "body": body, "reference": url}
             )
         return {
             "source": "email",
-            "status": "completed",
+            "status": "partially_processed" if errors and output else "failed" if errors else "completed",
+            "errors": errors,
             "reference": root,
             "messages": output,
             "count": len(output),
