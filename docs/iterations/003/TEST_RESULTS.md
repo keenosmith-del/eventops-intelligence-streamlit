@@ -7,6 +7,7 @@ These are local release results, not evidence of a public deployment. Gemini rem
 | Baseline | 135 tests passed; exact merged baseline GitHub CI completed successfully | `evidence/baseline-tests.txt`, `baseline-ci.json` |
 | Updated macOS regression | 147 passed; one Starlette/httpx deprecation warning | `evidence/pytest.txt` |
 | Disposable Linux ARM64 regression | 147 passed; same warning; no release database/provider credentials supplied | `evidence/linux-pytest.txt` |
+| Release GitHub CI | Both Python and container jobs completed successfully for implementation commit `4f926f46d3d19421354e67b7f70a0b798ce99840`, run39552175515: tests, real embedding evaluation, native Streamlit startup, Linux image imports/non-root and Caddy validation | `evidence/release-ci.json`; [observed run](https://github.com/keenosmith-del/eventops-intelligence-streamlit/actions/runs/39552175515) |
 | Static checks | Ruff, compilation, workflow generation drift, both workflow contracts and production/Funnel topology validation passed | Reproducible commands below; CI repeats these |
 | Gateway | Caddy HTTPS configuration validates. Real loopback gateway serves app HTML; webhook/editor/API/health routes return404; security headers asserted | `evidence/gateway-validation.txt`, `proxy-smoke.json` |
 | Workflow publication | Actual verification31-node and Gemini agent11-node graphs imported and published into isolated n8n; revision and hashes recorded | `evidence/workflow-publication.txt` |
@@ -45,3 +46,5 @@ Initial attempts exposed invalid comma-separated tmpfs parsing, an unreliable ex
 One first host test run lacked sandbox permission for its ephemeral loopback listener; rerunning with local-network permission passed147. Running unit tests inside an already configured production service was also inappropriate: production validation deliberately rejects test SQLite settings, and the cold download exposed the cache defect. The final Linux regression ran in a separate disposable container without release configuration and passed147; the actual protected runtime separately passed retrieval and end-to-end acceptance. The model cache fix uses persistent `HF_HOME` alongside `FASTEMBED_CACHE_PATH`.
 
 Resource samples in the rehearsal report are post-restart idle samples, not peak load or hosted sizing proof. Configured production container memory ceilings total about4.1GiB; a roughly6GB ARM host leaves operating-system/build headroom but still needs real hosted measurement. No load/uptime SLA or production-grade free-tier reliability is claimed.
+
+CI emitted non-failing notices about the ubuntu-latest image migration and older action runtime versions. The jobs still completed successfully; these are maintenance notices rather than deployment acceptance evidence.

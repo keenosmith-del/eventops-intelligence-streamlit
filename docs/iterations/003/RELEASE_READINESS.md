@@ -2,7 +2,7 @@
 
 **Verdict:** local deterministic release rehearsal passed. The project is prepared to begin controlled, owner-approved free infrastructure setup and hosted acceptance. It is **not publicly deployed**, and full public AI assessment acceptance remains blocked while Gemini is disabled. A real-browser release check is pending because the browser tool refused the local target.
 
-Starting implementation baseline: `a0f41bfc99c9a991879e3047beb3739f98d8ad6c` (initial stale local main was `be2aed8`). Work is on `iteration/003-deployment-readiness`; no merge into main or infrastructure creation is implied. Source/rehearsal hashes accompany the evidence, and Git identifies the delivered commit. Necessary commits/pushes were subsequently authorized by the owner.
+Starting implementation baseline: `a0f41bfc99c9a991879e3047beb3739f98d8ad6c` (initial stale local main was `be2aed8`). Work is on `iteration/003-deployment-readiness`; no merge into main or infrastructure creation is implied. Source/rehearsal hashes accompany the evidence, and Git identifies the delivered commit. Necessary commits/pushes were subsequently authorized by the owner. Implementation commit: `4f926f46d3d19421354e67b7f70a0b798ce99840`; this report is updated in a subsequent documentation-only commit.
 
 | Area | Conclusion | Evidence / condition |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ Starting implementation baseline: `a0f41bfc99c9a991879e3047beb3739f98d8ad6c` (in
 | Persistent storage | Tested locally / hosted pending | DB/n8n/model volumes; review/claim/object preservation, stopped n8n state backup |
 | Authentication boundaries | Reviewed | Strong gate, private service tokens, owner capabilities, replay/rate bounds; enterprise identity is out of scope |
 | HTTPS gateway | Configuration validated / live pending | Caddy validation and loopback routing; no public TLS certificate/Funnel route tested |
-| CI | Baseline verified / release run pending | Exact baseline successful GitHub run39546325285; release checks will be queried after push |
+| CI | Verified | Baseline39546325285 and release39552175515 both completed successfully; release run checks exact implementation commit `4f926f46d3d19421354e67b7f70a0b798ce99840` |
 | Monitoring | Prepared | Startup SQL, liveness, manual authenticated readiness, bounded redacted logs and incident runbook; no hosted alert service provisioned |
 | Backup and restore | Tested locally / hosted pending | Real PG archive restored into a new empty destination; exact payload/claim equality; off-host/n8n replacement restore pending |
 | Full release rehearsal | Partial overall; deterministic path passed | Model functions intentionally not revalidated; actual browser check blocked; all8 services healthy after restart |
