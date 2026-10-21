@@ -1,5 +1,6 @@
 """Narrow, authenticated primitives for the n8n graph; no whole-pipeline endpoint."""
 
+import hashlib
 import hmac
 import json
 import re
@@ -10,7 +11,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from eventops import pipeline, providers
 from eventops.config import setting
-from eventops.knowledge import load_documents
+from eventops.knowledge import fingerprint, load_documents
+from eventops.scenarios import configuration
 from eventops.store import Store, now
 
 app = FastAPI(
@@ -25,9 +27,19 @@ app = FastAPI(
 async def bounded_body(request: Request, call_next):
     from starlette.responses import JSONResponse
 
+    if not request.headers.get("content-length", "0").isdigit():
+        return JSONResponse({"detail": "Invalid content length"}, status_code=400)
     if int(request.headers.get("content-length", "0")) > 2_000_000:
         return JSONResponse({"detail": "Payload too large"}, status_code=413)
-    body = await request.body()
+    chunks = []
+    size = 0
+    async for chunk in request.stream():
+        size += len(chunk)
+        if size > 2_000_000:
+            return JSONResponse({"detail": "Payload too large"}, status_code=413)
+        chunks.append(chunk)
+    body = b"".join(chunks)
+    request._body = body
     if len(body) > 2_000_000:
         return JSONResponse({"detail": "Payload too large"}, status_code=413)
     return await call_next(request)
@@ -48,6 +60,8 @@ class RunInput(Contract):
     request_id: str = Field(pattern=r"^[a-zA-Z0-9-]{16,80}$")
     event_id: str = Field(pattern=r"^EVT-\d{3}$")
     limit: int = Field(default=3, ge=1, le=5)
+    scenario: Literal["external_reference", "assessment_event", "provider_unavailable"] = "external_reference"
+    execution_id: str | None = Field(default=None, max_length=80)
 
 
 class Stage(Contract):
@@ -84,15 +98,23 @@ def begin(data: RunInput):
     run_id = data.request_id
     existing = store.get(data.owner, run_id)
     if existing:
-        return {"replayed": True, "run_id": run_id, "run": existing["payload"]}
+        if any(
+            existing["payload"].get(k, "external_reference" if k == "scenario" else None) != getattr(data, k)
+            for k in ("event_id", "limit", "scenario")
+        ):
+            raise HTTPException(409, "Request ID is already bound to different inputs")
+        return {"replayed": True, "run_id": run_id, "run": {"run_id": run_id, **existing["payload"]}}
     try:
         store.save(
             data.owner,
             "run",
             {
                 **data.model_dump(),
+                "run_id": run_id,
                 "status": "running",
                 "started_at": now(),
+                "heartbeat_at": now(),
+                "stages": [],
                 "records": [],
                 "outcomes": [],
             },
@@ -102,6 +124,15 @@ def begin(data: RunInput):
         from sqlalchemy.exc import IntegrityError
 
         if isinstance(exc, IntegrityError):
+            existing = store.get(data.owner, run_id)
+            if existing:
+                if any(
+                    existing["payload"].get(k, "external_reference" if k == "scenario" else None)
+                    != getattr(data, k)
+                    for k in ("event_id", "limit", "scenario")
+                ):
+                    raise HTTPException(409, "Request ID is already bound to different inputs")
+                return {"replayed": True, "run_id": run_id, "run": {"run_id": run_id, **existing["payload"]}}
             raise HTTPException(409, "Execution ID already reserved") from exc
         raise
     return {"replayed": False, "run_id": run_id, **data.model_dump()}
@@ -116,27 +147,18 @@ def email(limit: int = 3):
     except providers.SourceError as exc:
         return {
             "source": "email",
-            "status": "failed",
+            "status": "timed_out" if "timed out" in str(exc) else "failed",
             "error": str(exc),
             "messages": [],
         }
 
 
 @app.get("/sources/config", dependencies=[Depends(authorize)])
-def source_config():
-    urls = {
-        "calendar": setting("CALENDAR_FEED_URL", providers.DEFAULT_CALENDAR),
-        "web": setting("WEB_SOURCE_URL", providers.DEFAULT_WEB),
-    }
-    errors = {}
-    for source, url in urls.items():
-        try:
-            # Network/DNS failures belong to each n8n source read, not global configuration.
-            providers.validate_url(url, resolve=False)
-        except providers.SourceError as exc:
-            errors[source] = str(exc)
-            urls[source] = ""
-    return {**urls, "configuration_errors": errors}
+def source_config(scenario: str = "external_reference"):
+    try:
+        return configuration(scenario)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 @app.post("/stages/extract", dependencies=[Depends(authorize)])
@@ -148,7 +170,9 @@ def extraction(data: ExtractInput):
             "records": records,
             "outcome": {
                 "source": data.source,
-                "status": payload.get("status", "failed"),
+                "status": ("completed_empty" if not records else "completed")
+                if payload.get("status") == "completed"
+                else payload.get("status", "failed"),
                 "reference": payload.get("reference"),
                 "count": len(records),
                 "error": payload.get("error"),
@@ -189,29 +213,96 @@ def finish(data: Finish):
     current = store.get(data.owner, data.run_id)
     if not current or current["payload"].get("request_id") != data.request_id:
         raise HTTPException(404, "Execution not found")
+    if any(
+        current["payload"].get(k, "external_reference" if k == "scenario" else None) != getattr(data, k)
+        for k in ("event_id", "scenario", "limit")
+    ):
+        raise HTTPException(409, "Finalization inputs differ from reserved request")
     if current["payload"]["status"] != "running":
         return current["payload"]
     if {x.get("source") for x in data.outcomes} != {"calendar", "email", "web"}:
         raise HTTPException(422, "All three source outcomes required")
+    allowed = {"completed", "completed_empty", "failed", "unavailable", "timed_out", "partially_processed"}
+    if any(o.get("status") not in allowed for o in data.outcomes):
+        raise HTTPException(422, "Invalid source outcome status")
     # Reapply authoritative verification even if an intermediate node is altered.
     records = pipeline.verify(data.records, data.event_id)
-    completed = sum(o["status"] == "completed" for o in data.outcomes)
+    completed = sum(o["status"] in ("completed", "completed_empty") for o in data.outcomes)
     result = {
         **current["payload"],
         "run_id": data.run_id,
         "execution_id": data.execution_id,
         "orchestrator": "n8n",
-        "status": (
-            "completed" if completed == 3 else "partial" if completed else "failed"
-        ),
+        "status": ("completed" if completed == 3 else "partial" if completed else "failed"),
         "finished_at": now(),
         "records": records,
         "outcomes": data.outcomes,
         "summary": pipeline.summary(records),
         "agent": {"status": "not_requested"},
     }
-    store.replace(data.owner, data.run_id, result)
-    return result
+
+    def finalize(existing):
+        if existing["status"] != "running":
+            return existing
+        return {**existing, **result, "stages": existing.get("stages", [])}
+
+    return store.mutate(data.owner, data.run_id, finalize)
+
+
+class Checkpoint(Contract):
+    owner: str = Field(pattern=r"^[a-zA-Z0-9-]{16,80}$")
+    run_id: str = Field(pattern=r"^[a-zA-Z0-9-]{16,80}$")
+    execution_id: str = Field(max_length=80)
+    stage: str = Field(min_length=1, max_length=100)
+    outcome: dict | None = None
+
+
+@app.post("/runs/checkpoint", dependencies=[Depends(authorize)])
+def checkpoint(data: Checkpoint):
+    def change(run):
+        if run["status"] != "running":
+            return run
+        stages = run.get("stages", [])
+        if not any(s["stage"] == data.stage for s in stages):
+            stages.append({"stage": data.stage, "at": now(), "outcome": data.outcome})
+        return {**run, "stages": stages, "heartbeat_at": now(), "execution_id": data.execution_id}
+
+    try:
+        return Store().mutate(data.owner, data.run_id, change)
+    except KeyError as exc:
+        raise HTTPException(404, "Run not found") from exc
+
+
+@app.get("/runs/{run_id}/reconcile", dependencies=[Depends(authorize)])
+def reconcile_run(run_id: str, x_workspace_key: str = Header(default="")):
+    from eventops.lifecycle import reconcile
+
+    return reconcile(Store(), x_workspace_key, run_id)
+
+
+def snapshot(payload):
+    return {
+        "references": [
+            r for r in load_documents() if payload["event_id"] in r["scope"] or "ALL" in r["scope"]
+        ],
+        "findings": [
+            {"id": r["id"], "status": r["status"], "issues": r["issues"], "checks": r["checks"]}
+            for r in payload["records"]
+        ],
+        "evidence": [{"id": r["id"], "evidence": r["evidence"]} for r in payload["records"]],
+    }
+
+
+def snapshot_hash(payload):
+    return fingerprint(
+        [
+            snapshot(payload),
+            {
+                "outcomes": payload["outcomes"],
+                "review_states": [(r["id"], r.get("review_status")) for r in payload["records"]],
+            },
+        ]
+    )
 
 
 class AgentInput(Contract):
@@ -235,40 +326,42 @@ def agent_context(data: AgentInput):
             if evidence.get("source") == "email":
                 excerpt = evidence.get("excerpt", "")
                 emails = re.findall(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", excerpt)
-                if (
-                    "CONTROLLED SYNTHETIC ASSESSMENT REGISTRATION" not in excerpt
-                    or any(
-                        not email.casefold().endswith("@example.com")
-                        for email in emails
-                    )
+                if "CONTROLLED SYNTHETIC ASSESSMENT REGISTRATION" not in excerpt or any(
+                    not email.casefold().endswith("@example.com") for email in emails
                 ):
                     raise HTTPException(
                         422,
                         "Only labelled synthetic example.com sandbox messages may be sent to the demonstration agent",
                     )
+    digest = snapshot_hash(payload)
+    key = hashlib.sha256((data.owner + data.run_id + data.intent.strip() + digest).encode()).hexdigest()
+    claim = store.claim_investigation(data.owner, key)
+    if not claim["claimed"]:
+        return {
+            "replayed": True,
+            "agent": claim["result"]
+            or {
+                "status": claim["state"],
+                "note": "Identical investigation already reserved; no second model execution.",
+            },
+        }
     if not store.budget("n8n-agent", 5):
+        result = {"status": "unavailable", "reason": "daily_budget_exhausted"}
+        store.finish_investigation(data.owner, key, result)
         raise HTTPException(429, "Daily agent execution budget exhausted")
     return {
         **data.model_dump(),
         "event_id": payload["event_id"],
-        "references": [
-            r
-            for r in load_documents()
-            if payload["event_id"] in r["scope"] or "ALL" in r["scope"]
-        ],
-        "findings": [
-            {
-                "id": r["id"],
-                "status": r["status"],
-                "issues": r["issues"],
-                "checks": r["checks"],
-            }
-            for r in payload["records"]
-        ],
-        "evidence": [
-            {"id": r["id"], "evidence": r["evidence"]} for r in payload["records"]
-        ],
+        "replayed": False,
+        "investigation_id": key,
+        "snapshot_hash": digest,
+        **snapshot(payload),
     }
+
+
+class EvidenceFinding(Contract):
+    description: str = Field(max_length=1500)
+    evidence_ids: list[str] = Field(min_length=1, max_length=10)
 
 
 class AgentAnswer(Contract):
@@ -276,6 +369,10 @@ class AgentAnswer(Contract):
     intent: str = Field(max_length=1000)
     evidence_ids: list[str] = Field(max_length=30)
     limitations: list[str] = Field(max_length=10)
+    findings: list[EvidenceFinding] = Field(default_factory=list, max_length=10)
+    conflicts: list[EvidenceFinding] = Field(default_factory=list, max_length=10)
+    suggested_review_actions: list[str] = Field(default_factory=list, max_length=10)
+    uncertainties: list[str] = Field(default_factory=list, max_length=10)
 
 
 class AgentFinish(AgentInput):
@@ -283,6 +380,8 @@ class AgentFinish(AgentInput):
     output: str = Field(max_length=12000)
     intermediate_steps: list[dict] = Field(max_length=20)
     error: bool = False
+    investigation_id: str | None = Field(default=None, max_length=64)
+    snapshot_hash: str | None = Field(default=None, max_length=64)
 
 
 @app.post("/agent/finish", dependencies=[Depends(authorize)])
@@ -292,6 +391,8 @@ def agent_finish(data: AgentFinish):
     if not run or run["kind"] != "run":
         raise HTTPException(404, "Run not found")
     payload = run["payload"]
+    if data.snapshot_hash and data.snapshot_hash != snapshot_hash(payload):
+        raise HTTPException(409, "Run evidence changed during investigation")
     agent = {
         "status": "unavailable",
         "execution_id": data.execution_id,
@@ -299,10 +400,10 @@ def agent_finish(data: AgentFinish):
         "tool_calls": [],
         "note": "No validated model-assisted result available.",
     }
+    calls = []
+    rejection_code = "invalid_schema"
     try:
-        answer = AgentAnswer.model_validate_json(
-            re.sub(r"^```(?:json)?\s*|\s*```$", "", data.output.strip())
-        )
+        answer = AgentAnswer.model_validate_json(re.sub(r"^```(?:json)?\s*|\s*```$", "", data.output.strip()))
         calls = []
         observed_ids = set()
         allowed = {"reference_lookup", "inspect_findings", "inspect_evidence"}
@@ -312,25 +413,21 @@ def agent_finish(data: AgentFinish):
                 raise ValueError("Unapproved tool")
             # Citations must occur in actual tool results, not merely exist somewhere in the dataset.
             observation = step.get("observation", "")
-            observed = (
-                json.loads(observation) if isinstance(observation, str) else observation
-            )
+            observed = json.loads(observation) if isinstance(observation, str) else observation
             # n8n Code Tools wrap string results as [{"response": "<JSON>"}].
-            if (
-                isinstance(observed, list)
-                and len(observed) == 1
-                and isinstance(observed[0], dict)
-            ):
+            if isinstance(observed, list) and len(observed) == 1 and isinstance(observed[0], dict):
                 observed = json.loads(observed[0].get("response", ""))
-            if not isinstance(observed, dict) or not isinstance(
-                observed.get("records"), list
-            ):
+            if not isinstance(observed, dict) or not isinstance(observed.get("records"), list):
                 raise ValueError("Invalid tool observation")
-            observed_ids.update(
-                r["id"]
-                for r in observed["records"]
-                if isinstance(r, dict) and "id" in r
-            )
+            field = {
+                "reference_lookup": "references",
+                "inspect_findings": "findings",
+                "inspect_evidence": "evidence",
+            }[action["tool"]]
+            expected = {r["id"]: r for r in snapshot(payload)[field]}
+            if any(not isinstance(r, dict) or expected.get(r.get("id")) != r for r in observed["records"]):
+                raise ValueError("Tool observation differs from permitted evidence")
+            observed_ids.update(r["id"] for r in observed["records"] if isinstance(r, dict) and "id" in r)
             # Store observable tool calls and results; omit internal agent logs/thoughts.
             calls.append(
                 {
@@ -339,16 +436,11 @@ def agent_finish(data: AgentFinish):
                     "observation": str(step.get("observation", ""))[:16000],
                 }
             )
-        ids = observed_ids & (
-            {r["id"] for r in payload["records"]} | {r["id"] for r in load_documents()}
-        )
-        if (
-            data.error
-            or not calls
-            or not answer.summary
-            or not answer.evidence_ids
-            or not set(answer.evidence_ids) <= ids
-        ):
+        cited = set(answer.evidence_ids) | {
+            rid for item in answer.findings + answer.conflicts for rid in item.evidence_ids
+        }
+        ids = observed_ids & ({r["id"] for r in payload["records"]} | {r["id"] for r in load_documents()})
+        if data.error or not calls or not answer.summary or not answer.evidence_ids or not cited <= ids:
             raise ValueError("Missing model execution evidence or invalid citations")
         agent = {
             **agent,
@@ -358,8 +450,21 @@ def agent_finish(data: AgentFinish):
             "tool_calls": calls,
         }
     except (ValueError, TypeError, KeyError):
-        pass
-    payload["agent"] = agent
-    store.replace(data.owner, data.run_id, payload)
+        agent = {
+            **agent,
+            "reason": rejection_code,
+            "model_execution_observed": bool(calls),
+            "tool_calls": calls,
+            "note": "Model output rejected by evidence validation; deterministic results remain available.",
+        }
+
+    def save_agent(current):
+        if data.snapshot_hash and data.snapshot_hash != snapshot_hash(current):
+            raise HTTPException(409, "Evidence changed before saving investigation")
+        return {**current, "agent": agent}
+
+    store.mutate(data.owner, data.run_id, save_agent)
+    if data.investigation_id:
+        store.finish_investigation(data.owner, data.investigation_id, agent)
     store.save(data.owner, "agent", {"run_id": data.run_id, **agent})
     return agent

@@ -1,0 +1,7 @@
+[
+ {"id":"web-event-canonical","event_id":"EVT-101","title":"AI Engineering Summit","starts_at":"2026-10-21T09:00:00+02:00","venue":"Cape Town Convention Centre","synthetic":true},
+ {"id":"web-wrong-event","event_id":"EVT-999","full_name":"Theo Daniels","email":"theo.daniels@example.com","synthetic":true},
+ {"id":"web-name-conflict","event_id":"EVT-101","full_name":"Theo Wrongname","email":"theo.daniels@example.com","synthetic":true},
+ {"id":"web-incomplete","event_id":"EVT-101","email":"ada.mensah@example.com","participant_id":"P-001","synthetic":true},
+ {"id":"web-missing-identity","title":"Synthetic registration awaiting event identity","full_name":"Unknown Synthetic Person","email":"unknown@example.com","synthetic":true}
+]

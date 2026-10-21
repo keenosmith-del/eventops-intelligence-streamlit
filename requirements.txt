@@ -8,3 +8,6 @@ SQLAlchemy>=2.0,<2.1
 psycopg[binary]>=3.2,<4
 fastapi>=0.115,<1
 uvicorn>=0.34,<1
+numpy>=2,<3
+pandas>=2.3,<4
+starlette>=0.52,<2

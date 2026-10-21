@@ -59,12 +59,11 @@ def extract_claim(body):
         body = "".join(parser.parts)
     values = {k: "" for k in FIELDS}
     issues = []
-    ids = sorted(
-        set("EVT-" + x for x in re.findall(r"\bEVT[\s-]?(\d{3})\b", body, re.I))
-    )
-    emails = sorted(set(x.casefold() for x in EMAIL.findall(body)))
+    ids = sorted(set("EVT-" + x for x in re.findall(r"\bEVT[\s-]?(\d{3})\b", body, re.I)))
+    raw_emails = EMAIL.findall(body)
+    emails = sorted(set(x.casefold() for x in raw_emails))
     values["event_id"] = ids[0] if len(ids) == 1 else ""
-    values["email"] = emails[0] if len(emails) == 1 else ""
+    values["email"] = raw_emails[0] if len(emails) == 1 else ""
     if len(ids) > 1:
         issues.append("ambiguous_event_id")
     if len(emails) > 1:
@@ -77,9 +76,7 @@ def extract_claim(body):
         "venue": r"(?:location|venue)",
     }
     for field, label in labels.items():
-        matches = re.findall(
-            r"(?:^|[\n;])\s*" + label + r"\s*:\s*([^\n;]+)", body, re.I
-        )
+        matches = re.findall(r"(?:^|[\n;])\s*" + label + r"\s*:\s*([^\n;]+)", body, re.I)
         if len(set(clean(x) for x in matches)) > 1:
             issues.append("ambiguous_" + field)
         elif matches:
@@ -89,7 +86,7 @@ def extract_claim(body):
 
 def extract(payload, limit=3):
     source = payload["source"]
-    if payload.get("status") != "completed":
+    if payload.get("status") not in ("completed", "partially_processed"):
         return []
     body = payload.get("body", "")
     if not isinstance(body, str) or len(body.encode()) > 512_000:
@@ -137,8 +134,7 @@ def extract(payload, limit=3):
             )
             add(
                 raw,
-                str(component.get("UID", ""))
-                or hashlib.sha256(str(component).encode()).hexdigest()[:16],
+                str(component.get("UID", "")) or hashlib.sha256(str(component).encode()).hexdigest()[:16],
                 component.to_ical().decode(),
             )
     elif source == "web":
@@ -164,9 +160,7 @@ def normalize(records):
         for field in FIELDS:
             r[field] = clean(r.get(field))[:500]
         r["email"] = r["email"].casefold()
-        r["event_id"] = re.sub(
-            r"^EVT[\s-]?(\d{3})$", r"EVT-\1", r["event_id"], flags=re.I
-        ).upper()
+        r["event_id"] = re.sub(r"^EVT[\s-]?(\d{3})$", r"EVT-\1", r["event_id"], flags=re.I).upper()
         r["participant_id"] = r["participant_id"].upper()
         r["issues"] = list(r.get("issues", []))
         if r["email"] and not EMAIL.fullmatch(r["email"]):
@@ -225,7 +219,9 @@ def deduplicate(records):
         r["duplicate_type"] = (
             "conflicting"
             if r["conflicts"]
-            else "exact_or_complementary" if r["duplicate_count"] else "unique"
+            else "exact_or_complementary"
+            if r["duplicate_count"]
+            else "unique"
         )
         r["potentially_related"] = [
             v["source_record_id"]
@@ -275,9 +271,7 @@ def verify(records, target_event, references=None):
             r["event_id"] == target_event,
         )
         participant = people.get(r["email"])
-        is_registration = bool(
-            r["email"] or r["participant_id"] or r["source"] == "email"
-        )
+        is_registration = bool(r["email"] or r["participant_id"] or r["source"] == "email")
         if event:
             r["matches"].append(event)
             for field in ("title", "starts_at", "venue"):
@@ -286,9 +280,7 @@ def verify(records, target_event, references=None):
                     passed = clean(actual).casefold() == clean(expected).casefold()
                     if field == "starts_at" and actual:
                         try:
-                            passed = datetime.fromisoformat(
-                                actual
-                            ) == datetime.fromisoformat(expected)
+                            passed = datetime.fromisoformat(actual) == datetime.fromisoformat(expected)
                         except ValueError:
                             passed = False
                     check(
@@ -328,8 +320,7 @@ def verify(records, target_event, references=None):
                     "full_name",
                     r["full_name"],
                     pf["full_name"],
-                    bool(r["full_name"])
-                    and r["full_name"].casefold() == pf["full_name"].casefold(),
+                    bool(r["full_name"]) and r["full_name"].casefold() == pf["full_name"].casefold(),
                 )
                 if r["participant_id"]:
                     check(
@@ -350,11 +341,9 @@ def verify(records, target_event, references=None):
                     "authority": "deterministic",
                 }
             )
-        missing = not r["event_id"] or (
-            is_registration and (not r["email"] or not r["full_name"])
-        )
+        missing = not r["event_id"] or (is_registration and (not r["email"] or not r["full_name"]))
         rejected = bool(r["event_id"] and not event) or any(
-            x in issues
+            x in issues and (x != "registered_for_event" or bool(r["event_id"]))
             for x in (
                 "active_participant",
                 "registered_for_event",
@@ -363,11 +352,31 @@ def verify(records, target_event, references=None):
             )
         )
         r["status"] = (
-            "incomplete"
+            "rejected"
+            if rejected
+            else "incomplete"
             if missing
-            else "rejected" if rejected else "review_required" if issues else "verified"
+            else "review_required"
+            if issues
+            else "verified"
         )
         r["issues"] = sorted(set(issues))
+        r["relevance"] = (
+            "target_event"
+            if r["event_id"] == target_event
+            else "other_event"
+            if r["event_id"]
+            else "unmapped_observation"
+        )
+        r["field_provenance"] = {
+            field: [
+                {k: e.get(k) for k in ("source", "source_record_id", "reference")}
+                for item in r.get("inputs", [r])
+                if item.get(field)
+                for e in item.get("evidence", [])
+            ]
+            for field in FIELDS
+        }
         r["record_type"] = "registration" if is_registration else "event_observation"
         r["review_status"] = "unreviewed"
         result.append(r)
@@ -404,13 +413,11 @@ def export_csv(records, verified_only=False):
         if verified_only and r["status"] != "verified":
             continue
         row = {
-            k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v
-            for k, v in r.items()
+            k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v for k, v in r.items()
         }
         # Prevent spreadsheet formula injection in exported external values.
         row = {
-            k: "'" + str(v) if str(v).lstrip().startswith(("=", "+", "-", "@")) else v
-            for k, v in row.items()
+            k: "'" + str(v) if str(v).lstrip().startswith(("=", "+", "-", "@")) else v for k, v in row.items()
         }
         writer.writerow(row)
     return output.getvalue()

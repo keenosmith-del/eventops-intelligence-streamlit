@@ -1,37 +1,31 @@
 # Interview questions and defensible answers
 
-**Why build this version?** To demonstrate engineering selection rather than allegiance to one framework. The same business rules and evidence requirements can be delivered through a custom product or a smaller internal tool.
+**What changed in Iteration 002?** Relevant event HTTP scenarios, measurable RAG/ambiguity behavior, additive migrations and concurrency controls, source failure isolation/checkpoints/reconciliation, reusable evidence-validated investigations, a practical review interface, full Linux/PostgreSQL validation and offline CI preparation.
 
-**Why Streamlit?** It provides native chat, forms, tables, navigation and exports in Python. It is effective when operational usefulness matters more than highly customized frontend interactions. It is less appropriate for a complex branded multi-tenant product experience.
+**Why not a larger vector database?** The corpus is small and structured-row retrieval is measurable. Local FastEmbed vectors preserve complete facts/IDs with little infrastructure. Scale and measured query behavior, not appearance, should justify another store.
 
-**Why n8n instead of LangGraph here?** Visual source connections and branches are easy to inspect in a small operations workflow. LangGraph remains attractive when state machines, testing, code review and developer ownership dominate. The companion uses real n8n execution records rather than a decorative exported graph.
+**What does the evaluation prove?** Recall@5/MRR on curated expected sources, plus separate clarification/no-answer and curated fact/citation checks. It does not prove every generated statement is entailed or every unseen query works. Similarity is not confidence.
 
-**How do we know the RAG is semantic?** FastEmbed produced actual 19×384 passage vectors and query vectors. Cosine ranking finds the expected paraphrased cancellation and ID policies. Model/index fingerprints and stored hits make retrieval reproducible; there is no hard-coded question-to-answer mapping or lexical fallback pretending to be embeddings.
+**How is context safer?** Explicit event IDs/titles are resolved first. A vague pronoun alone is insufficient; multiple possible contexts or unsupported references clarify without a generation call.
 
-**Why row chunks?** Each row preserves one complete business fact plus its identifier and event scope. Arbitrary character splitting could separate a policy from its event or a participant from their active status. A much larger mixed-document corpus would need another chunking strategy and retrieval evaluation.
+**Are the event integrations real?** n8n makes actual HTTP requests to a separately served controlled synthetic Calendar/Web service and genuine Mailtrap GET APIs. That is real transport and processing, but not a fabricated external event API. Public holiday connectors remain distinct.
 
-**Why Gemini Flash-Lite?** It is a currently documented Flash-class model with free-tier availability and low-cost suitability. It actually answered this RAG demonstration and ran through n8n's compatible chat model node. Account quotas/billing must still be checked; there is no paid fallback.
+**Is the agent genuine?** Yes: actual n8n AI Agent/Gemini Chat Model executions contain model-selected reference/findings/evidence calls. The deterministic verification workflow is never relabelled as an LLM agent.
 
-**Is this truly an agent?** Only the optional Gemini workflow is called an LLM-powered agent. The real AI Agent node chose `reference_lookup`, `inspect_findings` and `inspect_evidence`; the saved execution contains those calls and the model's structured response. The verification graph is deterministic automation and is labelled accordingly.
+**Can it override verification?** No. Tools expose bounded snapshots only; there is no write, sending, arbitrary browsing, SQL or executable-code parameter. Suggested actions are advisory. Reviews/corrections are separate audit records, not mutations of source truth.
 
-**Does the agent's explanation verify identity?** No. Exact normalized directory matching, active status and registration are authoritative deterministic checks. Agent output cannot mutate those decisions. A review note is a separate human annotation.
+**What about hallucination or injection?** Prompts are only one layer. Tool capability restrictions, input/output bounds, permitted snapshot equality, observed citations and independent deterministic decisions enforce real boundaries. A live model invented a shortened record ID and the explanation was rejected. Citation validation still does not prove full entailment.
 
-**Why use Python alongside a low-code tool?** Parsing ICS/email/JSON and comparing identity fields needs careful tests, schema boundaries and reusable rules. n8n orchestrates these narrow primitives and owns the source/branch graph. Putting all rules into visual expressions would obscure correctness; hiding the complete workflow behind one Python endpoint would obscure orchestration.
+**Why reuse investigations?** An atomic owner/run/intent/evidence-hash claim prevents concurrent duplicate model spending. Changed evidence invalidates reuse. A crashed/incomplete reservation is not automatically re-executed; cost safety is preferred over pretending recovery exists.
 
-**What prevents prompt injection?** Untrusted input is delimited as data, tools expose only bounded read-only snapshots, no tool accepts executable instructions or URLs, output and citations/tool names are validated, and deterministic verification is reapplied. The demo refuses unlabelled or non-example.com email evidence before model analysis. Prompts alone are not a complete defense.
+**What happens after a timeout?** Distinguish a definite HTTP rejection from uncertain delivery. Reconcile the original request ID with persisted checkpoints/final state and optional n8n metadata. Missing reservation is not proof of nondelivery; stale state requires intervention. No blind replay or queue recovery is claimed.
 
-**What if the LLM hallucinates with valid citations?** Citation membership validation catches invented IDs, not all unsupported claims. The UI preserves source text and labels generated explanations. Claim-level entailment evaluation and adversarial testing would be necessary for higher-assurance production use.
+**Why retain JSON snapshots?** The app restores small whole executions. Revisions, transactional reviews and unique claim keys provide justified constraints. Add normalized result/tenant tables only when reporting/authorization requirements need them, through further additive migrations.
 
-**What if the inbox is empty?** A successful read can produce zero records. That is recorded as zero, not fabricated extraction. Source success, workflow completion and record verification remain separate.
+**What was actually container-tested?** Clean Linux installation, non-root app/processor/source, private networking, separate PostgreSQL, source scenarios, protected n8n workflows and persistent records. Managed-host TLS, backups and public acceptance remain separate.
 
-**How are conflicts handled?** Event/email duplicates retain all inputs and evidence. Distinct supplied names, locations, titles or dates produce explicit conflicting values and prevent verification. Similar names with different emails are not silently merged.
+**Is CI green?** The workflow is implemented and its constituent checks run locally. No hosted GitHub Actions success is claimed without an observed run; this iteration does not push.
 
-**Why are holiday records incomplete?** They are genuine external observations with no authoritative assessment event or participant identity. Their presence proves the read, not attendance eligibility. Only the labelled synthetic registration messages support this sample participant verification.
+**Is it production-ready?** It is substantially better prepared and locally validated. Public hosting is deliberately pending. Commercial identities/tenancy, retention/backups, queues/recovery, external runners and target-platform acceptance remain necessary before real multi-user operations.
 
-**What happens after a webhook timeout?** Delivery is uncertain. The app preserves the request ID and any already-persisted run. The same ID returns saved state rather than re-running sources. There is no automatic recovery/cancellation; investigate the real n8n execution before retrying.
-
-**How durable is the app?** SQLite on local persistent disk preserves records. The hosted filesystem can be ephemeral. A separate PostgreSQL connection is implemented for durable hosting, but no managed database has been provisioned or validated in this delivery.
-
-**What is not yet production-ready?** Public hosting, managed database acceptance, real user identity/tenant permissions, durable queued execution/reconciliation, commercial data governance/retention, and platform-specific memory/cold-start testing. The current synthetic workspace key/password model is deliberately described as a demonstration boundary.
-
-**How were tests separated from live evidence?** The automated suite uses controlled transports for failure paths and actual local embeddings for retrieval tests. Separate files record real Gemini provider IDs, n8n executions, actual source counts and browser interactions. A mock provider response never establishes a live integration claim.
+**Which architecture would you recommend to a client?** A small internal tool may favor Streamlit/n8n; a bespoke branded product may favor a custom frontend/code graph. Ask about users, workflow complexity, long jobs, governance, hosting and maintenance ownership before choosing.

@@ -1,0 +1,11 @@
+# Deployment readiness decision
+
+**Local full topology accepted; public release acceptance pending.** No public deploy, GitHub push, paid infrastructure or billing change occurred.
+
+Recommend a single container provider/private network with separate Streamlit, processor and n8n services plus dedicated managed PostgreSQL. A reviewed private container host matching Compose is an alternative. This keeps one operational region and clear private service boundaries. Community Cloud is suitable for the interface but still requires independently hosted automation/processing/durable storage; unrelated free services add cold-start and network failure points. Consolidating Python services needs a reviewed process supervisor and private listener support.
+
+Observed restart sample: app 51.59MiB, processor 49.55MiB, n8n 568.9MiB, PostgreSQL 19.91MiB, source server 14.62MiB. This is a post-restart sample before embedding warm-up, not a peak or production sizing guarantee. Earlier warm interactive app use was about 246MiB. Cache and concurrent workload need headroom. Local limits are 1GiB each Python app/processor, 1.5GiB n8n, 512MiB database and 128MiB source fixture. No exact monthly price or free-tier entitlement is asserted.
+
+Verified platform references, tradeoffs, precise checklist and prepared HTTPS gateway are in [deployment guide](../../DEPLOYMENT.md) and [hosting preparation](../../../deploy/README.md). The override passed `docker compose ... config --quiet` with synthetic values only. It was never started. Prepared HTTPS paths permit only two webhooks; editor/processor ports are removed.
+
+Outstanding: approve provider/region/domain/budget; approve publishing; provision new TLS database and test backup restoration; configure access and secrets; protected editor administration; establish retention and monitoring; test target networking, HTTPS, cold start/memory, real external source reliability and all acceptance scenarios; observe hosted CI. Local capabilities/demo password do not establish commercial identity/tenancy. Managed-database failover, hosted TLS and disaster recovery have not been accepted. External n8n runners and durable recovery are future commercial hardening, not claimed completed features.

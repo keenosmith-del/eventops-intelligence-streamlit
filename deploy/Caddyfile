@@ -1,0 +1,12 @@
+{$APP_DOMAIN} {
+    reverse_proxy app:8501
+}
+{$AUTOMATION_DOMAIN} {
+    @production_webhook path /webhook/eventops-verify /webhook/eventops-agent
+    handle @production_webhook {
+        reverse_proxy n8n:5678
+    }
+    handle {
+        respond "Not found" 404
+    }
+}

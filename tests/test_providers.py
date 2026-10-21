@@ -41,9 +41,7 @@ def test_size_limit():
     with pytest.raises(SourceError, match="bounded"):
         fetch(
             "https://date.nager.at/api",
-            transport=httpx.MockTransport(
-                lambda request: httpx.Response(200, text="a" * 512001)
-            ),
+            transport=httpx.MockTransport(lambda request: httpx.Response(200, text="a" * 512001)),
         )
 
 
@@ -61,9 +59,7 @@ def test_mailtrap_schema(monkeypatch, bad):
     ]:
         monkeypatch.setenv(k, v)
     with pytest.raises(SourceError):
-        mailtrap(
-            transport=httpx.MockTransport(lambda request: httpx.Response(200, text=bad))
-        )
+        mailtrap(transport=httpx.MockTransport(lambda request: httpx.Response(200, text=bad)))
 
 
 def test_mailtrap_read_only(monkeypatch):

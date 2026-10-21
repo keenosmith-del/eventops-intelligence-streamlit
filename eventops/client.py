@@ -34,30 +34,39 @@ def webhook_url(agent=False):
     return url
 
 
-def trigger(store, owner, event_id, limit=3, request_id=None, transport=None):
+def trigger(store, owner, event_id, limit=3, request_id=None, transport=None, scenario="external_reference"):
     request_id = request_id or str(uuid.uuid4())
     payload = {
         "owner": owner,
         "event_id": event_id,
         "limit": limit,
         "request_id": request_id,
+        "scenario": scenario,
     }
     try:
-        with httpx.Client(
-            timeout=120, follow_redirects=False, transport=transport
-        ) as client:
+        with httpx.Client(timeout=120, follow_redirects=False, transport=transport) as client:
             response = client.post(
                 webhook_url(),
                 headers={"X-EventOps-Webhook": setting("N8N_WEBHOOK_TOKEN")},
                 json=payload,
             )
+        if response.status_code in (400, 401, 403, 409, 422):
+            result = {
+                **payload,
+                "run_id": request_id,
+                "status": "request_rejected",
+                "http_status": response.status_code,
+                "records": [],
+                "outcomes": [],
+                "error": "Webhook rejected this request. Correct authentication or input before a deliberate retry.",
+            }
+            key = "request-" + request_id
+            if not store.get(owner, key):
+                store.save(owner, "request", result, key)
+            return result
         response.raise_for_status()
         result = response.json()
-        if (
-            not isinstance(result, dict)
-            or result.get("run_id") != request_id
-            or "status" not in result
-        ):
+        if not isinstance(result, dict) or result.get("run_id") != request_id or "status" not in result:
             raise ValueError("Invalid n8n response")
         return result
     except (httpx.HTTPError, ValueError):
@@ -88,3 +97,9 @@ def explain(owner, run_id, intent):
         )
     response.raise_for_status()
     return response.json()
+
+
+def reconcile_request(store, owner, request_id):
+    from eventops.lifecycle import reconcile
+
+    return reconcile(store, owner, request_id)

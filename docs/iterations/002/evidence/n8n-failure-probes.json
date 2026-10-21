@@ -1,0 +1,290 @@
+{
+  "classification": "Actual n8n requests to controlled HTTP test routes; not real external provider outages",
+  "checks": [
+    {
+      "probe": "http401",
+      "execution_id": "31",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:11.580807+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:12.941923+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "reference": "http://scenario:8090/records.json",
+          "count": 0,
+          "error": "Source request failed or returned HTTP 401",
+          "observed_at": "2026-10-20T22:30:12.974495+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "http403",
+      "execution_id": "32",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:13.071357+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:14.375064+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "reference": "http://scenario:8090/records.json",
+          "count": 0,
+          "error": "Source request failed or returned HTTP 403",
+          "observed_at": "2026-10-20T22:30:14.405378+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "http429",
+      "execution_id": "33",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:14.500694+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:16.058795+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "reference": "http://scenario:8090/records.json",
+          "count": 0,
+          "error": "Source request failed or returned HTTP 429",
+          "observed_at": "2026-10-20T22:30:16.086505+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "http500",
+      "execution_id": "34",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:16.181351+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:17.513283+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "reference": "http://scenario:8090/records.json",
+          "count": 0,
+          "error": "Source request failed or returned HTTP 500",
+          "observed_at": "2026-10-20T22:30:17.542379+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "timeout",
+      "execution_id": "35",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:17.661463+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:18.947566+00:00"
+        },
+        {
+          "source": "web",
+          "status": "timed_out",
+          "reference": "http://scenario:8090/records.json",
+          "count": 0,
+          "error": "Source timed out",
+          "observed_at": "2026-10-20T22:30:19.993073+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "malformed",
+      "execution_id": "36",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:20.106793+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:21.546953+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "count": 0,
+          "error": "Unexpected source response schema",
+          "observed_at": "2026-10-20T22:30:21.579351+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "dns",
+      "execution_id": "37",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:21.666349+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:23.180286+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "reference": "http://scenario:8090/records.json",
+          "count": 0,
+          "error": "Source request failed or returned HTTP network error",
+          "observed_at": "2026-10-20T22:30:23.209089+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "processing_unavailable",
+      "execution_id": "38",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "completed",
+          "reference": "http://scenario:8090/calendar.ics",
+          "count": 2,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:23.297751+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:24.596276+00:00"
+        },
+        {
+          "source": "web",
+          "status": "failed",
+          "count": 0,
+          "error": "Source processing service unavailable",
+          "observed_at": "2026-10-20T22:30:24.628Z"
+        }
+      ]
+    },
+    {
+      "probe": "invalid_calendar",
+      "execution_id": "39",
+      "status": "passed",
+      "workflow_status": "partial",
+      "outcomes": [
+        {
+          "source": "calendar",
+          "status": "failed",
+          "count": 0,
+          "error": "Unexpected source response schema",
+          "observed_at": "2026-10-20T22:30:24.720582+00:00"
+        },
+        {
+          "source": "email",
+          "status": "completed",
+          "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+          "count": 3,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:26.222933+00:00"
+        },
+        {
+          "source": "web",
+          "status": "completed",
+          "reference": "http://scenario:8090/records.json",
+          "count": 5,
+          "error": null,
+          "observed_at": "2026-10-20T22:30:26.255947+00:00"
+        }
+      ]
+    }
+  ]
+}

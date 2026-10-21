@@ -1,0 +1,5 @@
+# Controlled assessment source service
+
+The Python HTTP server serves these files independently of Streamlit and the processing API. n8n makes real HTTP requests. This is controlled synthetic scenario data, not an external event authority or a fabricated third-party response. The original three documents remain the demonstration authority. Existing labelled synthetic Mailtrap messages provide positive/duplicate/inactive registrations; no message is sent or injected by this service. The Calendar has a correct entry and a deliberate schedule/venue discrepancy. Web includes a correct event, wrong event, conflicting participant name and incomplete claims. `/unavailable` returns real HTTP 503 for failure isolation.
+
+Start: `.venv/bin/python scripts/scenario_server.py`. Set `ENABLE_LOCAL_SCENARIO=true` and `ASSESSMENT_SOURCE_BASE_URL=http://host.docker.internal:8090` for the host-Python/n8n-Docker topology, or `http://scenario:8090` in full Compose. This is a separate controlled HTTP source, never advertised as a live external provider. An HTTPS deployment path requires an explicitly administrator-approved `ASSESSMENT_SOURCE_HOST`; no user URL input exists.
