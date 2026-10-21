@@ -1,0 +1,12 @@
+# Interview talking points
+
+- The same working Streamlit/n8n application now has a reproducible release path, rather than a Dockerfile-only readiness claim. Source identity, workflow hashes, migrations, private networking, secrets and recovery are explicit.
+- A real local rehearsal found configuration/runtime defects that syntax checks missed. Read-only filesystems, non-root execution and empty capability sets require tested writable paths and compatible images.
+- n8n remains the actual orchestrator and optional Gemini tool agent. Python still owns authoritative verification; a model cannot approve a record. Gemini is currently disabled because the owner could not confirm billing state under a strict zero-cost rule.
+- Free hosting is an engineering constraint, not a promise of free production reliability. Current Oracle limits differ from older 4CPU/24GB guides. Neon sleeps and has real quotas. Hugging Face's free CPU table does not establish free Docker creation eligibility. Render free disks/private services do not satisfy this topology.
+- The conditional primary path keeps real n8n state on persistent Always Free host storage, app data on a separate Neon Free project and a provider-issued HTTPS name through free Personal Funnel. If free compute is unavailable, no verified independent $0 substitute is silently invented.
+- Dependency readiness and liveness are different. Continuous SQL health polling can defeat Neon scale-to-zero and burn free compute; one startup check plus authenticated on-demand readiness preserves that distinction.
+- A deliberately interrupted real workflow retained Calendar/Email checkpoints, returned uncertain delivery and required intervention; reusing the request ID did not repeat sources. There is no unearned durable-queue/recovery claim.
+- PostgreSQL backup restoration matched persisted payload/review/claim hashes in a fresh local destination. Remote TLS, account quotas, public certificates and replacement-host n8n restoration remain separate acceptance gates.
+
+Six-minute demonstration: architecture/trust boundary (45s); login and semantic evidence (45s); controlled source run + deterministic record evidence (90s); source failure/interruption/reconciliation (60s); review/history/export/backup hashes (60s); genuine historical agent evidence plus current cost gate and honest free-host limits (60s). Do not imply Iteration002 model evidence is a new Iteration003 model execution.

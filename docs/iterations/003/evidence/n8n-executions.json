@@ -1,0 +1,3038 @@
+{
+  "origin": "Actual isolated Iteration 003 n8n records; Gemini disabled; only node metadata, no headers/credentials/model thoughts",
+  "executions": [
+    {
+      "execution_id": "1",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:24:23.783",
+      "finished_at": "2026-10-21 05:24:29.290",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            30
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            30
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1670
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            17
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            14
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3314
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            11
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Capture Web outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Extract Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Isolate Web processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Checkpoint Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Aggregate source evidence",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Normalize fields",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Merge duplicates",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Deterministic verification",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Any discrepancies?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Preserve review queue",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            15
+          ]
+        },
+        {
+          "node": "Persist authoritative results",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            201
+          ]
+        },
+        {
+          "node": "Return verification result",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            86
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "2",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:24:29.308",
+      "finished_at": "2026-10-21 05:24:29.420",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "3",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:24:29.938",
+      "finished_at": "2026-10-21 05:24:32.183",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2084
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            14
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            11
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            11
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Capture Web outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Extract Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Isolate Web processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Aggregate source evidence",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Normalize fields",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Merge duplicates",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Deterministic verification",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Any discrepancies?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Preserve review queue",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Persist authoritative results",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            13
+          ]
+        },
+        {
+          "node": "Return verification result",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "4",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:24:32.203",
+      "finished_at": "2026-10-21 05:24:32.302",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "5",
+      "workflow_id": "EventOpsInterrupted003",
+      "status": "crashed",
+      "started_at": "2026-10-21 05:24:47.719",
+      "finished_at": "2026-10-21 05:24:47.730",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            90
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1408
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1547
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "crashed"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "6",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:25:17.003",
+      "finished_at": "2026-10-21 05:25:17.296",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            95
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "7",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:47:16.490",
+      "finished_at": "2026-10-21 05:47:21.708",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            33
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1451
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3501
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Capture Web outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Isolate Web processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Checkpoint Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Aggregate source evidence",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Normalize fields",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Merge duplicates",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Deterministic verification",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Any discrepancies?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Preserve review queue",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Persist authoritative results",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            19
+          ]
+        },
+        {
+          "node": "Return verification result",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "8",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:47:21.722",
+      "finished_at": "2026-10-21 05:47:21.797",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "9",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:47:22.298",
+      "finished_at": "2026-10-21 05:47:23.797",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1351
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Capture Web outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Isolate Web processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Checkpoint Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Aggregate source evidence",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Normalize fields",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Merge duplicates",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Deterministic verification",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Any discrepancies?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Preserve review queue",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Persist authoritative results",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Return verification result",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "10",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:47:23.812",
+      "finished_at": "2026-10-21 05:47:23.860",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "11",
+      "workflow_id": "EventOpsInterrupted003",
+      "status": "crashed",
+      "started_at": "2026-10-21 05:47:42.273",
+      "finished_at": "2026-10-21 05:47:42.301",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            77
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1459
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1339
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "crashed"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            11
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "12",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:48:08.147",
+      "finished_at": "2026-10-21 05:48:08.494",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            35
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            58
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "13",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:51:30.919",
+      "finished_at": "2026-10-21 05:51:35.630",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            34
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1563
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            15
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            14
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2809
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            11
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            16
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Capture Web outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            7
+          ]
+        },
+        {
+          "node": "Isolate Web processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Aggregate source evidence",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Normalize fields",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Merge duplicates",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Deterministic verification",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            16
+          ]
+        },
+        {
+          "node": "Any discrepancies?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Preserve review queue",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Persist authoritative results",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            23
+          ]
+        },
+        {
+          "node": "Return verification result",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "14",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:51:35.645",
+      "finished_at": "2026-10-21 05:51:35.722",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "15",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:51:36.245",
+      "finished_at": "2026-10-21 05:51:38.435",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2029
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            11
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Capture Web outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Extract Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Isolate Web processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Checkpoint Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Aggregate source evidence",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Normalize fields",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Merge duplicates",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Deterministic verification",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Any discrepancies?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Preserve review queue",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Persist authoritative results",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            10
+          ]
+        },
+        {
+          "node": "Return verification result",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "16",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:51:38.447",
+      "finished_at": "2026-10-21 05:51:38.509",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "17",
+      "workflow_id": "EventOpsInterrupted003",
+      "status": "crashed",
+      "started_at": "2026-10-21 05:51:57.131",
+      "finished_at": "2026-10-21 05:52:00.373",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            79
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Allowed source configuration",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Read Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Capture Calendar outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1525
+          ]
+        },
+        {
+          "node": "Extract Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            9
+          ]
+        },
+        {
+          "node": "Read Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1530
+          ]
+        },
+        {
+          "node": "Capture Email outcome",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            6
+          ]
+        },
+        {
+          "node": "Extract Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            8
+          ]
+        },
+        {
+          "node": "Read Web",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "crashed"
+          ],
+          "execution_ms": [
+            0
+          ]
+        },
+        {
+          "node": "Isolate Calendar processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            4
+          ]
+        },
+        {
+          "node": "Checkpoint Calendar",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        },
+        {
+          "node": "Isolate Email processing",
+          "type": "n8n-nodes-base.code",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            5
+          ]
+        },
+        {
+          "node": "Checkpoint Email",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "execution_id": "18",
+      "workflow_id": "EventOpsVerify01",
+      "status": "success",
+      "started_at": "2026-10-21 05:52:23.570",
+      "finished_at": "2026-10-21 05:52:23.679",
+      "nodes": [
+        {
+          "node": "Verification webhook",
+          "type": "n8n-nodes-base.webhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            1
+          ]
+        },
+        {
+          "node": "Validate and reserve request",
+          "type": "n8n-nodes-base.httpRequest",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            24
+          ]
+        },
+        {
+          "node": "Input accepted?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        },
+        {
+          "node": "Repeated request?",
+          "type": "n8n-nodes-base.if",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            2
+          ]
+        },
+        {
+          "node": "Return saved execution",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "invocations": 1,
+          "statuses": [
+            "success"
+          ],
+          "execution_ms": [
+            3
+          ]
+        }
+      ]
+    }
+  ]
+}

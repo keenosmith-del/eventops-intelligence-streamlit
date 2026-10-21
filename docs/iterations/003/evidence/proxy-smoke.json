@@ -1,0 +1,53 @@
+{
+  "observed_at": "2026-10-21T05:49:08.904973+00:00",
+  "environment": "loopback HTTP",
+  "routes": [
+    {
+      "route": "/",
+      "status": 200
+    },
+    {
+      "route": "/webhook/eventops-verify",
+      "status": 404
+    },
+    {
+      "route": "/webhook/eventops-agent",
+      "status": 404
+    },
+    {
+      "route": "/rest/settings",
+      "status": 404
+    },
+    {
+      "route": "/api/v1/workflows",
+      "status": 404
+    },
+    {
+      "route": "/healthz",
+      "status": 404
+    },
+    {
+      "route": "/readyz",
+      "status": 404
+    },
+    {
+      "route": "/metrics",
+      "status": 404
+    },
+    {
+      "route": "/docs",
+      "status": 404
+    },
+    {
+      "route": "/openapi.json",
+      "status": 404
+    },
+    {
+      "route": "/_stcore/health",
+      "status": 404
+    }
+  ],
+  "tls": "not_tested",
+  "provider_availability": "not_checked",
+  "authentication_ui": "requires_browser_check"
+}

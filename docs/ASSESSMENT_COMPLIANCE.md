@@ -1,3 +1,5 @@
+> Current deployment preparation: [Iteration 003 readiness](iterations/003/RELEASE_READINESS.md) and [observed checks](iterations/003/TEST_RESULTS.md). Material below records Iteration 002 and its historical status.
+
 # Assessment requirements and evidence
 
 This maps the user-supplied assessment requirements to observed companion behavior. A standalone original assessor rubric was not supplied; no external score or unconditional 100% compliance is asserted.

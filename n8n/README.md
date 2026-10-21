@@ -1,4 +1,8 @@
-# n8n operation — Iteration 002
+# Release deployment
+
+For the protected release topology, use the [Iteration 003 n8n guide](../docs/iterations/003/N8N_DEPLOYMENT.md) and [deployment runbook](../docs/iterations/003/DEPLOYMENT_RUNBOOK.md). Instructions below describe development and historical acceptance. Gemini remains disabled for new release acceptance until the owner confirms its billing-disabled free tier.
+
+# n8n operation — Iteration 002 (historical development guide)
 
 Runtime validated: n8n **2.42.6**. Verification and Gemini agent workflows were actually imported, published and executed. Historical Iteration 001 evidence is in `docs/evidence`; new evidence is under `docs/iterations/002/evidence`. No hosted deployment is claimed.
 
@@ -79,4 +83,4 @@ This is a separate local-only test graph. It makes actual requests to controlled
 
 403: check webhook credential. 404: verify publication/restart. Invalid request: inspect strict contract. Partial run: inspect source outcomes. Empty inbox: zero records, not fake success. Unavailable agent: inspect provider/schema/citation guard and actual tool trace. Stale run: reconcile/inspect n8n; do not silently mark complete or re-run.
 
-The local editor uses loopback HTTP. Hosted cookies require HTTPS, editor access must be SSH/VPN/private, and a gateway should expose only the two production webhook paths. Preserve encryption keys, protect credential imports and configure backups/retention. External n8n runners and commercial identity/tenancy remain further hardening. See `docs/DEPLOYMENT.md` and the iteration limitations.
+The local editor uses loopback HTTP. The Iteration 003 release keeps both webhooks and the editor private, uses an external runner and exposes only the guarded Streamlit interface. Preserve encryption keys, protect credential imports and configure backups/retention. Commercial identity/tenancy remains outside this demonstration. See the current release guide above.

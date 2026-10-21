@@ -4,23 +4,61 @@ import hashlib
 import hmac
 import json
 import re
+import time
+from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
+from sqlalchemy.exc import SQLAlchemyError
+from starlette.responses import JSONResponse
 
 from eventops import pipeline, providers
 from eventops.config import setting
 from eventops.knowledge import fingerprint, load_documents
+from eventops.operations import emit, reserve_run_capacity
 from eventops.scenarios import configuration
 from eventops.store import Store, now
+
+
+@asynccontextmanager
+async def lifespan(app):
+    # One startup readiness query. Repeating DB health polls would defeat free-tier scale-to-zero.
+    from sqlalchemy import text
+
+    with Store().engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    yield
+
 
 app = FastAPI(
     title="EventOps companion primitives",
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
+    lifespan=lifespan,
 )
+
+
+@app.exception_handler(SQLAlchemyError)
+async def database_failure(request: Request, exc):
+    emit("dependency_failure", status="unavailable", error_category="database")
+    return JSONResponse({"detail": "Persistence is unavailable; reconcile before retrying"}, status_code=503)
+
+
+@app.middleware("http")
+async def operational_log(request: Request, call_next):
+    started = time.perf_counter()
+    response = await call_next(request)
+    route = request.scope.get("route")
+    emit(
+        "http_request",
+        stage=getattr(route, "path", "unmatched"),
+        http_status=response.status_code,
+        duration_ms=round((time.perf_counter() - started) * 1000, 2),
+        workflow_revision=setting("RELEASE_REVISION", "development"),
+    )
+    return response
 
 
 @app.middleware("http")
@@ -62,6 +100,7 @@ class RunInput(Contract):
     limit: int = Field(default=3, ge=1, le=5)
     scenario: Literal["external_reference", "assessment_event", "provider_unavailable"] = "external_reference"
     execution_id: str | None = Field(default=None, max_length=80)
+    workflow_revision: str = Field(default="development", pattern=r"^[a-zA-Z0-9._-]{1,80}$")
 
 
 class Stage(Contract):
@@ -90,6 +129,19 @@ def health():
     return {"status": "ok", "application": "eventops-streamlit-companion"}
 
 
+@app.get("/readyz", dependencies=[Depends(authorize)])
+def readiness():
+    from sqlalchemy import text
+
+    with Store().engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    return {
+        "status": "ready",
+        "revision": setting("RELEASE_REVISION", "development"),
+        "providers": "not_checked",
+    }
+
+
 @app.post("/runs/begin", dependencies=[Depends(authorize)])
 def begin(data: RunInput):
     if data.event_id not in {r["id"] for r in load_documents() if r["kind"] == "event"}:
@@ -104,6 +156,8 @@ def begin(data: RunInput):
         ):
             raise HTTPException(409, "Request ID is already bound to different inputs")
         return {"replayed": True, "run_id": run_id, "run": {"run_id": run_id, **existing["payload"]}}
+    if not reserve_run_capacity(store, data.owner):
+        raise HTTPException(429, "Source-processing request limit reached; retry in the next hour")
     try:
         store.save(
             data.owner,
@@ -135,6 +189,14 @@ def begin(data: RunInput):
                 return {"replayed": True, "run_id": run_id, "run": {"run_id": run_id, **existing["payload"]}}
             raise HTTPException(409, "Execution ID already reserved") from exc
         raise
+    emit(
+        "run_reserved",
+        request_id=data.request_id,
+        run_id=run_id,
+        execution_id=data.execution_id,
+        workflow_revision=data.workflow_revision,
+        status="running",
+    )
     return {"replayed": False, "run_id": run_id, **data.model_dump()}
 
 
@@ -246,7 +308,16 @@ def finish(data: Finish):
             return existing
         return {**existing, **result, "stages": existing.get("stages", [])}
 
-    return store.mutate(data.owner, data.run_id, finalize)
+    saved = store.mutate(data.owner, data.run_id, finalize)
+    emit(
+        "run_finished",
+        request_id=data.request_id,
+        run_id=data.run_id,
+        execution_id=data.execution_id,
+        workflow_revision=saved.get("workflow_revision"),
+        status=saved["status"],
+    )
+    return saved
 
 
 class Checkpoint(Contract):
@@ -268,7 +339,16 @@ def checkpoint(data: Checkpoint):
         return {**run, "stages": stages, "heartbeat_at": now(), "execution_id": data.execution_id}
 
     try:
-        return Store().mutate(data.owner, data.run_id, change)
+        saved = Store().mutate(data.owner, data.run_id, change)
+        emit(
+            "source_checkpoint",
+            run_id=data.run_id,
+            execution_id=data.execution_id,
+            stage=data.stage,
+            source=data.stage,
+            status=(data.outcome or {}).get("status"),
+        )
+        return saved
     except KeyError as exc:
         raise HTTPException(404, "Run not found") from exc
 
@@ -317,8 +397,10 @@ def agent_context(data: AgentInput):
     run = store.get(data.owner, data.run_id)
     if not run or run["kind"] != "run" or run["payload"]["status"] == "running":
         raise HTTPException(404, "Finished execution not found")
-    if setting("GEMINI_ENABLED") != "true" or not setting("GEMINI_API_KEY"):
+    if setting("GEMINI_ENABLED") != "true":
         raise HTTPException(503, "Gemini is not configured")
+    if setting("PRODUCTION_MODE") == "true" and setting("GEMINI_FREE_TIER_CONFIRMED") != "true":
+        raise HTTPException(503, "Free-tier Gemini project must be confirmed before model execution")
     payload = run["payload"]
     # This demonstration sends only explicitly controlled synthetic sandbox messages to Gemini.
     for record in payload["records"]:
@@ -345,7 +427,7 @@ def agent_context(data: AgentInput):
                 "note": "Identical investigation already reserved; no second model execution.",
             },
         }
-    if not store.budget("n8n-agent", 5):
+    if not store.budget("n8n-agent", int(setting("AGENT_DAILY_LIMIT", "5"))):
         result = {"status": "unavailable", "reason": "daily_budget_exhausted"}
         store.finish_investigation(data.owner, key, result)
         raise HTTPException(429, "Daily agent execution budget exhausted")

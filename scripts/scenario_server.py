@@ -21,10 +21,14 @@ class Handler(BaseHTTPRequestHandler):
         status = 503 if self.path == "/unavailable" else 200
         if self.path == "/slow":
             time.sleep(3)
+        if self.path == "/hold":
+            # Private rehearsal probe: interrupt a real workflow before persistence.
+            time.sleep(30)
         files = {
             "/calendar.ics": ("calendar.ics", "text/calendar"),
             "/records.json": ("records.json", "application/json"),
             "/malformed": ("malformed.txt", "text/plain"),
+            "/hold": ("records.json", "application/json"),
         }
         if self.path not in files:
             self.send_response(status if status != 200 else 404)

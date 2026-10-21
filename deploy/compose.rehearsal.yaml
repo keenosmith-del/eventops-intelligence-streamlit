@@ -1,0 +1,60 @@
+# LOCAL ONLY. Adds new isolated databases and loopback ports; never use on a public host.
+name: eventops-rehearsal003
+services:
+  app:
+    environment:
+      RELEASE_REHEARSAL: "true"
+    ports: ["127.0.0.1:8504:8501"]
+    depends_on:
+      database: {condition: service_healthy}
+  processor:
+    environment:
+      RELEASE_REHEARSAL: "true"
+    ports: ["127.0.0.1:8768:8766"]
+    depends_on:
+      database: {condition: service_healthy}
+  n8n:
+    ports: ["127.0.0.1:5681:5678"]
+  gateway:
+    ports: !override ["127.0.0.1:8503:8080"]
+    environment:
+      PUBLIC_SCHEME: http
+  database:
+    image: postgres:17.9-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: release_bootstrap
+      POSTGRES_DB: companion003
+      POSTGRES_PASSWORD: ${BOOTSTRAP_PASSWORD:?Local rehearsal bootstrap password}
+      COMPANION_DB_PASSWORD: ${COMPANION_DB_PASSWORD:?Local independent application role password}
+    volumes:
+      - rehearsal_database:/var/lib/postgresql/data
+      - ./init-rehearsal-db.sql:/docker-entrypoint-initdb.d/010-role.sql:ro
+    networks: [backend]
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U release_bootstrap -d companion003"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  restore:
+    image: postgres:17.9-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: release_bootstrap
+      POSTGRES_DB: companion003_restore
+      POSTGRES_PASSWORD: ${BOOTSTRAP_PASSWORD}
+      COMPANION_DB_PASSWORD: ${COMPANION_DB_PASSWORD}
+    volumes:
+      - rehearsal_restore:/var/lib/postgresql/data
+      - ./init-rehearsal-db.sql:/docker-entrypoint-initdb.d/010-role.sql:ro
+    networks: [backend]
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U release_bootstrap -d companion003_restore"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  rehearsal_database:
+  rehearsal_restore:

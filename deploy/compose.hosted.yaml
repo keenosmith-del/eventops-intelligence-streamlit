@@ -1,39 +1,192 @@
-# Preparation only. Do not start until hosting, domains, access and costs are approved.
-# Override the tested local topology on a reviewed private container host.
+# Standalone production topology. Use only after explicit infrastructure approval.
+name: eventops-release
+x-python: &python
+  image: eventops-companion:${RELEASE_TAG:?Set a traceable release tag}
+  build:
+    context: ..
+    args:
+      RELEASE_REVISION: ${RELEASE_REVISION:?Set source revision}
+  restart: unless-stopped
+  init: true
+  stop_grace_period: 30s
+  read_only: true
+  tmpfs: ["/tmp:size=64m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  logging: &logs
+    driver: json-file
+    options: {max-size: "10m", max-file: "3"}
 services:
   app:
-    ports: !reset []
+    <<: *python
+    mem_limit: 1g
+    cpus: 1.0
     environment:
+      PRODUCTION_MODE: "true"
       PUBLIC_DEMO: "true"
-      APP_PASSWORD: ${APP_PASSWORD:?Set a strong demo access password}
+      APP_PASSWORD: ${APP_PASSWORD:?Set independent access password}
+      EVENTOPS_DATABASE_URL: ${EVENTOPS_DATABASE_URL:?Set dedicated TLS database URL}
+      PRIVATE_N8N_ORIGIN: http://n8n:5678
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook/eventops-verify
+      N8N_AGENT_URL: http://n8n:5678/webhook/eventops-agent
+      N8N_WEBHOOK_TOKEN: ${N8N_WEBHOOK_TOKEN:?Set webhook credential}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      GEMINI_FREE_TIER_CONFIRMED: ${GEMINI_FREE_TIER_CONFIRMED:-false}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
+      GEMINI_DAILY_LIMIT: ${GEMINI_DAILY_LIMIT:-8}
+      FASTEMBED_CACHE_PATH: /app/storage/models
+      HF_HOME: /app/storage/huggingface
       KNOWLEDGE_ADMIN_ENABLED: "false"
-      N8N_WEBHOOK_URL: https://${AUTOMATION_DOMAIN}/webhook/eventops-verify
-      N8N_AGENT_URL: https://${AUTOMATION_DOMAIN}/webhook/eventops-agent
-      EVENTOPS_LOCAL_COMPOSE: "false"
-      EVENTOPS_DATABASE_URL: ${HOSTED_COMPANION_DATABASE_URL:?Use a dedicated PostgreSQL with TLS}
+      RELEASE_REVISION: ${RELEASE_REVISION}
+      STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION: "true"
+      STREAMLIT_SERVER_ENABLE_CORS: "true"
+    volumes: ["models:/app/storage"]
+    networks: [frontend, backend]
+    depends_on:
+      processor: {condition: service_healthy}
   processor:
-    ports: !reset []
+    <<: *python
+    command: ["uvicorn", "eventops.service:app", "--host", "0.0.0.0", "--port", "8766", "--no-access-log"]
+    mem_limit: 768m
+    cpus: 0.75
     environment:
-      EVENTOPS_DATABASE_URL: ${HOSTED_COMPANION_DATABASE_URL}
-      ENABLE_LOCAL_SCENARIO: "false"
-      ASSESSMENT_SOURCE_BASE_URL: ${HOSTED_ASSESSMENT_SOURCE_URL:-}
-      ASSESSMENT_SOURCE_HOST: ${HOSTED_ASSESSMENT_SOURCE_HOST:-}
+      PRODUCTION_MODE: "true"
+      EVENTOPS_DATABASE_URL: ${EVENTOPS_DATABASE_URL}
+      EVENTOPS_SERVICE_TOKEN: ${EVENTOPS_SERVICE_TOKEN:?Set service credential}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      GEMINI_FREE_TIER_CONFIRMED: ${GEMINI_FREE_TIER_CONFIRMED:-false}
+      AGENT_DAILY_LIMIT: ${AGENT_DAILY_LIMIT:-3}
+      RUNS_PER_HOUR: ${RUNS_PER_HOUR:-30}
+      RUNS_PER_WORKSPACE_HOUR: ${RUNS_PER_WORKSPACE_HOUR:-6}
+      MAILTRAP_API_TOKEN: ${MAILTRAP_API_TOKEN:-}
+      MAILTRAP_ACCOUNT_ID: ${MAILTRAP_ACCOUNT_ID:-}
+      MAILTRAP_INBOX_ID: ${MAILTRAP_INBOX_ID:-}
+      PRIVATE_SOURCE_ORIGIN: http://scenario:8090
+      ASSESSMENT_SOURCE_BASE_URL: http://scenario:8090
+      RELEASE_REVISION: ${RELEASE_REVISION}
+    tmpfs: ["/tmp:size=64m,mode=1777", "/app/storage:size=16m,uid=1000,gid=1000"]
+    networks: [backend, sources, outbound]
+    healthcheck:
+      test: ["CMD", "python", "-m", "deploy.health", "processor"]
+      interval: 10s
+      timeout: 5s
+      start_period: 15s
+      retries: 12
+  scenario:
+    <<: *python
+    command: ["python", "scripts/scenario_server.py"]
+    mem_limit: 128m
+    cpus: 0.25
+    networks: [sources]
+    healthcheck:
+      test: ["CMD", "python", "-m", "deploy.health", "scenario"]
+      interval: 10s
+      timeout: 4s
+      retries: 12
   n8n:
-    ports: !reset []
+    image: docker.n8n.io/n8nio/n8n:2.42.6
+    restart: unless-stopped
+    stop_grace_period: 60s
+    user: "1000:1000"
+    read_only: true
+    tmpfs: ["/tmp:size=64m,mode=1777", "/home/node/.cache:size=64m,uid=1000,gid=1000"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 1536m
+    cpus: 1.0
+    logging: *logs
     environment:
-      N8N_WEBHOOK_URL: https://${AUTOMATION_DOMAIN}/
-      N8N_SECURE_COOKIE: "true"
-      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Preserve the independent encryption key}
+      WEBHOOK_URL: http://n8n:5678/
       N8N_BLOCK_ENV_ACCESS_IN_NODE: "true"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_UNVERIFIED_PACKAGES_ENABLED: "false"
+      N8N_COMMUNITY_PACKAGES_ENABLED: "false"
+      N8N_TEMPLATES_ENABLED: "false"
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_SECURE_COOKIE: "true"
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: "0.0.0.0"
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN:?Set independent runner credential}
+      N8N_RUNNERS_TASK_TIMEOUT: 60
+      EXECUTIONS_DATA_PRUNE: "true"
+      EXECUTIONS_DATA_MAX_AGE: ${EXECUTIONS_DATA_MAX_AGE:-168}
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      GENERIC_TIMEZONE: Africa/Johannesburg
+    volumes:
+      - n8n_state:/home/node/.n8n
+      - ./.local/workflows:/workflows:ro
+    networks: [backend, sources, runner, outbound]
+    depends_on:
+      processor: {condition: service_healthy}
+      scenario: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5678/healthz/readiness').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+  runners:
+    image: n8nio/runners:2.42.6
+    restart: unless-stopped
+    user: "65532:65532"
+    read_only: true
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    cpus: 0.5
+    logging: *logs
+    environment:
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT: 0
+    networks: [runner]
+    depends_on:
+      n8n: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5680/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
   gateway:
-    image: caddy:2-alpine
+    image: eventops-gateway:2.11.2
+    build: {context: ., dockerfile: Gateway.Dockerfile}
+    restart: unless-stopped
+    init: true
+    user: "1000:1000"
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    sysctls: {net.ipv4.ip_unprivileged_port_start: "0"}
+    mem_limit: 128m
+    cpus: 0.25
+    logging: *logs
     ports: ["80:80", "443:443"]
     environment:
-      APP_DOMAIN: ${APP_DOMAIN}
-      AUTOMATION_DOMAIN: ${AUTOMATION_DOMAIN}
+      APP_SITE: ${APP_SITE:?Set HTTPS application site}
     volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - gateway_tls:/data
-    depends_on: [app, n8n]
+      - gateway_config:/config
+    networks: [frontend]
+    depends_on:
+      app: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:2019/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+networks:
+  frontend: {}
+  backend: {internal: true}
+  sources: {internal: true}
+  runner: {internal: true}
+  outbound: {}
 volumes:
+  models:
+  n8n_state:
   gateway_tls:
+  gateway_config:

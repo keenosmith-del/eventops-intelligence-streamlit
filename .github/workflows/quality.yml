@@ -24,11 +24,13 @@ jobs:
           key: fastembed-bge-small-v1.5-${{ runner.os }}
       - run: pip install -r requirements.lock.txt
       - run: pip check
-      - run: ruff check app.py eventops scripts tests
-      - run: python -m compileall -q app.py eventops scripts
+      - run: ruff check app.py eventops scripts tests deploy
+      - run: python -m compileall -q app.py eventops scripts deploy
       - run: python scripts/build_workflows.py --check
       - run: python scripts/validate_workflows.py
       - run: python scripts/security_audit.py
+      - run: python -m deploy.ci_check
+      - run: python -m deploy.release_manifest --output release-manifest.json
       - run: pytest -q --junitxml=results.xml
       - run: python scripts/evaluate_rag.py
       - name: Native Streamlit startup
@@ -47,10 +49,13 @@ jobs:
           path: |
             results.xml
             docs/iterations/002/evidence/rag-evaluation.json
+            release-manifest.json
   container:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t eventops-ci .
+      - run: docker build --build-arg RELEASE_REVISION=${{ github.sha }} -t eventops-ci .
       - run: docker run --rm --entrypoint python eventops-ci -c "import streamlit,fastembed,eventops.service; print('Container imports passed')"
       - run: docker run --rm --entrypoint sh eventops-ci -c 'test "$(id -u)" != 0'
+      - name: Validate HTTPS gateway configuration without starting it
+        run: docker run --rm -e APP_SITE=https://assessment.example.test -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2.11.2-alpine caddy validate --config /etc/caddy/Caddyfile

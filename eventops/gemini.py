@@ -29,6 +29,8 @@ def grounded_answer(question, evidence, store, transport=None):
         }
     if setting("GEMINI_ENABLED") != "true" or not setting("GEMINI_API_KEY"):
         return {**unavailable, "reason": "not_configured"}
+    if setting("PRODUCTION_MODE") == "true" and setting("GEMINI_FREE_TIER_CONFIRMED") != "true":
+        return {**unavailable, "reason": "free_tier_not_confirmed"}
     model = setting("GEMINI_MODEL", "gemini-3.5-flash-lite")
     if not re.fullmatch(r"gemini-[\w.-]*flash[\w.-]*", model):
         return {**unavailable, "reason": "model_not_allowed"}

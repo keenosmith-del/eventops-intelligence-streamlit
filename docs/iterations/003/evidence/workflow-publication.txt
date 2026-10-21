@@ -1,0 +1,35 @@
+Generated both credential-free workflows.
+Importing 1 workflows...
+Deactivating workflow "EventOps · autonomous source verification".
+Successfully imported 1 workflow.
+Importing 1 workflows...
+Deactivating workflow "EventOps · Gemini read-only analyst".
+Successfully imported 1 workflow.
+Publishing workflow with ID: EventOpsVerify01 (current version)
+Note: Changes will not take effect if n8n is running.
+Please restart n8n for changes to take effect if n8n is currently running.
+Publishing workflow with ID: EventOpsAgent01 (current version)
+Note: Changes will not take effect if n8n is running.
+Please restart n8n for changes to take effect if n8n is currently running.
+ Container eventops-rehearsal003-n8n-1 Restarting
+ Container eventops-rehearsal003-runners-1 Restarting
+ Container eventops-rehearsal003-n8n-1 Started
+ Container eventops-rehearsal003-runners-1 Started
+{
+  "status": "published",
+  "manifest": {
+    "revision": "a0f41bfc99c9-worktree-91d3a6592398",
+    "processor_origin": "http://processor:8766",
+    "files": {
+      "verification.json": {
+        "sha256": "e6412508ad5f3c72a56f75f508741cbedd78260c86cd66b6f0eeb6d438370ec7",
+        "nodes": 31
+      },
+      "gemini-agent.json": {
+        "sha256": "a72a04d21117179527861fcbde09b3507bd3c46983a8eea393107fbe4ea2750d",
+        "nodes": 11
+      }
+    }
+  },
+  "replay": "never_automatic"
+}

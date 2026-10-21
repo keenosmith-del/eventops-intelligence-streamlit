@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "model_execution": false,
+  "backup_restore": "payload hashes match",
+  "public_deployment": "not_performed",
+  "evidence": "docs/iterations/003/evidence/release-rehearsal.json"
+}

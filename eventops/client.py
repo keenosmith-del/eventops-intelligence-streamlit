@@ -10,6 +10,8 @@ from eventops.store import now
 
 
 def webhook_url(agent=False):
+    from eventops.operations import private_origin
+
     url = setting("N8N_AGENT_URL" if agent else "N8N_WEBHOOK_URL")
     p = urlsplit(url)
     if (
@@ -24,7 +26,8 @@ def webhook_url(agent=False):
     if p.scheme != "https" and not (
         p.scheme == "http"
         and (
-            p.hostname in ("127.0.0.1", "localhost")
+            private_origin(url, "PRIVATE_N8N_ORIGIN")
+            or p.hostname in ("127.0.0.1", "localhost")
             or (setting("EVENTOPS_LOCAL_COMPOSE") == "true" and p.hostname == "n8n")
         )
     ):

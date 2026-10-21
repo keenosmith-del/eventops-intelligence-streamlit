@@ -19,6 +19,8 @@ def upgrade(engine, metadata):
         )
         ledger.create(conn, checkfirst=True)
         applied = set(conn.execute(select(ledger.c.version)).scalars())
+        if any(version > VERSION for version in applied):
+            raise RuntimeError("Database schema is newer than this release; restore a compatible application")
         metadata.create_all(conn)
         if 1 not in applied:
             conn.execute(

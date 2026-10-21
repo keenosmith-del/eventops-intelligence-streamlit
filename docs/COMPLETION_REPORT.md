@@ -1,3 +1,5 @@
+> Current deployment preparation: [Iteration 003 readiness](iterations/003/RELEASE_READINESS.md) and [observed checks](iterations/003/TEST_RESULTS.md). Material below records Iteration 002 and its historical status.
+
 # Completion report — Iteration 002
 
 The Streamlit companion has been improved and accepted locally on branch `iteration/002-production-readiness`, starting at `be2aed8`. See the [full completion report](iterations/002/ACCEPTANCE_REPORT.md) for all significant changes, reasoning, actual executions, commands and remaining prerequisites.

@@ -8,6 +8,7 @@ from pathlib import Path
 parser = argparse.ArgumentParser()
 parser.add_argument("database")
 parser.add_argument("--output", required=True)
+parser.add_argument("--origin", default="Actual isolated Iteration 002 n8n records")
 args = parser.parse_args()
 con = sqlite3.connect(args.database)
 executions = []
@@ -52,7 +53,7 @@ for eid, wid, status, start, stop, raw, workflow in con.execute(
 Path(args.output).write_text(
     json.dumps(
         {
-            "origin": "Actual isolated Iteration 002 n8n records; only node metadata, no headers/credentials/model thoughts",
+            "origin": args.origin + "; only node metadata, no headers/credentials/model thoughts",
             "executions": executions,
         },
         indent=2,

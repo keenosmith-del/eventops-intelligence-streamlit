@@ -46,7 +46,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {...$json.body,execution_id:$execution.id} }}"
+        "jsonBody": "={{ {...$json.body,execution_id:$execution.id,workflow_revision:\"development\"} }}"
       },
       "credentials": {
         "httpHeaderAuth": {
@@ -1075,6 +1075,6 @@
     "callerPolicy": "workflowsFromSameOwner"
   },
   "pinData": {},
-  "versionId": "d4f7c72d-0858-44bf-82ba-26d2efee07a5",
+  "versionId": "331f376a-6200-553b-b580-b2f50086b024",
   "tags": []
 }

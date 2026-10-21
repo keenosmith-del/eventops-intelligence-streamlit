@@ -1,0 +1,8 @@
+# Optional FREE provider-subdomain ingress preparation. Does not start Tailscale or expose anything.
+# The owner must approve and configure a Personal tailnet/Funnel on the new host separately.
+services:
+  gateway:
+    ports: !override ["127.0.0.1:8505:8080"]
+    environment:
+      APP_SITE: http://:8080
+      PUBLIC_SCHEME: https

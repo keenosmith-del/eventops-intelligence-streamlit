@@ -1,0 +1,62 @@
+{
+  "n8n": [
+    {
+      "os": "linux",
+      "architecture": "amd64",
+      "digest": "sha256:38142a5e754050a83a9b280b29204da8578cab8ebcb35928b575fd871e03dd97"
+    },
+    {
+      "os": "linux",
+      "architecture": "arm64",
+      "digest": "sha256:15caf9037da366e768a2e4269073a828d462cfb7607ec16214589d369c33530e"
+    }
+  ],
+  "runners": [
+    {
+      "os": "linux",
+      "architecture": "amd64",
+      "digest": "sha256:8a6024c92fec67b2fa5a9341b3678661911001b509c515f5b9ccf633d9981002"
+    },
+    {
+      "os": "linux",
+      "architecture": "arm64",
+      "digest": "sha256:70785d48bb2fb3483d5af76912b369399eb5387360a5895f1921c656572c1a0a"
+    }
+  ],
+  "caddy": [
+    {
+      "os": "linux",
+      "architecture": "amd64",
+      "digest": "sha256:6d125e80883be8a2bef5f088c7535945b42cdbb8a0f5471bf36eaf18dc0638f1"
+    },
+    {
+      "os": "linux",
+      "architecture": "arm64",
+      "digest": "sha256:df9781ddd351c310248024d964065cd8d41b11fb5d238256d55d30925e8b6ae4"
+    }
+  ],
+  "postgres": [
+    {
+      "os": "linux",
+      "architecture": "amd64",
+      "digest": "sha256:e19c5d72436d4d2f54d00c789775095d02a5dfb1c0f7ea5a243230b1bb46c2bb"
+    },
+    {
+      "os": "linux",
+      "architecture": "arm64",
+      "digest": "sha256:faf1338f88c8da3c81a87ebea9d49455e27523f867fee461b9cc1325af200ef3"
+    }
+  ],
+  "python": [
+    {
+      "os": "linux",
+      "architecture": "amd64",
+      "digest": "sha256:e8a38829209aea82774882e5157e1f7c3e8c8393ff53a697b3580896e57f345c"
+    },
+    {
+      "os": "linux",
+      "architecture": "arm64",
+      "digest": "sha256:6c6ae3622772575c3ac02ecb2b02a06d05f19e1713a0cbff476ef37bca79e90f"
+    }
+  ]
+}

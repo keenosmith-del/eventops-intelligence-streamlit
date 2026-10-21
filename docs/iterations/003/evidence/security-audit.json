@@ -1,0 +1,18 @@
+{
+  "actual_secrets_found": [],
+  "unnecessary_provider_identifiers": [
+    "history:1ddc9b4364:docs/evidence/live-verified.csv",
+    "history:32a24d1d9d:docs/evidence/browser-agent-result.json",
+    "history:476f56a374:docs/evidence/live-agent.json",
+    "history:4bf76d8d36:docs/evidence/live-all.csv",
+    "history:56eff51783:docs/evidence/final-live-agent.json",
+    "history:7419900b39:docs/evidence/browser-agent-result.json",
+    "history:ae016f00db:docs/evidence/live-agent.json",
+    "history:dae6bdd9e1:docs/evidence/final-live-agent.json",
+    "history:e3a1682a8a:docs/evidence/live-acceptance.json",
+    "history:f1024bd500:docs/evidence/live-acceptance.json"
+  ],
+  "history_blobs_scanned": 198,
+  "current_files_scanned": 175,
+  "note": "Pattern/value scan is a safeguard, not proof that arbitrary unknown secrets cannot exist. History is read-only."
+}

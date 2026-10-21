@@ -18,7 +18,11 @@ PATTERNS = [
 
 
 def audit(history=True):
-    configured = dotenv_values(ROOT / ".env") if (ROOT / ".env").exists() else {}
+    configured = {}
+    for path in [ROOT / ".env", ROOT / "deploy/production.env", ROOT / "deploy/.local/rehearsal.env"]:
+        if path.exists():
+            for key, value in dotenv_values(path).items():
+                configured[str(path) + ":" + key] = value
     actual = [
         v.encode()
         for k, v in configured.items()

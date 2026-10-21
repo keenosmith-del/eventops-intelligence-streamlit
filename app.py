@@ -22,10 +22,21 @@ from eventops.config import ROOT, setting
 from eventops.knowledge import fingerprint, load_documents
 from eventops.knowledge_admin import put_document, remove_document, workspace_records
 from eventops.lifecycle import reconcile
+from eventops.operations import WindowLimiter, production_errors
 from eventops.pipeline import export_csv, summary
 from eventops.rag import SemanticIndex, ask
 from eventops.scenarios import SCENARIOS
 from eventops.store import Store
+
+if production_errors():
+    st.error("Production configuration is incomplete. Run the deployment preflight before opening this app.")
+    st.stop()
+
+
+@st.cache_resource
+def login_throttle():
+    return WindowLimiter()
+
 
 st.html("""<style>
 .block-container {max-width:1280px;padding-top:2.4rem;padding-bottom:3rem;}
@@ -45,7 +56,9 @@ if setting("APP_PASSWORD") and not st.session_state.get("authenticated"):
     with st.form("sign-in"):
         password = st.text_input("Workspace password", type="password")
         if st.form_submit_button("Open workspace", type="primary"):
-            if hmac.compare_digest(password, setting("APP_PASSWORD")):
+            if not login_throttle().allow():
+                st.error("Too many access attempts. Wait one minute before trying again.")
+            elif hmac.compare_digest(password, setting("APP_PASSWORD")):
                 st.session_state.authenticated = True
                 st.rerun()
             else:
