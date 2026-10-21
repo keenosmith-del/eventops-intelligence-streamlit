@@ -12,6 +12,7 @@ SCENARIOS = {
 
 
 def configuration(scenario="external_reference"):
+    from eventops.operations import private_origin
     from eventops.providers import DEFAULT_CALENDAR, DEFAULT_WEB, SourceError, validate_url
 
     if scenario not in SCENARIOS:
@@ -36,8 +37,11 @@ def configuration(scenario="external_reference"):
             and p.hostname == setting("ASSESSMENT_SOURCE_HOST")
             and bool(setting("ASSESSMENT_SOURCE_HOST"))
         )
+        private = (
+            private_origin(base, "PRIVATE_SOURCE_ORIGIN") and p.hostname == "scenario" and p.port == 8090
+        )
         if (
-            not (local or external)
+            not (local or external or private)
             or p.username
             or p.password
             or p.query

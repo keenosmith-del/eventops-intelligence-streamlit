@@ -11,3 +11,6 @@ storage/*
 n8n/.local/
 *.log
 .DS_Store
+
+deploy/.local/
+deploy/*.env

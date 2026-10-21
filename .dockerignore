@@ -7,3 +7,5 @@ n8n/.local
 .streamlit/secrets.toml
 __pycache__
 .pytest_cache
+deploy/.local
+deploy/*.env

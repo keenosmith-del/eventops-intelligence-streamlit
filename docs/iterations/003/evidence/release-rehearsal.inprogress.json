@@ -1,0 +1,2651 @@
+{
+  "observed_at": "2026-10-21T05:51:20.292876+00:00",
+  "environment": "isolated Docker Linux ARM64 rehearsal; local PostgreSQL without TLS; private synthetic HTTP + actual Mailtrap",
+  "source_revision": "a0f41bfc99c9-worktree-91d3a6592398",
+  "checks": {
+    "protected_internal_auth": "passed",
+    "csv_exports": "passed",
+    "review_persisted": "passed",
+    "owner_isolation": "passed",
+    "replay": "passed"
+  },
+  "runs": [
+    {
+      "elapsed_seconds": 5.406,
+      "run": {
+        "request_id": "1a4d5375-a823-4660-8b4e-7b5a71f44803",
+        "event_id": "EVT-101",
+        "limit": 5,
+        "scenario": "assessment_event",
+        "execution_id": "13",
+        "workflow_revision": "a0f41bfc99c9-worktree-91d3a6592398",
+        "run_id": "1a4d5375-a823-4660-8b4e-7b5a71f44803",
+        "status": "completed",
+        "started_at": "2026-10-21T05:51:31.042739+00:00",
+        "heartbeat_at": "2026-10-21T05:51:35.546835+00:00",
+        "stages": [
+          {
+            "stage": "calendar",
+            "at": "2026-10-21T05:51:32.657933+00:00",
+            "outcome": {
+              "source": "calendar",
+              "status": "completed",
+              "reference": "http://scenario:8090/calendar.ics",
+              "count": 2,
+              "error": null,
+              "observed_at": "2026-10-21T05:51:32.640162+00:00"
+            }
+          },
+          {
+            "stage": "email",
+            "at": "2026-10-21T05:51:35.514512+00:00",
+            "outcome": {
+              "source": "email",
+              "status": "completed",
+              "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+              "count": 3,
+              "error": null,
+              "observed_at": "2026-10-21T05:51:35.491643+00:00"
+            }
+          },
+          {
+            "stage": "web",
+            "at": "2026-10-21T05:51:35.546827+00:00",
+            "outcome": {
+              "source": "web",
+              "status": "completed",
+              "reference": "http://scenario:8090/records.json",
+              "count": 5,
+              "error": null,
+              "observed_at": "2026-10-21T05:51:35.532142+00:00"
+            }
+          }
+        ],
+        "records": [
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "",
+            "email": "",
+            "title": "AI Engineering Summit",
+            "starts_at": "2026-10-21T07:00:00+00:00",
+            "venue": "Cape Town Convention Centre",
+            "issues": [],
+            "extraction_method": "deterministic",
+            "source": "calendar",
+            "source_record_id": "assessment-evt101-correct",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "",
+              "email": "",
+              "title": "AI Engineering Summit",
+              "starts_at": "2026-10-21T07:00:00+00:00",
+              "venue": "Cape Town Convention Centre",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-correct",
+                "reference": "http://scenario:8090/calendar.ics",
+                "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T070000Z\r\nUID:assessment-evt101-correct\r\nDESCRIPTION:Controlled synthetic assessment event. Event ID: EVT-101\r\nLOCATION:Cape Town Convention Centre\r\nEND:VEVENT\r\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "",
+                "email": "",
+                "title": "AI Engineering Summit",
+                "starts_at": "2026-10-21T07:00:00+00:00",
+                "venue": "Cape Town Convention Centre",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-correct",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "",
+                  "email": "",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T07:00:00+00:00",
+                  "venue": "Cape Town Convention Centre",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "calendar",
+                    "source_record_id": "assessment-evt101-correct",
+                    "reference": "http://scenario:8090/calendar.ics",
+                    "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T070000Z\r\nUID:assessment-evt101-correct\r\nDESCRIPTION:Controlled synthetic assessment event. Event ID: EVT-101\r\nLOCATION:Cape Town Convention Centre\r\nEND:VEVENT\r\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "b9dbb441faf4e75cdb5a",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "title_matches",
+                "field": "title",
+                "actual": "AI Engineering Summit",
+                "reference": "AI Engineering Summit",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "starts_at_matches",
+                "field": "starts_at",
+                "actual": "2026-10-21T07:00:00+00:00",
+                "reference": "2026-10-21T09:00:00+02:00",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "venue_matches",
+                "field": "venue",
+                "actual": "Cape Town Convention Centre",
+                "reference": "Cape Town Convention Centre",
+                "status": "passed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              }
+            ],
+            "input_issues": [],
+            "status": "verified",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [],
+              "email": [],
+              "title": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "starts_at": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "venue": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ]
+            },
+            "record_type": "event_observation",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "",
+            "email": "",
+            "title": "AI Engineering Summit",
+            "starts_at": "2026-10-21T08:00:00+00:00",
+            "venue": "Incorrect Assessment Hall",
+            "issues": [
+              "starts_at_matches",
+              "venue_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "calendar",
+            "source_record_id": "assessment-evt101-discrepancy",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "",
+              "email": "",
+              "title": "AI Engineering Summit",
+              "starts_at": "2026-10-21T08:00:00+00:00",
+              "venue": "Incorrect Assessment Hall",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-discrepancy",
+                "reference": "http://scenario:8090/calendar.ics",
+                "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T080000Z\r\nUID:assessment-evt101-discrepancy\r\nDESCRIPTION:Controlled synthetic assessment discrepancy. Event ID: EVT-101\r\nLOCATION:Incorrect Assessment Hall\r\nEND:VEVENT\r\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "",
+                "email": "",
+                "title": "AI Engineering Summit",
+                "starts_at": "2026-10-21T08:00:00+00:00",
+                "venue": "Incorrect Assessment Hall",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-discrepancy",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "",
+                  "email": "",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T08:00:00+00:00",
+                  "venue": "Incorrect Assessment Hall",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "calendar",
+                    "source_record_id": "assessment-evt101-discrepancy",
+                    "reference": "http://scenario:8090/calendar.ics",
+                    "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T080000Z\r\nUID:assessment-evt101-discrepancy\r\nDESCRIPTION:Controlled synthetic assessment discrepancy. Event ID: EVT-101\r\nLOCATION:Incorrect Assessment Hall\r\nEND:VEVENT\r\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "e542225b5e4c5f92ad5a",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "title_matches",
+                "field": "title",
+                "actual": "AI Engineering Summit",
+                "reference": "AI Engineering Summit",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "starts_at_matches",
+                "field": "starts_at",
+                "actual": "2026-10-21T08:00:00+00:00",
+                "reference": "2026-10-21T09:00:00+02:00",
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "venue_matches",
+                "field": "venue",
+                "actual": "Incorrect Assessment Hall",
+                "reference": "Cape Town Convention Centre",
+                "status": "failed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              }
+            ],
+            "input_issues": [],
+            "status": "review_required",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [],
+              "email": [],
+              "title": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "starts_at": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "venue": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ]
+            },
+            "record_type": "event_observation",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "Lindi Mokoena-Test",
+            "email": "lindi.mokoena@example.com",
+            "title": "",
+            "starts_at": "",
+            "venue": "",
+            "issues": [
+              "active_participant",
+              "name_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "email",
+            "source_record_id": "5748076401",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "Lindi Mokoena-Test",
+              "email": "LINDI.MOKOENA@EXAMPLE.COM",
+              "title": "",
+              "starts_at": "",
+              "venue": "",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "email",
+                "source_record_id": "5748076401",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt",
+                "excerpt": "EventOps final assessment | EVT-101 | inactive-conflict\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Lindi Mokoena-Test\nEmail: LINDI.MOKOENA@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: inactive-conflict. Verify against directory and event references.\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Lindi Mokoena-Test",
+                "email": "lindi.mokoena@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "email",
+                "source_record_id": "5748076401",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Lindi Mokoena-Test",
+                  "email": "LINDI.MOKOENA@EXAMPLE.COM",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": "",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "email",
+                    "source_record_id": "5748076401",
+                    "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt",
+                    "excerpt": "EventOps final assessment | EVT-101 | inactive-conflict\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Lindi Mokoena-Test\nEmail: LINDI.MOKOENA@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: inactive-conflict. Verify against directory and event references.\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "bd9c2f1a691c9d27a1c5",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "lindi.mokoena@example.com",
+                "reference": "lindi.mokoena@example.com",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "active_participant",
+                "field": "status",
+                "actual": "inactive",
+                "reference": "active",
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "registered_for_event",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "name_matches",
+                "field": "full_name",
+                "actual": "Lindi Mokoena-Test",
+                "reference": "Lindi Mokoena",
+                "status": "failed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              },
+              {
+                "id": "P-003",
+                "kind": "participant",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Participant P-003: Lindi Mokoena. Email: lindi.mokoena@example.com. Organization: Apex Consulting. Directory status: inactive. Registered events: EVT-101.",
+                "fields": {
+                  "participant_id": "P-003",
+                  "full_name": "Lindi Mokoena",
+                  "email": "lindi.mokoena@example.com",
+                  "organization": "Apex Consulting",
+                  "status": "inactive",
+                  "registered_events": [
+                    "EVT-101"
+                  ]
+                },
+                "source": "directory.json#participant_id=P-003"
+              }
+            ],
+            "input_issues": [],
+            "status": "rejected",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076401",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076401",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt"
+                }
+              ],
+              "email": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076401",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt"
+                }
+              ],
+              "title": [],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "P-001",
+            "full_name": "Ada Mensah",
+            "email": "ada.mensah@example.com",
+            "title": "",
+            "starts_at": "",
+            "venue": "",
+            "issues": [],
+            "extraction_method": "deterministic",
+            "source": "email",
+            "source_record_id": "5748076082",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "Ada Mensah",
+              "email": "ADA.MENSAH@EXAMPLE.COM",
+              "title": "",
+              "starts_at": "",
+              "venue": "",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "email",
+                "source_record_id": "5748076082",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt",
+                "excerpt": "EventOps final assessment | EVT-101 | duplicate\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: duplicate. Verify against directory and event references.\n"
+              },
+              {
+                "source": "email",
+                "source_record_id": "5748068714",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt",
+                "excerpt": "EventOps final assessment | EVT-101 | positive\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: positive. Verify against directory and event references.\n"
+              },
+              {
+                "source": "web",
+                "source_record_id": "web-incomplete",
+                "reference": "http://scenario:8090/records.json",
+                "excerpt": "{\"id\": \"web-incomplete\", \"event_id\": \"EVT-101\", \"email\": \"ada.mensah@example.com\", \"participant_id\": \"P-001\", \"synthetic\": true}"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Ada Mensah",
+                "email": "ada.mensah@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "email",
+                "source_record_id": "5748076082",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Ada Mensah",
+                  "email": "ADA.MENSAH@EXAMPLE.COM",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": "",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "email",
+                    "source_record_id": "5748076082",
+                    "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt",
+                    "excerpt": "EventOps final assessment | EVT-101 | duplicate\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: duplicate. Verify against directory and event references.\n"
+                  }
+                ]
+              },
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Ada Mensah",
+                "email": "ada.mensah@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "email",
+                "source_record_id": "5748068714",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Ada Mensah",
+                  "email": "ADA.MENSAH@EXAMPLE.COM",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": "",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "email",
+                    "source_record_id": "5748068714",
+                    "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt",
+                    "excerpt": "EventOps final assessment | EVT-101 | positive\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: positive. Verify against directory and event references.\n"
+                  }
+                ]
+              },
+              {
+                "event_id": "EVT-101",
+                "participant_id": "P-001",
+                "full_name": "",
+                "email": "ada.mensah@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "web",
+                "source_record_id": "web-incomplete",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "P-001",
+                  "full_name": "",
+                  "email": "ada.mensah@example.com",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": ""
+                },
+                "evidence": [
+                  {
+                    "source": "web",
+                    "source_record_id": "web-incomplete",
+                    "reference": "http://scenario:8090/records.json",
+                    "excerpt": "{\"id\": \"web-incomplete\", \"event_id\": \"EVT-101\", \"email\": \"ada.mensah@example.com\", \"participant_id\": \"P-001\", \"synthetic\": true}"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 2,
+            "conflicts": {},
+            "id": "8cc22f899d28c292cbe4",
+            "duplicate_type": "exact_or_complementary",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "ada.mensah@example.com",
+                "reference": "ada.mensah@example.com",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "active_participant",
+                "field": "status",
+                "actual": "active",
+                "reference": "active",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "registered_for_event",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "name_matches",
+                "field": "full_name",
+                "actual": "Ada Mensah",
+                "reference": "Ada Mensah",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "participant_id_matches",
+                "field": "participant_id",
+                "actual": "P-001",
+                "reference": "P-001",
+                "status": "passed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              },
+              {
+                "id": "P-001",
+                "kind": "participant",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Participant P-001: Ada Mensah. Email: ada.mensah@example.com. Organization: Meridian Technologies. Directory status: active. Registered events: EVT-101.",
+                "fields": {
+                  "participant_id": "P-001",
+                  "full_name": "Ada Mensah",
+                  "email": "ada.mensah@example.com",
+                  "organization": "Meridian Technologies",
+                  "status": "active",
+                  "registered_events": [
+                    "EVT-101"
+                  ]
+                },
+                "source": "directory.json#participant_id=P-001"
+              }
+            ],
+            "input_issues": [],
+            "status": "verified",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076082",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt"
+                },
+                {
+                  "source": "email",
+                  "source_record_id": "5748068714",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt"
+                },
+                {
+                  "source": "web",
+                  "source_record_id": "web-incomplete",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "participant_id": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-incomplete",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "full_name": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076082",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt"
+                },
+                {
+                  "source": "email",
+                  "source_record_id": "5748068714",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt"
+                }
+              ],
+              "email": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076082",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt"
+                },
+                {
+                  "source": "email",
+                  "source_record_id": "5748068714",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt"
+                },
+                {
+                  "source": "web",
+                  "source_record_id": "web-incomplete",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "title": [],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "",
+            "email": "",
+            "title": "AI Engineering Summit",
+            "starts_at": "2026-10-21T07:00:00+00:00",
+            "venue": "Cape Town Convention Centre",
+            "issues": [],
+            "extraction_method": "deterministic",
+            "source": "web",
+            "source_record_id": "web-event-canonical",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "",
+              "email": "",
+              "title": "AI Engineering Summit",
+              "starts_at": "2026-10-21T09:00:00+02:00",
+              "venue": "Cape Town Convention Centre"
+            },
+            "evidence": [
+              {
+                "source": "web",
+                "source_record_id": "web-event-canonical",
+                "reference": "http://scenario:8090/records.json",
+                "excerpt": "{\"id\": \"web-event-canonical\", \"event_id\": \"EVT-101\", \"title\": \"AI Engineering Summit\", \"starts_at\": \"2026-10-21T09:00:00+02:00\", \"venue\": \"Cape Town Convention Centre\", \"synthetic\": true}"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "",
+                "email": "",
+                "title": "AI Engineering Summit",
+                "starts_at": "2026-10-21T07:00:00+00:00",
+                "venue": "Cape Town Convention Centre",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "web",
+                "source_record_id": "web-event-canonical",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "",
+                  "email": "",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "venue": "Cape Town Convention Centre"
+                },
+                "evidence": [
+                  {
+                    "source": "web",
+                    "source_record_id": "web-event-canonical",
+                    "reference": "http://scenario:8090/records.json",
+                    "excerpt": "{\"id\": \"web-event-canonical\", \"event_id\": \"EVT-101\", \"title\": \"AI Engineering Summit\", \"starts_at\": \"2026-10-21T09:00:00+02:00\", \"venue\": \"Cape Town Convention Centre\", \"synthetic\": true}"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "1066431650b9ff614d06",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "title_matches",
+                "field": "title",
+                "actual": "AI Engineering Summit",
+                "reference": "AI Engineering Summit",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "starts_at_matches",
+                "field": "starts_at",
+                "actual": "2026-10-21T07:00:00+00:00",
+                "reference": "2026-10-21T09:00:00+02:00",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "venue_matches",
+                "field": "venue",
+                "actual": "Cape Town Convention Centre",
+                "reference": "Cape Town Convention Centre",
+                "status": "passed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              }
+            ],
+            "input_issues": [],
+            "status": "verified",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-event-canonical",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [],
+              "email": [],
+              "title": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-event-canonical",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "starts_at": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-event-canonical",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "venue": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-event-canonical",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ]
+            },
+            "record_type": "event_observation",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-999",
+            "participant_id": "",
+            "full_name": "Theo Daniels",
+            "email": "theo.daniels@example.com",
+            "title": "",
+            "starts_at": "",
+            "venue": "",
+            "issues": [
+              "event_exists",
+              "registered_for_event",
+              "target_event_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "web",
+            "source_record_id": "web-wrong-event",
+            "raw": {
+              "event_id": "EVT-999",
+              "participant_id": "",
+              "full_name": "Theo Daniels",
+              "email": "theo.daniels@example.com",
+              "title": "",
+              "starts_at": "",
+              "venue": ""
+            },
+            "evidence": [
+              {
+                "source": "web",
+                "source_record_id": "web-wrong-event",
+                "reference": "http://scenario:8090/records.json",
+                "excerpt": "{\"id\": \"web-wrong-event\", \"event_id\": \"EVT-999\", \"full_name\": \"Theo Daniels\", \"email\": \"theo.daniels@example.com\", \"synthetic\": true}"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-999",
+                "participant_id": "",
+                "full_name": "Theo Daniels",
+                "email": "theo.daniels@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "web",
+                "source_record_id": "web-wrong-event",
+                "raw": {
+                  "event_id": "EVT-999",
+                  "participant_id": "",
+                  "full_name": "Theo Daniels",
+                  "email": "theo.daniels@example.com",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": ""
+                },
+                "evidence": [
+                  {
+                    "source": "web",
+                    "source_record_id": "web-wrong-event",
+                    "reference": "http://scenario:8090/records.json",
+                    "excerpt": "{\"id\": \"web-wrong-event\", \"event_id\": \"EVT-999\", \"full_name\": \"Theo Daniels\", \"email\": \"theo.daniels@example.com\", \"synthetic\": true}"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "95e00fc8f58dc5b066cc",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-999",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-999",
+                "reference": "EVT-101",
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "theo.daniels@example.com",
+                "reference": "theo.daniels@example.com",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "active_participant",
+                "field": "status",
+                "actual": "active",
+                "reference": "active",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "registered_for_event",
+                "field": "event_id",
+                "actual": "EVT-999",
+                "reference": [
+                  "EVT-101"
+                ],
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "name_matches",
+                "field": "full_name",
+                "actual": "Theo Daniels",
+                "reference": "Theo Daniels",
+                "status": "passed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "P-002",
+                "kind": "participant",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Participant P-002: Theo Daniels. Email: theo.daniels@example.com. Organization: Nexa Digital. Directory status: active. Registered events: EVT-101.",
+                "fields": {
+                  "participant_id": "P-002",
+                  "full_name": "Theo Daniels",
+                  "email": "theo.daniels@example.com",
+                  "organization": "Nexa Digital",
+                  "status": "active",
+                  "registered_events": [
+                    "EVT-101"
+                  ]
+                },
+                "source": "directory.json#participant_id=P-002"
+              }
+            ],
+            "input_issues": [],
+            "status": "rejected",
+            "relevance": "other_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-wrong-event",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-wrong-event",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "email": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-wrong-event",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "title": [],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "Theo Wrongname",
+            "email": "theo.daniels@example.com",
+            "title": "",
+            "starts_at": "",
+            "venue": "",
+            "issues": [
+              "name_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "web",
+            "source_record_id": "web-name-conflict",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "Theo Wrongname",
+              "email": "theo.daniels@example.com",
+              "title": "",
+              "starts_at": "",
+              "venue": ""
+            },
+            "evidence": [
+              {
+                "source": "web",
+                "source_record_id": "web-name-conflict",
+                "reference": "http://scenario:8090/records.json",
+                "excerpt": "{\"id\": \"web-name-conflict\", \"event_id\": \"EVT-101\", \"full_name\": \"Theo Wrongname\", \"email\": \"theo.daniels@example.com\", \"synthetic\": true}"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Theo Wrongname",
+                "email": "theo.daniels@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "web",
+                "source_record_id": "web-name-conflict",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Theo Wrongname",
+                  "email": "theo.daniels@example.com",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": ""
+                },
+                "evidence": [
+                  {
+                    "source": "web",
+                    "source_record_id": "web-name-conflict",
+                    "reference": "http://scenario:8090/records.json",
+                    "excerpt": "{\"id\": \"web-name-conflict\", \"event_id\": \"EVT-101\", \"full_name\": \"Theo Wrongname\", \"email\": \"theo.daniels@example.com\", \"synthetic\": true}"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "4ca3840bb08b16a401fc",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "theo.daniels@example.com",
+                "reference": "theo.daniels@example.com",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "active_participant",
+                "field": "status",
+                "actual": "active",
+                "reference": "active",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "registered_for_event",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "name_matches",
+                "field": "full_name",
+                "actual": "Theo Wrongname",
+                "reference": "Theo Daniels",
+                "status": "failed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              },
+              {
+                "id": "P-002",
+                "kind": "participant",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Participant P-002: Theo Daniels. Email: theo.daniels@example.com. Organization: Nexa Digital. Directory status: active. Registered events: EVT-101.",
+                "fields": {
+                  "participant_id": "P-002",
+                  "full_name": "Theo Daniels",
+                  "email": "theo.daniels@example.com",
+                  "organization": "Nexa Digital",
+                  "status": "active",
+                  "registered_events": [
+                    "EVT-101"
+                  ]
+                },
+                "source": "directory.json#participant_id=P-002"
+              }
+            ],
+            "input_issues": [],
+            "status": "review_required",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-name-conflict",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-name-conflict",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "email": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-name-conflict",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "title": [],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "",
+            "participant_id": "",
+            "full_name": "Unknown Synthetic Person",
+            "email": "unknown@example.com",
+            "title": "Synthetic registration awaiting event identity",
+            "starts_at": "",
+            "venue": "",
+            "issues": [
+              "directory_identity",
+              "event_exists",
+              "target_event_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "web",
+            "source_record_id": "web-missing-identity",
+            "raw": {
+              "event_id": "",
+              "participant_id": "",
+              "full_name": "Unknown Synthetic Person",
+              "email": "unknown@example.com",
+              "title": "Synthetic registration awaiting event identity",
+              "starts_at": "",
+              "venue": ""
+            },
+            "evidence": [
+              {
+                "source": "web",
+                "source_record_id": "web-missing-identity",
+                "reference": "http://scenario:8090/records.json",
+                "excerpt": "{\"id\": \"web-missing-identity\", \"title\": \"Synthetic registration awaiting event identity\", \"full_name\": \"Unknown Synthetic Person\", \"email\": \"unknown@example.com\", \"synthetic\": true}"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "",
+                "participant_id": "",
+                "full_name": "Unknown Synthetic Person",
+                "email": "unknown@example.com",
+                "title": "Synthetic registration awaiting event identity",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "web",
+                "source_record_id": "web-missing-identity",
+                "raw": {
+                  "event_id": "",
+                  "participant_id": "",
+                  "full_name": "Unknown Synthetic Person",
+                  "email": "unknown@example.com",
+                  "title": "Synthetic registration awaiting event identity",
+                  "starts_at": "",
+                  "venue": ""
+                },
+                "evidence": [
+                  {
+                    "source": "web",
+                    "source_record_id": "web-missing-identity",
+                    "reference": "http://scenario:8090/records.json",
+                    "excerpt": "{\"id\": \"web-missing-identity\", \"title\": \"Synthetic registration awaiting event identity\", \"full_name\": \"Unknown Synthetic Person\", \"email\": \"unknown@example.com\", \"synthetic\": true}"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "016203f17c92ac89d272",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "",
+                "reference": "EVT-101",
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "unknown@example.com",
+                "reference": null,
+                "status": "failed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [],
+            "input_issues": [],
+            "status": "incomplete",
+            "relevance": "unmapped_observation",
+            "field_provenance": {
+              "event_id": [],
+              "participant_id": [],
+              "full_name": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-missing-identity",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "email": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-missing-identity",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "title": [
+                {
+                  "source": "web",
+                  "source_record_id": "web-missing-identity",
+                  "reference": "http://scenario:8090/records.json"
+                }
+              ],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          }
+        ],
+        "outcomes": [
+          {
+            "source": "calendar",
+            "status": "completed",
+            "reference": "http://scenario:8090/calendar.ics",
+            "count": 2,
+            "error": null,
+            "observed_at": "2026-10-21T05:51:32.640162+00:00"
+          },
+          {
+            "source": "email",
+            "status": "completed",
+            "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+            "count": 3,
+            "error": null,
+            "observed_at": "2026-10-21T05:51:35.491643+00:00"
+          },
+          {
+            "source": "web",
+            "status": "completed",
+            "reference": "http://scenario:8090/records.json",
+            "count": 5,
+            "error": null,
+            "observed_at": "2026-10-21T05:51:35.532142+00:00"
+          }
+        ],
+        "orchestrator": "n8n",
+        "finished_at": "2026-10-21T05:51:35.619019+00:00",
+        "summary": {
+          "total": 8,
+          "verified": 3,
+          "review_required": 2,
+          "rejected": 2,
+          "incomplete": 1,
+          "duplicates_merged": 2
+        },
+        "agent": {
+          "status": "not_requested"
+        }
+      }
+    },
+    {
+      "elapsed_seconds": 2.282,
+      "run": {
+        "request_id": "9fbf4743-b92e-4f6a-856f-fabfaceeaf69",
+        "event_id": "EVT-101",
+        "limit": 5,
+        "scenario": "provider_unavailable",
+        "execution_id": "15",
+        "workflow_revision": "a0f41bfc99c9-worktree-91d3a6592398",
+        "run_id": "9fbf4743-b92e-4f6a-856f-fabfaceeaf69",
+        "status": "partial",
+        "started_at": "2026-10-21T05:51:36.276310+00:00",
+        "heartbeat_at": "2026-10-21T05:51:38.391564+00:00",
+        "stages": [
+          {
+            "stage": "calendar",
+            "at": "2026-10-21T05:51:36.297317+00:00",
+            "outcome": {
+              "source": "calendar",
+              "status": "completed",
+              "reference": "http://scenario:8090/calendar.ics",
+              "count": 2,
+              "error": null,
+              "observed_at": "2026-10-21T05:51:36.289764+00:00"
+            }
+          },
+          {
+            "stage": "email",
+            "at": "2026-10-21T05:51:38.363626+00:00",
+            "outcome": {
+              "source": "email",
+              "status": "completed",
+              "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+              "count": 3,
+              "error": null,
+              "observed_at": "2026-10-21T05:51:38.348525+00:00"
+            }
+          },
+          {
+            "stage": "web",
+            "at": "2026-10-21T05:51:38.391558+00:00",
+            "outcome": {
+              "source": "web",
+              "status": "failed",
+              "reference": "http://scenario:8090/unavailable",
+              "count": 0,
+              "error": "Source request failed or returned HTTP 503",
+              "observed_at": "2026-10-21T05:51:38.382591+00:00"
+            }
+          }
+        ],
+        "records": [
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "",
+            "email": "",
+            "title": "AI Engineering Summit",
+            "starts_at": "2026-10-21T07:00:00+00:00",
+            "venue": "Cape Town Convention Centre",
+            "issues": [],
+            "extraction_method": "deterministic",
+            "source": "calendar",
+            "source_record_id": "assessment-evt101-correct",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "",
+              "email": "",
+              "title": "AI Engineering Summit",
+              "starts_at": "2026-10-21T07:00:00+00:00",
+              "venue": "Cape Town Convention Centre",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-correct",
+                "reference": "http://scenario:8090/calendar.ics",
+                "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T070000Z\r\nUID:assessment-evt101-correct\r\nDESCRIPTION:Controlled synthetic assessment event. Event ID: EVT-101\r\nLOCATION:Cape Town Convention Centre\r\nEND:VEVENT\r\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "",
+                "email": "",
+                "title": "AI Engineering Summit",
+                "starts_at": "2026-10-21T07:00:00+00:00",
+                "venue": "Cape Town Convention Centre",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-correct",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "",
+                  "email": "",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T07:00:00+00:00",
+                  "venue": "Cape Town Convention Centre",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "calendar",
+                    "source_record_id": "assessment-evt101-correct",
+                    "reference": "http://scenario:8090/calendar.ics",
+                    "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T070000Z\r\nUID:assessment-evt101-correct\r\nDESCRIPTION:Controlled synthetic assessment event. Event ID: EVT-101\r\nLOCATION:Cape Town Convention Centre\r\nEND:VEVENT\r\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "b9dbb441faf4e75cdb5a",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "title_matches",
+                "field": "title",
+                "actual": "AI Engineering Summit",
+                "reference": "AI Engineering Summit",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "starts_at_matches",
+                "field": "starts_at",
+                "actual": "2026-10-21T07:00:00+00:00",
+                "reference": "2026-10-21T09:00:00+02:00",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "venue_matches",
+                "field": "venue",
+                "actual": "Cape Town Convention Centre",
+                "reference": "Cape Town Convention Centre",
+                "status": "passed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              }
+            ],
+            "input_issues": [],
+            "status": "verified",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [],
+              "email": [],
+              "title": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "starts_at": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "venue": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-correct",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ]
+            },
+            "record_type": "event_observation",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "",
+            "email": "",
+            "title": "AI Engineering Summit",
+            "starts_at": "2026-10-21T08:00:00+00:00",
+            "venue": "Incorrect Assessment Hall",
+            "issues": [
+              "starts_at_matches",
+              "venue_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "calendar",
+            "source_record_id": "assessment-evt101-discrepancy",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "",
+              "email": "",
+              "title": "AI Engineering Summit",
+              "starts_at": "2026-10-21T08:00:00+00:00",
+              "venue": "Incorrect Assessment Hall",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-discrepancy",
+                "reference": "http://scenario:8090/calendar.ics",
+                "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T080000Z\r\nUID:assessment-evt101-discrepancy\r\nDESCRIPTION:Controlled synthetic assessment discrepancy. Event ID: EVT-101\r\nLOCATION:Incorrect Assessment Hall\r\nEND:VEVENT\r\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "",
+                "email": "",
+                "title": "AI Engineering Summit",
+                "starts_at": "2026-10-21T08:00:00+00:00",
+                "venue": "Incorrect Assessment Hall",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "calendar",
+                "source_record_id": "assessment-evt101-discrepancy",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "",
+                  "email": "",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T08:00:00+00:00",
+                  "venue": "Incorrect Assessment Hall",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "calendar",
+                    "source_record_id": "assessment-evt101-discrepancy",
+                    "reference": "http://scenario:8090/calendar.ics",
+                    "excerpt": "BEGIN:VEVENT\r\nSUMMARY:AI Engineering Summit\r\nDTSTART:20261021T080000Z\r\nUID:assessment-evt101-discrepancy\r\nDESCRIPTION:Controlled synthetic assessment discrepancy. Event ID: EVT-101\r\nLOCATION:Incorrect Assessment Hall\r\nEND:VEVENT\r\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "e542225b5e4c5f92ad5a",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "title_matches",
+                "field": "title",
+                "actual": "AI Engineering Summit",
+                "reference": "AI Engineering Summit",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "starts_at_matches",
+                "field": "starts_at",
+                "actual": "2026-10-21T08:00:00+00:00",
+                "reference": "2026-10-21T09:00:00+02:00",
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "venue_matches",
+                "field": "venue",
+                "actual": "Incorrect Assessment Hall",
+                "reference": "Cape Town Convention Centre",
+                "status": "failed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              }
+            ],
+            "input_issues": [],
+            "status": "review_required",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [],
+              "email": [],
+              "title": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "starts_at": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ],
+              "venue": [
+                {
+                  "source": "calendar",
+                  "source_record_id": "assessment-evt101-discrepancy",
+                  "reference": "http://scenario:8090/calendar.ics"
+                }
+              ]
+            },
+            "record_type": "event_observation",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "Lindi Mokoena-Test",
+            "email": "lindi.mokoena@example.com",
+            "title": "",
+            "starts_at": "",
+            "venue": "",
+            "issues": [
+              "active_participant",
+              "name_matches"
+            ],
+            "extraction_method": "deterministic",
+            "source": "email",
+            "source_record_id": "5748076401",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "Lindi Mokoena-Test",
+              "email": "LINDI.MOKOENA@EXAMPLE.COM",
+              "title": "",
+              "starts_at": "",
+              "venue": "",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "email",
+                "source_record_id": "5748076401",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt",
+                "excerpt": "EventOps final assessment | EVT-101 | inactive-conflict\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Lindi Mokoena-Test\nEmail: LINDI.MOKOENA@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: inactive-conflict. Verify against directory and event references.\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Lindi Mokoena-Test",
+                "email": "lindi.mokoena@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "email",
+                "source_record_id": "5748076401",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Lindi Mokoena-Test",
+                  "email": "LINDI.MOKOENA@EXAMPLE.COM",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": "",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "email",
+                    "source_record_id": "5748076401",
+                    "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt",
+                    "excerpt": "EventOps final assessment | EVT-101 | inactive-conflict\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Lindi Mokoena-Test\nEmail: LINDI.MOKOENA@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: inactive-conflict. Verify against directory and event references.\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 0,
+            "conflicts": {},
+            "id": "bd9c2f1a691c9d27a1c5",
+            "duplicate_type": "unique",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "lindi.mokoena@example.com",
+                "reference": "lindi.mokoena@example.com",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "active_participant",
+                "field": "status",
+                "actual": "inactive",
+                "reference": "active",
+                "status": "failed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "registered_for_event",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "name_matches",
+                "field": "full_name",
+                "actual": "Lindi Mokoena-Test",
+                "reference": "Lindi Mokoena",
+                "status": "failed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              },
+              {
+                "id": "P-003",
+                "kind": "participant",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Participant P-003: Lindi Mokoena. Email: lindi.mokoena@example.com. Organization: Apex Consulting. Directory status: inactive. Registered events: EVT-101.",
+                "fields": {
+                  "participant_id": "P-003",
+                  "full_name": "Lindi Mokoena",
+                  "email": "lindi.mokoena@example.com",
+                  "organization": "Apex Consulting",
+                  "status": "inactive",
+                  "registered_events": [
+                    "EVT-101"
+                  ]
+                },
+                "source": "directory.json#participant_id=P-003"
+              }
+            ],
+            "input_issues": [],
+            "status": "rejected",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076401",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076401",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt"
+                }
+              ],
+              "email": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076401",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076401/body.txt"
+                }
+              ],
+              "title": [],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          },
+          {
+            "event_id": "EVT-101",
+            "participant_id": "",
+            "full_name": "Ada Mensah",
+            "email": "ada.mensah@example.com",
+            "title": "",
+            "starts_at": "",
+            "venue": "",
+            "issues": [],
+            "extraction_method": "deterministic",
+            "source": "email",
+            "source_record_id": "5748076082",
+            "raw": {
+              "event_id": "EVT-101",
+              "participant_id": "",
+              "full_name": "Ada Mensah",
+              "email": "ADA.MENSAH@EXAMPLE.COM",
+              "title": "",
+              "starts_at": "",
+              "venue": "",
+              "issues": [],
+              "extraction_method": "deterministic"
+            },
+            "evidence": [
+              {
+                "source": "email",
+                "source_record_id": "5748076082",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt",
+                "excerpt": "EventOps final assessment | EVT-101 | duplicate\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: duplicate. Verify against directory and event references.\n"
+              },
+              {
+                "source": "email",
+                "source_record_id": "5748068714",
+                "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt",
+                "excerpt": "EventOps final assessment | EVT-101 | positive\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: positive. Verify against directory and event references.\n"
+              }
+            ],
+            "inputs": [
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Ada Mensah",
+                "email": "ada.mensah@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "email",
+                "source_record_id": "5748076082",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Ada Mensah",
+                  "email": "ADA.MENSAH@EXAMPLE.COM",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": "",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "email",
+                    "source_record_id": "5748076082",
+                    "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt",
+                    "excerpt": "EventOps final assessment | EVT-101 | duplicate\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: duplicate. Verify against directory and event references.\n"
+                  }
+                ]
+              },
+              {
+                "event_id": "EVT-101",
+                "participant_id": "",
+                "full_name": "Ada Mensah",
+                "email": "ada.mensah@example.com",
+                "title": "",
+                "starts_at": "",
+                "venue": "",
+                "issues": [],
+                "extraction_method": "deterministic",
+                "source": "email",
+                "source_record_id": "5748068714",
+                "raw": {
+                  "event_id": "EVT-101",
+                  "participant_id": "",
+                  "full_name": "Ada Mensah",
+                  "email": "ADA.MENSAH@EXAMPLE.COM",
+                  "title": "",
+                  "starts_at": "",
+                  "venue": "",
+                  "issues": [],
+                  "extraction_method": "deterministic"
+                },
+                "evidence": [
+                  {
+                    "source": "email",
+                    "source_record_id": "5748068714",
+                    "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt",
+                    "excerpt": "EventOps final assessment | EVT-101 | positive\nCONTROLLED SYNTHETIC ASSESSMENT REGISTRATION \u2014 NOT A REAL EMAIL\n\nEvent: evt-101\nFull name: Ada Mensah\nEmail: ADA.MENSAH@EXAMPLE.COM\nRegistration: AI Engineering Summit\n\nCase: positive. Verify against directory and event references.\n"
+                  }
+                ]
+              }
+            ],
+            "duplicate_count": 1,
+            "conflicts": {},
+            "id": "8cc22f899d28c292cbe4",
+            "duplicate_type": "exact_or_complementary",
+            "potentially_related": [],
+            "checks": [
+              {
+                "rule": "event_exists",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101",
+                  "EVT-102",
+                  "EVT-103"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "target_event_matches",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": "EVT-101",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "directory_identity",
+                "field": "email",
+                "actual": "ada.mensah@example.com",
+                "reference": "ada.mensah@example.com",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "active_participant",
+                "field": "status",
+                "actual": "active",
+                "reference": "active",
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "registered_for_event",
+                "field": "event_id",
+                "actual": "EVT-101",
+                "reference": [
+                  "EVT-101"
+                ],
+                "status": "passed",
+                "authority": "deterministic"
+              },
+              {
+                "rule": "name_matches",
+                "field": "full_name",
+                "actual": "Ada Mensah",
+                "reference": "Ada Mensah",
+                "status": "passed",
+                "authority": "deterministic"
+              }
+            ],
+            "matches": [
+              {
+                "id": "EVT-101",
+                "kind": "event",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Event EVT-101: AI Engineering Summit. Starts at: 2026-10-21T09:00:00+02:00. Ends at: 2026-10-21T17:00:00+02:00. Venue: Cape Town Convention Centre. Capacity: 150.",
+                "fields": {
+                  "event_id": "EVT-101",
+                  "title": "AI Engineering Summit",
+                  "starts_at": "2026-10-21T09:00:00+02:00",
+                  "ends_at": "2026-10-21T17:00:00+02:00",
+                  "venue": "Cape Town Convention Centre",
+                  "capacity": "150"
+                },
+                "source": "events.csv#event_id=EVT-101"
+              },
+              {
+                "id": "P-001",
+                "kind": "participant",
+                "scope": [
+                  "EVT-101"
+                ],
+                "content": "Participant P-001: Ada Mensah. Email: ada.mensah@example.com. Organization: Meridian Technologies. Directory status: active. Registered events: EVT-101.",
+                "fields": {
+                  "participant_id": "P-001",
+                  "full_name": "Ada Mensah",
+                  "email": "ada.mensah@example.com",
+                  "organization": "Meridian Technologies",
+                  "status": "active",
+                  "registered_events": [
+                    "EVT-101"
+                  ]
+                },
+                "source": "directory.json#participant_id=P-001"
+              }
+            ],
+            "input_issues": [],
+            "status": "verified",
+            "relevance": "target_event",
+            "field_provenance": {
+              "event_id": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076082",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt"
+                },
+                {
+                  "source": "email",
+                  "source_record_id": "5748068714",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt"
+                }
+              ],
+              "participant_id": [],
+              "full_name": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076082",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt"
+                },
+                {
+                  "source": "email",
+                  "source_record_id": "5748068714",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt"
+                }
+              ],
+              "email": [
+                {
+                  "source": "email",
+                  "source_record_id": "5748076082",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748076082/body.txt"
+                },
+                {
+                  "source": "email",
+                  "source_record_id": "5748068714",
+                  "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages/5748068714/body.txt"
+                }
+              ],
+              "title": [],
+              "starts_at": [],
+              "venue": []
+            },
+            "record_type": "registration",
+            "review_status": "unreviewed"
+          }
+        ],
+        "outcomes": [
+          {
+            "source": "calendar",
+            "status": "completed",
+            "reference": "http://scenario:8090/calendar.ics",
+            "count": 2,
+            "error": null,
+            "observed_at": "2026-10-21T05:51:36.289764+00:00"
+          },
+          {
+            "source": "email",
+            "status": "completed",
+            "reference": "https://mailtrap.io/api/accounts/REDACTED/inboxes/REDACTED/messages",
+            "count": 3,
+            "error": null,
+            "observed_at": "2026-10-21T05:51:38.348525+00:00"
+          },
+          {
+            "source": "web",
+            "status": "failed",
+            "reference": "http://scenario:8090/unavailable",
+            "count": 0,
+            "error": "Source request failed or returned HTTP 503",
+            "observed_at": "2026-10-21T05:51:38.382591+00:00"
+          }
+        ],
+        "orchestrator": "n8n",
+        "finished_at": "2026-10-21T05:51:38.427968+00:00",
+        "summary": {
+          "total": 4,
+          "verified": 2,
+          "review_required": 1,
+          "rejected": 1,
+          "incomplete": 0,
+          "duplicates_merged": 1
+        },
+        "agent": {
+          "status": "not_requested"
+        }
+      }
+    }
+  ],
+  "services": [
+    {
+      "service": "app",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "database",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "gateway",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "n8n",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "processor",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "restore",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "runners",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "scenario",
+      "state": "running",
+      "health": "healthy"
+    }
+  ],
+  "public_surface": {
+    "observed_at": "2026-10-21T05:51:30.477253+00:00",
+    "environment": "loopback HTTP",
+    "routes": [
+      {
+        "route": "/",
+        "status": 200
+      },
+      {
+        "route": "/webhook/eventops-verify",
+        "status": 404
+      },
+      {
+        "route": "/webhook/eventops-agent",
+        "status": 404
+      },
+      {
+        "route": "/rest/settings",
+        "status": 404
+      },
+      {
+        "route": "/api/v1/workflows",
+        "status": 404
+      },
+      {
+        "route": "/healthz",
+        "status": 404
+      },
+      {
+        "route": "/readyz",
+        "status": 404
+      },
+      {
+        "route": "/metrics",
+        "status": 404
+      },
+      {
+        "route": "/docs",
+        "status": 404
+      },
+      {
+        "route": "/openapi.json",
+        "status": 404
+      },
+      {
+        "route": "/_stcore/health",
+        "status": 404
+      }
+    ],
+    "tls": "not_tested",
+    "provider_availability": "not_checked",
+    "authentication_ui": "requires_browser_check"
+  },
+  "model_status": "not_requested; no fabricated execution claim",
+  "interruption": {
+    "request_id": "04c0a2b3-f5ae-49d2-a503-a8dbd527e47c",
+    "execution_id": "17",
+    "client_delivery": "delivery_unknown",
+    "state": "intervention_required",
+    "healthy_checkpoints": [
+      "calendar",
+      "email"
+    ],
+    "replay_did_not_repeat_sources": true,
+    "automatic_recovery": false
+  }
+}

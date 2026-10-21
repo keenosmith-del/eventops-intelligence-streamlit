@@ -1,3 +1,5 @@
+> Current deployment preparation: [Iteration 003 readiness](iterations/003/RELEASE_READINESS.md) and [observed checks](iterations/003/TEST_RESULTS.md). Material below records Iteration 002 and its historical status.
+
 # Test report
 
 Current results and caveats are in [Iteration 002 observed tests](iterations/002/TEST_RESULTS.md): 135 tests pass on host and Linux ARM64, with one dependency deprecation warning. Actual provider/model/workflow acceptance is recorded separately from isolated regression tests.

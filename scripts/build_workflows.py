@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import uuid
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -10,6 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--processor-url", default="http://processor:8766")
 parser.add_argument("--output", type=Path)
 parser.add_argument("--check", action="store_true")
+parser.add_argument("--revision", default="development")
 args = parser.parse_args()
 p = urlsplit(args.processor_url)
 if (
@@ -78,7 +80,7 @@ def workflow(wid, name, nodes, connections):
             "callerPolicy": "workflowsFromSameOwner",
         },
         "pinData": {},
-        "versionId": "d4f7c72d-0858-44bf-82ba-26d2efee07a5",
+        "versionId": str(uuid.uuid5(uuid.NAMESPACE_URL, wid + args.processor_url + args.revision)),
         "tags": [],
     }
 
@@ -348,7 +350,7 @@ main = workflow("EventOpsVerify01", "EventOps · autonomous source verification"
 # Iteration 002: explicit scenario, source isolation, actual checkpoint evidence, no environment access.
 by_name = {n["name"]: n for n in main["nodes"]}
 by_name["Validate and reserve request"]["parameters"]["jsonBody"] = (
-    "={{ {...$json.body,execution_id:$execution.id} }}"
+    "={{ {...$json.body,execution_id:$execution.id,workflow_revision:" + json.dumps(args.revision) + "} }}"
 )
 by_name["Allowed source configuration"]["parameters"].update(
     sendQuery=True,

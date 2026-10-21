@@ -4,7 +4,11 @@ An independent event operations workspace combining semantic RAG, genuine n8n au
 
 [Public source repository](https://github.com/keenosmith-del/eventops-intelligence-streamlit) · [Iteration 002 report](docs/iterations/002/ACCEPTANCE_REPORT.md) · [Architecture](docs/ARCHITECTURE.md)
 
-**Current state: locally tested, not publicly deployed.** The repository was published after Iteration 001's local acceptance. Iteration 002 makes no GitHub push, paid provisioning or public deployment. Historical evidence is kept separately in `docs/evidence`; new evidence is in `docs/iterations/002/evidence`.
+**Current state: locally tested, not publicly deployed.** Iteration 003 prepares deployment under a strict R0/$0 ongoing budget. Historical model execution evidence is in `docs/iterations/002/evidence`; current release evidence is in `docs/iterations/003/evidence`. Gemini is disabled for the new release rehearsal at the owner's instruction.
+
+## Deployment preparation
+
+Iteration 003 prepares a protected release topology, independent persistence, reproducible workflow publication, backup/restore and local release rehearsal. The owner requires R0/$0 ongoing hosting: [current runbook](docs/iterations/003/DEPLOYMENT_RUNBOOK.md), [verified free-hosting options](docs/iterations/003/HOSTING_OPTIONS.md), and [readiness status](docs/iterations/003/RELEASE_READINESS.md). No public deployment or infrastructure provisioning has occurred. Gemini remains disabled for new release acceptance until its free-tier/billing status is confirmed.
 
 ## Capabilities
 

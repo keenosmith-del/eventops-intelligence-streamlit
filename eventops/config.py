@@ -15,4 +15,7 @@ def database_url():
     url = setting("EVENTOPS_DATABASE_URL", f"sqlite:///{ROOT / 'storage/eventops.db'}")
     if not url.startswith(("sqlite:", "postgresql+psycopg:")):
         raise ValueError("Use a dedicated SQLite or postgresql+psycopg database URL.")
+    from eventops.operations import validate_database
+
+    validate_database(url)
     return url

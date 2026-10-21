@@ -40,9 +40,13 @@ def reconcile(store, owner, request_id, transport=None):
     if base and key and eid and str(eid).isdigit():
         from urllib.parse import urlsplit
 
+        from eventops.operations import private_origin
+
         p = urlsplit(base)
-        if p.scheme == "https" or (
-            setting("EVENTOPS_LOCAL_COMPOSE") == "true" and p.scheme == "http" and p.hostname == "n8n"
+        if (
+            p.scheme == "https"
+            or private_origin(base, "PRIVATE_N8N_ORIGIN")
+            or (setting("EVENTOPS_LOCAL_COMPOSE") == "true" and p.scheme == "http" and p.hostname == "n8n")
         ):
             try:
                 with httpx.Client(timeout=5, transport=transport, follow_redirects=False) as client:

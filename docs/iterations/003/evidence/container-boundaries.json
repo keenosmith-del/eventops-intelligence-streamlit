@@ -1,0 +1,82 @@
+[
+  {
+    "service": "app",
+    "user": "companion",
+    "readonly": true,
+    "privileged": false,
+    "gemini_enabled": "false",
+    "free_tier_confirmed": "false",
+    "revision": "a0f41bfc99c9-worktree-91d3a6592398",
+    "image_id": "sha256:6ed0964367eb29cc8a3f9e94bc62b6dcde29392291a40ba040fec845b65fbbae"
+  },
+  {
+    "service": "database",
+    "user": "",
+    "readonly": false,
+    "privileged": false,
+    "gemini_enabled": "not_injected",
+    "free_tier_confirmed": "not_injected",
+    "revision": null,
+    "image_id": "sha256:c7526c0f6c3f30260a563d7bcf8ad778effac59a44f8ffa86678c35418338609"
+  },
+  {
+    "service": "gateway",
+    "user": "1000:1000",
+    "readonly": true,
+    "privileged": false,
+    "gemini_enabled": "not_injected",
+    "free_tier_confirmed": "not_injected",
+    "revision": null,
+    "image_id": "sha256:3e8a66daad02c04fec781c215837966403c4e2ec97b566a6cb72ff0971a74a7f"
+  },
+  {
+    "service": "n8n",
+    "user": "1000:1000",
+    "readonly": true,
+    "privileged": false,
+    "gemini_enabled": "not_injected",
+    "free_tier_confirmed": "not_injected",
+    "revision": null,
+    "image_id": "sha256:526daa38b68e923cc00c5280d18b4da5d489f115a73bdbf3b8e452b184197a9a"
+  },
+  {
+    "service": "processor",
+    "user": "companion",
+    "readonly": true,
+    "privileged": false,
+    "gemini_enabled": "false",
+    "free_tier_confirmed": "false",
+    "revision": "a0f41bfc99c9-worktree-91d3a6592398",
+    "image_id": "sha256:6ed0964367eb29cc8a3f9e94bc62b6dcde29392291a40ba040fec845b65fbbae"
+  },
+  {
+    "service": "restore",
+    "user": "",
+    "readonly": false,
+    "privileged": false,
+    "gemini_enabled": "not_injected",
+    "free_tier_confirmed": "not_injected",
+    "revision": null,
+    "image_id": "sha256:c7526c0f6c3f30260a563d7bcf8ad778effac59a44f8ffa86678c35418338609"
+  },
+  {
+    "service": "runners",
+    "user": "65532:65532",
+    "readonly": true,
+    "privileged": false,
+    "gemini_enabled": "not_injected",
+    "free_tier_confirmed": "not_injected",
+    "revision": null,
+    "image_id": "sha256:b78816286beb0a14e874abfda31eb4621d47f5ebb38f194271df7e39b7bd63a7"
+  },
+  {
+    "service": "scenario",
+    "user": "companion",
+    "readonly": true,
+    "privileged": false,
+    "gemini_enabled": "not_injected",
+    "free_tier_confirmed": "not_injected",
+    "revision": "a0f41bfc99c9-worktree-91d3a6592398",
+    "image_id": "sha256:6ed0964367eb29cc8a3f9e94bc62b6dcde29392291a40ba040fec845b65fbbae"
+  }
+]
